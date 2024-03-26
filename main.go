@@ -1,7 +1,6 @@
 package main
 
 import (
-	"bitrix_app/backend/bitrix/authorize"
 	"bitrix_app/backend/bitrix/repo/mysql"
 	"bitrix_app/backend/routes"
 	"fmt"
@@ -22,7 +21,6 @@ func main() {
 	}
 
 	routes.Router()
-	authorize.BitrixAuthorize()
 
 	server := &http.Server{
 		Addr:              ":9090",

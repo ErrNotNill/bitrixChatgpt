@@ -3,34 +3,35 @@ package authorize
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/ikarpovich/go-bitrix/client"
-	"github.com/ikarpovich/go-bitrix/types"
+	goBX24 "github.com/whatcrm/go-bitrix24"
 	"io"
 	"log"
 	"net/http"
 	"os"
 )
 
-func BitrixAuthorize() {
-	c, err := client.NewEnvClientWithWebhookAuth()
+func AuthorizeBitrix() error {
+	clientID := os.Getenv("BITRIX_CLIENT_ID")
+	clientSecret := os.Getenv("BITRIX_CLIENT_SECRET")
+	domain := os.Getenv("BITRIX_DOOMAIN")
+	auth := "auth"
 
-	if err != nil {
-		log.Fatalf("Can't create client: %s", err)
+	b24 := goBX24.NewAPI(clientID, clientSecret)
+
+	if err := b24.SetOptions(domain, auth, true); err != nil {
+		return err
 	}
 
-	c.SetInsecureSSL(true)
-	c.SetDebug(true)
+	admin, _ := b24.IsAdmin()
+	log.Println(admin.Result)
 
-	resp, err := c.Methods(&types.MethodsRequest{
-		Full:  true,
-		Scope: "landing",
-	})
-
+	dealId := "43"
+	res, err := b24.Get().Deals(dealId)
 	if err != nil {
-		log.Fatalf("Request error: %s", err)
+		return err
 	}
-
-	log.Print(resp)
+	log.Println("result: ", res)
+	return nil
 }
 
 func BotBitrix(w http.ResponseWriter, r *http.Request) {

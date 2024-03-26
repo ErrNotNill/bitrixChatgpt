@@ -2,7 +2,7 @@ package routes
 
 func Router() {
 
-	/*http.HandleFunc("/bitrix/auth", authorization.GetAuthCode)
+	/*http.HandleFunc("/api/auth", authorization.GetAuthCode)
 
 	c := cors.New(cors.Options{
 		AllowedOrigins: []string{"*"}, // Change this to the specific origin of your Vue.js app in a production environment.
