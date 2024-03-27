@@ -14,6 +14,7 @@ import (
 
 func main() {
 	fmt.Println("service starting...")
+
 	if err := godotenv.Load(filepath.Join(".env")); err != nil {
 		log.Print("No .env file found")
 	} else {
