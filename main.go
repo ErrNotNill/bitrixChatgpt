@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bitrix_app/backend/bitrix/authorize"
 	"bitrix_app/backend/bitrix/repo/mysql"
 	"bitrix_app/backend/routes"
 	"fmt"
@@ -23,13 +24,18 @@ func main() {
 
 	routes.Router()
 
+	err := authorize.AuthorizeBitrix()
+	if err != nil {
+		log.Println("Bitrix authorization error...")
+	}
 	server := &http.Server{
 		Addr:              ":9090",
 		ReadHeaderTimeout: 3 * time.Second,
 	}
 
 	urlMysql := os.Getenv("URL_MYSQL")
-	err := mysql.InitDB(urlMysql)
+
+	err = mysql.InitDB(urlMysql)
 	if err != nil {
 		fmt.Println("cant' connect to mysql")
 		log.Fatal(err)
