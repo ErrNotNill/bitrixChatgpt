@@ -13,7 +13,7 @@ import (
 func AuthorizeBitrix() error {
 	clientID := os.Getenv("BITRIX_CLIENT_ID")
 	clientSecret := os.Getenv("BITRIX_CLIENT_SECRET")
-	domain := os.Getenv("BITRIX_DOOMAIN")
+	domain := os.Getenv("BITRIX_DOMAIN")
 	auth := "auth"
 
 	b24 := goBX24.NewAPI(clientID, clientSecret)
@@ -27,6 +27,7 @@ func AuthorizeBitrix() error {
 
 	dealId := "43"
 	res, err := b24.Get().Deals(dealId)
+
 	if err != nil {
 		return err
 	}
