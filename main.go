@@ -36,6 +36,7 @@ func main() {
 		fmt.Println("db init accepted")
 	}
 
+	fmt.Printf("server started on addr: %s", server.Addr)
 	err = server.ListenAndServe()
 	if err != nil {
 		fmt.Println("Server started with error")
