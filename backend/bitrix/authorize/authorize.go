@@ -10,7 +10,9 @@ import (
 	"log"
 	"net/http"
 	"net/http/cookiejar"
+	"net/url"
 	"os"
+	"strconv"
 )
 
 func StartB24() {
@@ -79,42 +81,71 @@ type AuthRequest struct {
 }
 
 func ConnectionBitrix(w http.ResponseWriter, r *http.Request) {
-
-	bs, _ := io.ReadAll(r.Body)
+	bs, err := io.ReadAll(r.Body)
+	if err != nil {
+		log.Println("error reading request body:", err)
+		http.Error(w, "Bad request", http.StatusBadRequest)
+		return
+	}
 	log.Println("resp_at_first:", string(bs))
 	defer r.Body.Close()
 
-	auth := AuthRequest{}
-	err := json.Unmarshal(bs, &auth)
+	values, err := url.ParseQuery(string(bs))
 	if err != nil {
-		log.Println("json unmarshalling err: ", err.Error())
+		log.Println("error parsing query:", err)
+		http.Error(w, "Bad request", http.StatusBadRequest)
+		return
 	}
 
-	fmt.Println("auth.AuthId.", auth.AuthID)
-	fmt.Println("auth.RefreshId.", auth.RefreshID)
+	authExpires, err := strconv.Atoi(values.Get("AUTH_EXPIRES"))
+	if err != nil {
+		log.Println("error converting AUTH_EXPIRES to int:", err)
+		http.Error(w, "Bad request", http.StatusBadRequest)
+		return
+	}
 
-	//token := os.Getenv("TOKEN")
-	//clientSecret := os.Getenv("BITRIX_CLIENT_SECRET")
+	auth := AuthRequest{
+		AuthID:           values.Get("AUTH_ID"),
+		AuthExpires:      authExpires,
+		RefreshID:        values.Get("REFRESH_ID"),
+		MemberID:         values.Get("member_id"),
+		Status:           values.Get("status"),
+		Placement:        values.Get("PLACEMENT"),
+		PlacementOptions: values.Get("PLACEMENT_OPTIONS"),
+	}
+
+	fmt.Println("auth.AuthId:", auth.AuthID)
+	fmt.Println("auth.RefreshId:", auth.RefreshID)
 
 	clientId := os.Getenv("BITRIX_CLIENT_ID")
 	method := "POST"
 
 	url := fmt.Sprintf("https://b24-9f7fvg.bitrix24.ru/oauth/authorize/?client_id=%s", clientId)
 
-	req, _ := http.NewRequest(method, url, nil)
-
-	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
-
-	rezp, err := http.DefaultClient.Do(req)
+	req, err := http.NewRequest(method, url, nil)
 	if err != nil {
-		log.Println(err)
+		log.Println("error creating new request:", err)
+		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}
 
-	bz, _ := io.ReadAll(rezp.Body)
-	log.Println("resp_at_last:", string(bz))
-	defer r.Body.Close()
+	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
 
+	resp, err := http.DefaultClient.Do(req)
+	if err != nil {
+		log.Println("error sending request:", err)
+		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		return
+	}
+	defer resp.Body.Close()
+
+	bz, err := io.ReadAll(resp.Body)
+	if err != nil {
+		log.Println("error reading response body:", err)
+		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		return
+	}
+	log.Println("resp_at_last:", string(bz))
 }
 
 func CustomAuthorizeBitrix() {
