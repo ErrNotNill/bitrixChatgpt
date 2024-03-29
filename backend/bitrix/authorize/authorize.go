@@ -90,7 +90,9 @@ func ConnectionBitrix(w http.ResponseWriter, r *http.Request) {
 	}
 	log.Println("resp_at_last:", string(bz))
 
-	AddDeal(w, r)
+	http.Redirect(w, r, "https://b24app.rwp2.com/", http.StatusFound)
+
+	//AddDeal(w, r)
 }
 
 func AddDeal(w http.ResponseWriter, r *http.Request) {
