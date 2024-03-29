@@ -5,6 +5,8 @@ go 1.20
 require (
 	filippo.io/edwards25519 v1.1.0 // indirect
 	github.com/andybalholm/brotli v1.0.5 // indirect
+	github.com/appscode/go-querystring v0.0.0-20170504095604-0126cfb3f1dc // indirect
+	github.com/asaskevich/govalidator v0.0.0-20230301143203-a9d515a09cc2 // indirect
 	github.com/go-sql-driver/mysql v1.8.0 // indirect
 	github.com/gofiber/fiber/v2 v2.43.0 // indirect
 	github.com/google/uuid v1.3.0 // indirect
@@ -16,6 +18,7 @@ require (
 	github.com/mattn/go-isatty v0.0.17 // indirect
 	github.com/mattn/go-runewidth v0.0.14 // indirect
 	github.com/philhofer/fwd v1.1.2 // indirect
+	github.com/pkg/errors v0.9.1 // indirect
 	github.com/rivo/uniseg v0.2.0 // indirect
 	github.com/rs/cors v1.10.1 // indirect
 	github.com/savsgio/dictpool v0.0.0-20221023140959-7bf2e61cea94 // indirect
@@ -25,5 +28,7 @@ require (
 	github.com/valyala/fasthttp v1.45.0 // indirect
 	github.com/valyala/tcplisten v1.0.0 // indirect
 	github.com/whatcrm/go-bitrix24 v0.0.0-20231211095234-ac4569e0fe00 // indirect
+	golang.org/x/net v0.8.0 // indirect
 	golang.org/x/sys v0.6.0 // indirect
+	gopkg.in/resty.v1 v1.12.0 // indirect
 )

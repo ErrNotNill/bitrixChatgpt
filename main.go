@@ -21,13 +21,14 @@ func main() {
 	} else {
 		fmt.Println("Loaded .env file")
 	}
-
+	authorize.StartB24()
 	routes.Router()
 
-	err := authorize.AuthorizeBitrix()
-	if err != nil {
-		log.Println("Bitrix authorization error...")
-	}
+	/*	err := authorize.AuthorizeBitrix()
+		if err != nil {
+			log.Println("Bitrix authorization error...")
+		}*/
+
 	server := &http.Server{
 		Addr:              ":9090",
 		ReadHeaderTimeout: 3 * time.Second,
@@ -35,7 +36,7 @@ func main() {
 
 	urlMysql := os.Getenv("URL_MYSQL")
 
-	err = mysql.InitDB(urlMysql)
+	err := mysql.InitDB(urlMysql)
 	if err != nil {
 		fmt.Println("cant' connect to mysql")
 		log.Fatal(err)
