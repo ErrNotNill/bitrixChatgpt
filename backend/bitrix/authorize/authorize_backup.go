@@ -3,6 +3,7 @@ package authorize
 import (
 	"encoding/json"
 	"fmt"
+	"html/template"
 	"io"
 	"log"
 	"net/http"
@@ -114,6 +115,15 @@ func ConnectionBitrix(w http.ResponseWriter, r *http.Request) {
 		log.Println("error writing JSON response:", err)
 		// You might choose not to send another HTTP error here if the header has already been written
 		return
+	}
+
+	ts, err := template.ParseFiles("backend/bitrix/authorize/index.html")
+	if err != nil {
+		log.Println("error parsing")
+	}
+	err = ts.Execute(w, r)
+	if err != nil {
+		log.Println("error executing")
 	}
 	/*redirectURL := "https://b24app.rwp2.com/"
 
