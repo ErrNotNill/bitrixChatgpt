@@ -90,16 +90,16 @@ func ConnectionBitrix(w http.ResponseWriter, r *http.Request) {
 	}
 	log.Println("resp_at_last:", string(bz))
 
-	http.Redirect(w, r, "https://b24app.rwp2.com/", http.StatusFound)
+	//http.Redirect(w, r, "https://b24app.rwp2.com/", http.StatusFound)
 
-	//AddDeal(w, r)
+	AddDeal(w, r)
 }
 
 func AddDeal(w http.ResponseWriter, r *http.Request) {
 	method := "POST"
 	//https://b24-9f7fvg.bitrix24.ru/rest/crm.deal.add?auth=AUTH_ID&fields[TITLE]=TEST%DEAL
 
-	requestUrl := fmt.Sprintf("https://b24-9f7fvg.bitrix24.ru//rest/crm.deal.add?auth=%s&fields[TITLE]=TEST_DEAL", AuthorizationIdGlobal)
+	requestUrl := fmt.Sprintf("https://b24-9f7fvg.bitrix24.ru/rest/crm.deal.add?auth=%s&fields[TITLE]=TEST_DEAL", AuthorizationIdGlobal)
 
 	req, err := http.NewRequest(method, requestUrl, nil)
 	if err != nil {
@@ -108,7 +108,7 @@ func AddDeal(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
 
 	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
