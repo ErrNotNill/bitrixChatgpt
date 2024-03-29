@@ -38,7 +38,7 @@ func main() {
 
 	urlMysql := os.Getenv("URL_MYSQL")
 
-	err := mysql.InitDB(urlMysql)
+	err = mysql.InitDB(urlMysql)
 	if err != nil {
 		fmt.Println("cant' connect to mysql")
 		log.Fatal(err)
