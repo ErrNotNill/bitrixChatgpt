@@ -86,7 +86,11 @@ func ConnectionBitrix(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	log.Println("resp_at_last:", string(bz))
-
+	if err := GetDeals(auth.AuthID); err != nil {
+		// Handle error if adding a deal fails
+		http.Error(w, "Failed to add deal", http.StatusInternalServerError)
+		return
+	}
 	//http.Redirect(w, r, "https://b24app.rwp2.com/", http.StatusFound)
 	if err := AddDeal(auth.AuthID); err != nil {
 		// Handle error if adding a deal fails
@@ -94,6 +98,36 @@ func ConnectionBitrix(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+}
+
+func GetDeals(authID string) error {
+	method := "GET"
+	// Format the URL with the provided authID parameter
+	requestUrl := fmt.Sprintf("https://b24-9f7fvg.bitrix24.ru/rest/crm.deal.list?auth=%s", authID)
+
+	req, err := http.NewRequest(method, requestUrl, nil)
+	if err != nil {
+		log.Println("error creating new request:", err)
+		return err
+	}
+
+	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+
+	resp, err := http.DefaultClient.Do(req)
+	if err != nil {
+		log.Println("error sending request:", err)
+		return err
+	}
+	defer resp.Body.Close()
+
+	bz, err := io.ReadAll(resp.Body)
+	if err != nil {
+		log.Println("error reading response body:", err)
+		return err
+	}
+
+	log.Println("resp_at_last_AddDeal:", string(bz))
+	return nil
 }
 
 func AddDeal(authID string) error {
@@ -106,6 +140,8 @@ func AddDeal(authID string) error {
 		log.Println("error creating new request:", err)
 		return err
 	}
+
+	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
 
 	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
