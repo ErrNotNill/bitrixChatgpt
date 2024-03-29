@@ -27,7 +27,6 @@ func ConnectionBitrix(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.Println("error reading request body:", err)
 		http.Error(w, "Bad request", http.StatusBadRequest)
-		return
 	}
 	log.Println("resp_at_first:", string(bs))
 	defer r.Body.Close()
@@ -36,14 +35,12 @@ func ConnectionBitrix(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.Println("error parsing query:", err)
 		http.Error(w, "Bad request", http.StatusBadRequest)
-		return
 	}
 
 	authExpires, err := strconv.Atoi(values.Get("AUTH_EXPIRES"))
 	if err != nil {
 		log.Println("error converting AUTH_EXPIRES to int:", err)
 		http.Error(w, "Bad request", http.StatusBadRequest)
-		return
 	}
 
 	auth := AuthRequest{
@@ -68,23 +65,23 @@ func ConnectionBitrix(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.Println("error creating new request:", err)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
-		return
+
 	}
 
-	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+	//req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
 
 	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
 		log.Println("error sending request:", err)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
-		return
+
 	}
 
 	bz, err := io.ReadAll(resp.Body)
 	if err != nil {
 		log.Println("error reading response body:", err)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
-		return
+
 	}
 	log.Println("resp_at_last:", string(bz))
 	/*if err := GetDeals(auth.AuthID); err != nil {
@@ -103,7 +100,7 @@ func ConnectionBitrix(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.Println("error marshalling AuthRequest to JSON:", err)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
-		return
+
 	}
 
 	// Set the Content-Type header to application/json
@@ -114,7 +111,7 @@ func ConnectionBitrix(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.Println("error writing JSON response:", err)
 		// You might choose not to send another HTTP error here if the header has already been written
-		return
+
 	}
 
 	ts, err := template.ParseFiles("backend/bitrix/authorize/index.html")
