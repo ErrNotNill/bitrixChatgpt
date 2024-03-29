@@ -78,7 +78,6 @@ func ConnectionBitrix(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}
-	defer resp.Body.Close()
 
 	bz, err := io.ReadAll(resp.Body)
 	if err != nil {
