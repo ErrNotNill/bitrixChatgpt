@@ -1,74 +1,14 @@
 package authorize
 
 import (
-	"encoding/json"
 	"fmt"
-	"github.com/ikarpovich/go-bitrix/client"
-	"github.com/ikarpovich/go-bitrix/types"
-	goBX24 "github.com/whatcrm/go-bitrix24"
 	"io"
 	"log"
 	"net/http"
-	"net/http/cookiejar"
 	"net/url"
 	"os"
 	"strconv"
 )
-
-func StartB24() {
-
-	auth := Bitrix24Authorization{
-		AppScope:         "crm",
-		AppID:            "local.660318677effc3.11656865",
-		AppSecret:        "vbxnpmbR9hGgfXYxOGuZMe8hhsLsf2HH6AJKE2BE0bXMyJ2RoN",
-		Bitrix24Domain:   "b24-9f7fvg.bitrix24.ru",
-		Bitrix24Login:    "vyvevern@gmail.com",
-		Bitrix24Password: "htZHtFxG5728",
-	}
-
-	err := auth.Authorize()
-	if err != nil {
-		fmt.Println("Authorization failed:", err)
-		return
-	}
-
-	fmt.Println("Authorization successful:", auth.Bitrix24Access)
-}
-
-// Bitrix24Authorization struct mirrors the PHP class' properties
-type Bitrix24Authorization struct {
-	AppScope         string
-	AppID            string
-	AppSecret        string
-	Bitrix24Domain   string
-	Bitrix24Login    string
-	Bitrix24Password string
-	Bitrix24Access   interface{}
-}
-
-// authorize is the Go equivalent of the PHP authorize method
-func (b *Bitrix24Authorization) Authorize() error {
-	// Initialize HTTP client with cookie jar support
-	jar, _ := cookiejar.New(nil)
-	client := &http.Client{
-		Jar: jar,
-	}
-
-	// Example: Making an initial GET request to obtain auth details
-	// This is simplified; you'll need to adapt it to match the exact logic of your PHP code
-	authURL := fmt.Sprintf("https://%s/oauth/authorize/?client_id=%s", b.Bitrix24Domain, b.AppID)
-	resp, err := client.Get(authURL)
-	if err != nil {
-		return err
-	}
-	defer resp.Body.Close()
-
-	// Example of handling the response, extracting data, and making further requests
-	// You'll need to implement similar logic for your specific authorization process
-	// including handling redirects, extracting session IDs, making POST requests with cookies, etc.
-
-	return nil
-}
 
 type AuthRequest struct {
 	AuthID           string `json:"auth_id"`
@@ -79,6 +19,8 @@ type AuthRequest struct {
 	Placement        string `json:"placement"`
 	PlacementOptions string `json:"placement_options"`
 }
+
+var AuthorizationIdGlobal string
 
 func ConnectionBitrix(w http.ResponseWriter, r *http.Request) {
 	bs, err := io.ReadAll(r.Body)
@@ -116,13 +58,14 @@ func ConnectionBitrix(w http.ResponseWriter, r *http.Request) {
 
 	fmt.Println("auth.AuthId:", auth.AuthID)
 	fmt.Println("auth.RefreshId:", auth.RefreshID)
+	AuthorizationIdGlobal = auth.AuthID
 
 	clientId := os.Getenv("BITRIX_CLIENT_ID")
 	method := "POST"
 
-	url := fmt.Sprintf("https://b24-9f7fvg.bitrix24.ru/oauth/authorize/?client_id=%s", clientId)
+	requestUrl := fmt.Sprintf("https://b24-9f7fvg.bitrix24.ru/oauth/authorize/?client_id=%s", clientId)
 
-	req, err := http.NewRequest(method, url, nil)
+	req, err := http.NewRequest(method, requestUrl, nil)
 	if err != nil {
 		log.Println("error creating new request:", err)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
@@ -146,102 +89,40 @@ func ConnectionBitrix(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	log.Println("resp_at_last:", string(bz))
+
+	AddDeal(w, r)
 }
 
-func CustomAuthorizeBitrix() {
-
-	//token := os.Getenv("TOKEN")
-	//clientSecret := os.Getenv("BITRIX_CLIENT_SECRET")
-
-	clientId := os.Getenv("BITRIX_CLIENT_ID")
+func AddDeal(w http.ResponseWriter, r *http.Request) {
 	method := "POST"
+	//https://b24-9f7fvg.bitrix24.ru/rest/crm.deal.add?auth=AUTH_ID&fields[TITLE]=TEST%DEAL
 
-	url := fmt.Sprintf("https://b24-9f7fvg.bitrix24.ru/oauth/authorize/?client_id=%s", clientId)
+	requestUrl := fmt.Sprintf("https://b24-9f7fvg.bitrix24.ru//rest/crm.deal.add?auth=%s&fields[TITLE]=TEST_DEAL", AuthorizationIdGlobal)
 
-	req, _ := http.NewRequest(method, url, nil)
+	req, err := http.NewRequest(method, requestUrl, nil)
+	if err != nil {
+		log.Println("error creating new request:", err)
+		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		return
+	}
 
-	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+	req.Header.Set("Content-Type", "application/json")
 
 	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
-		log.Println(err)
+		log.Println("error sending request:", err)
+		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}
-
 	defer resp.Body.Close()
-	bs, _ := io.ReadAll(resp.Body)
-	log.Println("resp:", string(bs))
 
-}
-
-func AuthorizeBitrix() error {
-	c, err := client.NewEnvClientWithWebhookAuth()
-
+	bz, err := io.ReadAll(resp.Body)
 	if err != nil {
-		log.Fatalf("Can't create client: %s", err)
-	}
-
-	c.SetInsecureSSL(true)
-	c.SetDebug(true)
-
-	resp, err := c.Methods(&types.MethodsRequest{
-		Full:  true,
-		Scope: "crm",
-	})
-
-	if err != nil {
-		log.Fatalf("Request error: %s", err)
-	}
-
-	log.Print(resp)
-
-	clientID := os.Getenv("BITRIX_CLIENT_ID")
-	clientSecret := os.Getenv("BITRIX_CLIENT_SECRET")
-	domain := os.Getenv("BITRIX_DOMAIN")
-	auth := "auth"
-
-	b24 := goBX24.NewAPI(clientID, clientSecret)
-
-	if err := b24.SetOptions(domain, auth, true); err != nil {
-		log.Println("Error setting client options", err.Error())
-		return err
-	}
-
-	admin, err := b24.IsAdmin()
-	if err != nil {
-		log.Println("Error IsAdmin set", err.Error())
-	}
-
-	log.Println(admin.Result)
-
-	dealId := "43"
-	res, err := b24.Get().Deals(dealId)
-
-	if err != nil {
-		return err
-	}
-	log.Println("result: ", res)
-	return nil
-}
-
-func BotBitrix(w http.ResponseWriter, r *http.Request) {
-	BitrixClientId := os.Getenv("BITRIX_CLIENT_ID")
-
-	client := &http.Client{}
-
-	tokenURL := fmt.Sprintf(`https://onviz.bitrix24.ru/oauth/authorize/?client_id=%s`,
-		BitrixClientId)
-
-	post, err := client.Post(tokenURL, "application/x-www-form-urlencoded", nil)
-	if err != nil {
-		fmt.Println("Failed to exchange authorization code for access token:", err)
+		log.Println("error reading response body:", err)
+		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}
-
-	body, err := io.ReadAll(post.Body)
-	fmt.Println("post.Body", post.Body)
-	json.Unmarshal(body, &post.Body)
-	fmt.Fprint(w, string(body))
+	log.Println("resp_at_last_AddDeal:", string(bz))
 
 }
 
