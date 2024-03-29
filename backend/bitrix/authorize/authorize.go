@@ -2,6 +2,7 @@ package authorize
 
 import (
 	"fmt"
+	"html/template"
 	"io"
 	"log"
 	"net/http"
@@ -70,11 +71,25 @@ func ConnectionBitrix(w http.ResponseWriter, r *http.Request) {
 
 }
 
+func CheckWidget(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("CheckWidget status: ", r.Trailer)
+	ts, err := template.ParseFiles("backend/bitrix/authorize/index.html")
+	if err != nil {
+		log.Println("error parse")
+	}
+	err = ts.Execute(w, r)
+	if err != nil {
+		log.Println("error executing")
+	}
+	//w.Write([]byte("HELLO"))
+}
+
 func TransferDealsOnVue(w http.ResponseWriter, r *http.Request) {
 	err := GetDeals(GlobalAuthId)
 	if err != nil {
 		log.Println("error getting deals: ", err.Error())
 	}
+	//w.Write([]byte())
 
 }
 
