@@ -11,7 +11,7 @@ func Router() {
 
 	//http.HandleFunc("/api/check", authorize.BotBitrix)
 	http.HandleFunc("/api/connect", authorize.ConnectionBitrixLocalApp)
-	http.HandleFunc("/api/deals_get", authorize.TransferDealsOnVue)
+	http.HandleFunc("/api/deals_get", service.TransferDealsOnVue)
 
 	http.HandleFunc("/api/check_widget", widget.CheckWidget) //here we create widget in bitrix
 
