@@ -1,6 +1,8 @@
 package authorize
 
 import (
+	"bitrix_app/backend/bitrix/models"
+	"encoding/json"
 	"fmt"
 	"html/template"
 	"io"
@@ -73,6 +75,7 @@ func ConnectionBitrix(w http.ResponseWriter, r *http.Request) {
 
 func CheckWidget(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("CheckWidget status: ", r.Trailer)
+
 	ts, err := template.ParseFiles("backend/bitrix/authorize/index.html")
 	if err != nil {
 		log.Println("error parse")
@@ -85,15 +88,27 @@ func CheckWidget(w http.ResponseWriter, r *http.Request) {
 }
 
 func TransferDealsOnVue(w http.ResponseWriter, r *http.Request) {
-	err := GetDeals(GlobalAuthId)
+	deals, err := GetDeals(GlobalAuthId)
 	if err != nil {
 		log.Println("error getting deals: ", err.Error())
+		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		return
 	}
-	//w.Write([]byte())
 
+	// Set content type to application/json before writing the response
+	w.Header().Set("Content-Type", "application/json")
+
+	// Write the JSON data to the response
+	_, writeErr := w.Write(deals)
+	if writeErr != nil {
+		log.Println("error writing deals to response: ", writeErr.Error())
+		// Note: In real scenarios, consider handling this error more gracefully,
+		// since part of the HTTP response might have already been written,
+		// making it tricky to send a proper HTTP status code at this point.
+	}
 }
 
-func GetDeals(authID string) error {
+func GetDeals(authID string) ([]byte, error) {
 	method := "GET"
 	// Format the URL with the provided authID parameter
 	requestUrl := fmt.Sprintf("https://b24-9f7fvg.bitrix24.ru/rest/crm.deal.list?auth=%s", authID)
@@ -101,7 +116,7 @@ func GetDeals(authID string) error {
 	req, err := http.NewRequest(method, requestUrl, nil)
 	if err != nil {
 		log.Println("error creating new request:", err)
-		return err
+		return nil, err
 	}
 
 	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
@@ -109,18 +124,33 @@ func GetDeals(authID string) error {
 	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
 		log.Println("error sending request:", err)
-		return err
+		return nil, err
 	}
 	defer resp.Body.Close()
 
 	bz, err := io.ReadAll(resp.Body)
 	if err != nil {
 		log.Println("error reading response body:", err)
-		return err
+		return nil, err
 	}
 
 	log.Println("resp_at_last_AddDeal:", string(bz))
-	return nil
+
+	var apiResponse models.ApiResponse
+	if err := json.Unmarshal(bz, &apiResponse); err != nil {
+		log.Printf("error unmarshalling response to ApiResponse: %v", err)
+		return nil, err
+	}
+
+	// If you need to return the data as JSON (for example, to send to another system or client),
+	// you can re-marshal the ApiResponse struct back into JSON.
+	jsonResponse, err := json.Marshal(apiResponse)
+	if err != nil {
+		log.Printf("error marshalling ApiResponse back to JSON: %v", err)
+		return nil, err
+	}
+
+	return jsonResponse, nil
 }
 
 func AddDeal(authID string) error {
