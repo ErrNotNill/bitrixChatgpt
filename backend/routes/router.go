@@ -3,7 +3,6 @@ package routes
 import (
 	"bitrix_app/backend/bitrix/authorize"
 	"bitrix_app/backend/bitrix/service"
-	"bitrix_app/backend/bitrix/widget"
 	"net/http"
 )
 
@@ -13,7 +12,7 @@ func Router() {
 	http.HandleFunc("/api/connect", authorize.ConnectionBitrixLocalApp)
 	http.HandleFunc("/api/deals_get", service.TransferDealsOnVue)
 
-	http.HandleFunc("/api/check_widget", widget.CheckWidget) //here we create widget in bitrix
+	//http.HandleFunc("/api/check_widget", widget.CheckWidget) //here we create widget in bitrix
 
 	/*c := cors.New(cors.Options{
 		AllowedOrigins: []string{"*"}, // Change this to the specific origin of your Vue.js app in a production environment.

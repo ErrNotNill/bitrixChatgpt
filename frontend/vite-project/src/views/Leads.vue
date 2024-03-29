@@ -60,7 +60,7 @@ export default {
   },
   created() {
     axios
-      .get('https://b24app.rwp2.com/api/deals_get')
+      .get('http://localhost:9090/api/deals_get')
       .then((response) => {
         this.jsonArray = response.data // Assign the JSON array to a data property
       })
