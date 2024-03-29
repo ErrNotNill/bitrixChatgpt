@@ -7,7 +7,6 @@
     <router-view />
   </div>
 
-
   <div class="center-form">
     <div class="container" :class="{ active: isSignup }">
       <div class="forms">
