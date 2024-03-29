@@ -9,7 +9,7 @@ func Router() {
 
 	//http.HandleFunc("/api/check", authorize.BotBitrix)
 	http.HandleFunc("/api/connect", authorize.ConnectionBitrix)
-
+	http.HandleFunc("/api/deals_get", authorize.TransferDealsOnVue)
 	/*c := cors.New(cors.Options{
 		AllowedOrigins: []string{"*"}, // Change this to the specific origin of your Vue.js app in a production environment.
 		AllowedMethods: []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},

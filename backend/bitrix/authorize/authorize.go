@@ -45,6 +45,8 @@ func ParseValues(w http.ResponseWriter, bs []byte) AuthRequest {
 	return auth
 }
 
+var GlobalAuthId string
+
 func ConnectionBitrix(w http.ResponseWriter, r *http.Request) {
 	bs, err := io.ReadAll(r.Body)
 	if err != nil {
@@ -57,16 +59,23 @@ func ConnectionBitrix(w http.ResponseWriter, r *http.Request) {
 	auth := ParseValues(w, bs) //todo here we must to add this data in dbase?
 	fmt.Printf("auth.AuthID : %s, auth.MemberID: %s", auth.AuthID, auth.MemberID)
 
-	err = GetDeals(auth.AuthID)
-	if err != nil {
-		log.Println("GetDeals: ", string(bs))
-	}
-
 	redirectURL := "https://b24app.rwp2.com/"
 
 	// Use http.Redirect to redirect the client
 	// The http.StatusFound status code is commonly used for redirects
 	http.Redirect(w, r, redirectURL, http.StatusFound)
+
+	fmt.Println("redirect is done...")
+	GlobalAuthId = auth.AuthID
+
+}
+
+func TransferDealsOnVue(w http.ResponseWriter, r *http.Request) {
+	err := GetDeals(GlobalAuthId)
+	if err != nil {
+		log.Println("error getting deals: ", err.Error())
+	}
+
 }
 
 func GetDeals(authID string) error {

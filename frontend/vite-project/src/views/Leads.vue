@@ -4,16 +4,18 @@
   <Sidebar />
 
   <main id="Home-page">
-    <h1>Home</h1>
-    <p>This is the home page</p>
+    <h1>Сделки</h1>
+    <p></p>
     <!-- Filter dropdown -->
     <div>
-      <label for="filter">Filter by:</label>
+      <label for="filter">Filter by: </label>
       <select id="filter" v-model="selectedFilter">
         <option value="all">All</option>
-        <option value="Евгений">Евгений</option>
+        <option value="Евгений">Opts...</option>
+
         <!-- Add more filter options here as needed -->
       </select>
+      <p></p>
       <button @click="applyFilter">Apply Filter</button>
     </div>
 
@@ -45,8 +47,6 @@
 import axios from 'axios'
 import Sidebar from '@/components/Sidebar.vue'
 
-
-
 export default {
   components: { Sidebar },
   data() {
@@ -60,7 +60,7 @@ export default {
   },
   created() {
     axios
-      .get('https://onviz-api.ru/api/leads_get')
+      .get('https://b24app.rwp2.com/api/deals_get')
       .then((response) => {
         this.jsonArray = response.data // Assign the JSON array to a data property
       })
