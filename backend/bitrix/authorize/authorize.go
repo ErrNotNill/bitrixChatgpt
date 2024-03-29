@@ -4,7 +4,6 @@ import (
 	"bitrix_app/backend/bitrix/models"
 	"encoding/json"
 	"fmt"
-	"html/template"
 	"io"
 	"log"
 	"net/http"
@@ -74,17 +73,24 @@ func ConnectionBitrix(w http.ResponseWriter, r *http.Request) {
 }
 
 func CheckWidget(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("CheckWidget status: ", r.Trailer)
+	deals, err := GetDeals(GlobalAuthId)
+	if err != nil {
+		log.Println("error getting deals: ", err.Error())
+		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		return
+	}
 
-	ts, err := template.ParseFiles("backend/bitrix/authorize/index.html")
-	if err != nil {
-		log.Println("error parse")
+	// Set content type to application/json before writing the response
+	w.Header().Set("Content-Type", "application/json")
+
+	// Write the JSON data to the response
+	_, writeErr := w.Write(deals)
+	if writeErr != nil {
+		log.Println("error writing deals to response: ", writeErr.Error())
+		// Note: In real scenarios, consider handling this error more gracefully,
+		// since part of the HTTP response might have already been written,
+		// making it tricky to send a proper HTTP status code at this point.
 	}
-	err = ts.Execute(w, r)
-	if err != nil {
-		log.Println("error executing")
-	}
-	//w.Write([]byte("HELLO"))
 }
 
 func TransferDealsOnVue(w http.ResponseWriter, r *http.Request) {
