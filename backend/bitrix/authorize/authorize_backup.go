@@ -1,6 +1,7 @@
 package authorize
 
 import (
+	"encoding/json"
 	"fmt"
 	"io"
 	"log"
@@ -86,7 +87,7 @@ func ConnectionBitrix(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	log.Println("resp_at_last:", string(bz))
-	if err := GetDeals(auth.AuthID); err != nil {
+	/*if err := GetDeals(auth.AuthID); err != nil {
 		// Handle error if adding a deal fails
 		http.Error(w, "Failed to get deal", http.StatusInternalServerError)
 		return
@@ -96,13 +97,30 @@ func ConnectionBitrix(w http.ResponseWriter, r *http.Request) {
 		// Handle error if adding a deal fails
 		http.Error(w, "Failed to add deal", http.StatusInternalServerError)
 		return
+	}*/
+
+	jsonResponse, err := json.Marshal(auth)
+	if err != nil {
+		log.Println("error marshalling AuthRequest to JSON:", err)
+		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		return
 	}
 
-	redirectURL := "https://b24app.rwp2.com/"
+	// Set the Content-Type header to application/json
+	w.Header().Set("Content-Type", "application/json")
+
+	// Write the JSON response
+	_, err = w.Write(jsonResponse)
+	if err != nil {
+		log.Println("error writing JSON response:", err)
+		// You might choose not to send another HTTP error here if the header has already been written
+		return
+	}
+	/*redirectURL := "https://b24app.rwp2.com/"
 
 	// Use http.Redirect to redirect the client
 	// The http.StatusFound status code is commonly used for redirects
-	http.Redirect(w, r, redirectURL, http.StatusFound)
+	http.Redirect(w, r, redirectURL, http.StatusFound)*/
 
 }
 
