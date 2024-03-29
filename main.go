@@ -21,13 +21,15 @@ func main() {
 	} else {
 		fmt.Println("Loaded .env file")
 	}
-	authorize.StartB24()
+
+	//authorize.StartB24()
+
 	routes.Router()
 
-	/*	err := authorize.AuthorizeBitrix()
-		if err != nil {
-			log.Println("Bitrix authorization error...")
-		}*/
+	err := authorize.AuthorizeBitrix()
+	if err != nil {
+		log.Println("Bitrix authorization error...")
+	}
 
 	server := &http.Server{
 		Addr:              ":9090",
