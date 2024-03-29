@@ -21,19 +21,18 @@
 
     <div class="table-container">
       <ul class="table">
-        <li v-for="item in jsonArray" :key="item.id" class="list-item">
+        <li v-for="deal in jsonArray" :key="deal.ID" class="list-item">
           <div class="button-container">
-            <button
-              @click="toggleMenu(item.ID)"
-              class="table-button"
-              :class="{ highlighted: item.name === 'Евгений' }">
-              {{ item.ID }}
+            <button @click="toggleMenu(deal.ID)" class="table-button">
+              {{ deal.TITLE }} ({{ deal.ID }})
             </button>
           </div>
-          <div v-if="activeItem === item.ID" class="item-details">
-            <p>Name: {{ item.name }}</p>
-            <p>Phone: {{ item.phone }}</p>
-            <p>Assigned By Lead: {{ item.assignedByLead }}</p>
+          <div v-if="activeItem === deal.ID" class="item-details">
+            <!-- Adjust according to the actual properties of a deal -->
+            <p>Title: {{ deal.TITLE }}</p>
+            <p>Currency: {{ deal.CURRENCY_ID }}</p>
+            <p>Opportunity: {{ deal.OPPORTUNITY }}</p>
+            <!-- Add more details as needed -->
           </div>
         </li>
       </ul>
@@ -62,7 +61,7 @@ export default {
     axios
       .get('http://localhost:9090/api/deals_get')
       .then((response) => {
-        this.jsonArray = response.data // Assign the JSON array to a data property
+        this.jsonArray = response.data.result; // Assign the JSON array to a data property
       })
       .catch((error) => {
         console.error('Error fetching data:', error)
@@ -70,11 +69,10 @@ export default {
   },
   computed: {
     filteredItems() {
-      // Filter items based on the selected filter criteria
       if (this.selectedFilter === 'all') {
-        return this.jsonArray // Return all items
+        return this.jsonArray;
       } else {
-        return this.jsonArray.filter((item) => item.name === this.selectedFilter)
+        return this.jsonArray.filter((deal) => deal.ASSIGNED_BY_ID === this.selectedFilter);
       }
     }
   },
