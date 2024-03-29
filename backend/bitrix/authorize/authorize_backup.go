@@ -88,7 +88,7 @@ func ConnectionBitrix(w http.ResponseWriter, r *http.Request) {
 	log.Println("resp_at_last:", string(bz))
 	if err := GetDeals(auth.AuthID); err != nil {
 		// Handle error if adding a deal fails
-		http.Error(w, "Failed to add deal", http.StatusInternalServerError)
+		http.Error(w, "Failed to get deal", http.StatusInternalServerError)
 		return
 	}
 	//http.Redirect(w, r, "https://b24app.rwp2.com/", http.StatusFound)
@@ -97,6 +97,12 @@ func ConnectionBitrix(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Failed to add deal", http.StatusInternalServerError)
 		return
 	}
+
+	redirectURL := "https://b24app.rwp2.com/"
+
+	// Use http.Redirect to redirect the client
+	// The http.StatusFound status code is commonly used for redirects
+	http.Redirect(w, r, redirectURL, http.StatusFound)
 
 }
 
