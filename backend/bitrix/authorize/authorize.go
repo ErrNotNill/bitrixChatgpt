@@ -20,8 +20,6 @@ type AuthRequest struct {
 	PlacementOptions string `json:"placement_options"`
 }
 
-var AuthorizationIdGlobal string
-
 func ConnectionBitrix(w http.ResponseWriter, r *http.Request) {
 	bs, err := io.ReadAll(r.Body)
 	if err != nil {
@@ -58,7 +56,6 @@ func ConnectionBitrix(w http.ResponseWriter, r *http.Request) {
 
 	fmt.Println("auth.AuthId:", auth.AuthID)
 	fmt.Println("auth.RefreshId:", auth.RefreshID)
-	AuthorizationIdGlobal = auth.AuthID
 
 	clientId := os.Getenv("BITRIX_CLIENT_ID")
 	method := "POST"
@@ -91,21 +88,23 @@ func ConnectionBitrix(w http.ResponseWriter, r *http.Request) {
 	log.Println("resp_at_last:", string(bz))
 
 	//http.Redirect(w, r, "https://b24app.rwp2.com/", http.StatusFound)
+	if err := AddDeal(auth.AuthID); err != nil {
+		// Handle error if adding a deal fails
+		http.Error(w, "Failed to add deal", http.StatusInternalServerError)
+		return
+	}
 
-	AddDeal(w, r)
 }
 
-func AddDeal(w http.ResponseWriter, r *http.Request) {
+func AddDeal(authID string) error {
 	method := "POST"
-	//https://b24-9f7fvg.bitrix24.ru/rest/crm.deal.add?auth=AUTH_ID&fields[TITLE]=TEST%DEAL
-
-	requestUrl := fmt.Sprintf("https://b24-9f7fvg.bitrix24.ru/rest/crm.deal.add?auth=%s&fields[TITLE]=TEST_DEAL", AuthorizationIdGlobal)
+	// Format the URL with the provided authID parameter
+	requestUrl := fmt.Sprintf("https://b24-9f7fvg.bitrix24.ru/rest/crm.deal.add?auth=%s&fields[TITLE]=TEST_DEAL", authID)
 
 	req, err := http.NewRequest(method, requestUrl, nil)
 	if err != nil {
 		log.Println("error creating new request:", err)
-		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
-		return
+		return err
 	}
 
 	req.Header.Set("Content-Type", "application/json")
@@ -113,19 +112,18 @@ func AddDeal(w http.ResponseWriter, r *http.Request) {
 	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
 		log.Println("error sending request:", err)
-		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
-		return
+		return err
 	}
 	defer resp.Body.Close()
 
 	bz, err := io.ReadAll(resp.Body)
 	if err != nil {
 		log.Println("error reading response body:", err)
-		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
-		return
+		return err
 	}
-	log.Println("resp_at_last_AddDeal:", string(bz))
 
+	log.Println("resp_at_last_AddDeal:", string(bz))
+	return nil
 }
 
 func ConnectionBitrixLogger(w http.ResponseWriter, r *http.Request) {
