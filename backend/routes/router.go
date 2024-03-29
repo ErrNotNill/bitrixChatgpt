@@ -7,7 +7,7 @@ import (
 
 func Router() {
 
-	http.HandleFunc("/api/check", authorize.BotBitrix)
+	//http.HandleFunc("/api/check", authorize.BotBitrix)
 	http.HandleFunc("/api/connect", authorize.ConnectionBitrix)
 
 	/*c := cors.New(cors.Options{

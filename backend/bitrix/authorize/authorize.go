@@ -68,11 +68,30 @@ func (b *Bitrix24Authorization) Authorize() error {
 	return nil
 }
 
+type Authenticate struct {
+	AuthId           string `json:"AUTH_ID"`
+	AuthExpires      int    `json:"AUTH_EXPIRES "`
+	RefreshId        string `json:"REFRESH_ID"`
+	MemberId         string `json:"member_id"`
+	Status           string `json:"status"`
+	Placement        string `json:"PLACEMENT"`
+	PlacementOptions string `json:"PLACEMENT_OPTIONS"`
+}
+
 func ConnectionBitrix(w http.ResponseWriter, r *http.Request) {
 
 	bs, _ := io.ReadAll(r.Body)
-	log.Println("resp:", string(bs))
+	log.Println("resp_at_first:", string(bs))
 	defer r.Body.Close()
+
+	auth := Authenticate{}
+	err := json.Unmarshal(bs, &auth)
+	if err != nil {
+		log.Println("json unmarshalling err: ", err.Error())
+	}
+
+	fmt.Println("auth.AuthId.", auth.AuthId)
+	fmt.Println("auth.RefreshId.", auth.RefreshId)
 
 	//token := os.Getenv("TOKEN")
 	//clientSecret := os.Getenv("BITRIX_CLIENT_SECRET")
@@ -93,7 +112,7 @@ func ConnectionBitrix(w http.ResponseWriter, r *http.Request) {
 	}
 
 	bz, _ := io.ReadAll(rezp.Body)
-	log.Println("resp:", string(bz))
+	log.Println("resp_at_last:", string(bz))
 	defer r.Body.Close()
 
 }
