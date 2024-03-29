@@ -73,24 +73,11 @@ func ConnectionBitrix(w http.ResponseWriter, r *http.Request) {
 }
 
 func CheckWidget(w http.ResponseWriter, r *http.Request) {
-	deals, err := GetDeals(GlobalAuthId)
-	if err != nil {
-		log.Println("error getting deals: ", err.Error())
-		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
-		return
-	}
+	redirectURL := "https://b24app.rwp2.com/"
 
-	// Set content type to application/json before writing the response
-	w.Header().Set("Content-Type", "application/json")
-
-	// Write the JSON data to the response
-	_, writeErr := w.Write(deals)
-	if writeErr != nil {
-		log.Println("error writing deals to response: ", writeErr.Error())
-		// Note: In real scenarios, consider handling this error more gracefully,
-		// since part of the HTTP response might have already been written,
-		// making it tricky to send a proper HTTP status code at this point.
-	}
+	// Use http.Redirect to redirect the client
+	// The http.StatusFound status code is commonly used for redirects
+	http.Redirect(w, r, redirectURL, http.StatusFound)
 }
 
 func TransferDealsOnVue(w http.ResponseWriter, r *http.Request) {
