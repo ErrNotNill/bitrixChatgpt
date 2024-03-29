@@ -68,6 +68,36 @@ func (b *Bitrix24Authorization) Authorize() error {
 	return nil
 }
 
+func ConnectionBitrix(w http.ResponseWriter, r *http.Request) {
+
+	bs, _ := io.ReadAll(r.Body)
+	log.Println("resp:", string(bs))
+	defer r.Body.Close()
+
+	//token := os.Getenv("TOKEN")
+	//clientSecret := os.Getenv("BITRIX_CLIENT_SECRET")
+
+	clientId := os.Getenv("BITRIX_CLIENT_ID")
+	method := "POST"
+
+	url := fmt.Sprintf("https://b24-9f7fvg.bitrix24.ru/oauth/authorize/?client_id=%s", clientId)
+
+	req, _ := http.NewRequest(method, url, nil)
+
+	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+
+	rezp, err := http.DefaultClient.Do(req)
+	if err != nil {
+		log.Println(err)
+		return
+	}
+
+	bz, _ := io.ReadAll(rezp.Body)
+	log.Println("resp:", string(bz))
+	defer r.Body.Close()
+
+}
+
 func CustomAuthorizeBitrix() {
 
 	//token := os.Getenv("TOKEN")
