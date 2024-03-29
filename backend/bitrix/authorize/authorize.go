@@ -2,7 +2,6 @@ package authorize
 
 import (
 	"fmt"
-	"html/template"
 	"io"
 	"log"
 	"net/http"
@@ -28,14 +27,20 @@ func ConnectionBitrix(w http.ResponseWriter, r *http.Request) {
 	log.Println("resp_at_first:", string(bs))
 	defer r.Body.Close()
 
-	ts, err := template.ParseFiles("backend/bitrix/authorize/index.html")
+	redirectURL := "https://b24app.rwp2.com/"
+
+	// Use http.Redirect to redirect the client
+	// The http.StatusFound status code is commonly used for redirects
+	http.Redirect(w, r, redirectURL, http.StatusFound)
+
+	/*ts, err := template.ParseFiles("backend/bitrix/authorize/index.html")
 	if err != nil {
 		log.Println("error parsing")
 	}
 	err = ts.Execute(w, r)
 	if err != nil {
 		log.Println("error executing")
-	}
+	}*/
 
 	/*values, err := url.ParseQuery(string(bs))
 	if err != nil {
