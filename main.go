@@ -21,7 +21,10 @@ func main() {
 	} else {
 		fmt.Println("Loaded .env file")
 	}
-	authorize.StartB24()
+	//authorize.StartB24()
+
+	authorize.CustomAuthorizeBitrix()
+
 	routes.Router()
 
 	/*	err := authorize.AuthorizeBitrix()

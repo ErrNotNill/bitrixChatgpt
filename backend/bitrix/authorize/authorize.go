@@ -162,6 +162,7 @@ func BotBitrix(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("post.Body", post.Body)
 	json.Unmarshal(body, &post.Body)
 	fmt.Fprint(w, string(body))
+
 }
 
 func ConnectionBitrixLogger(w http.ResponseWriter, r *http.Request) {
