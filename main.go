@@ -1,7 +1,6 @@
 package main
 
 import (
-	"bitrix_app/backend/bitrix/authorize"
 	"bitrix_app/backend/bitrix/repo/mysql"
 	"bitrix_app/backend/routes"
 	"fmt"
@@ -23,7 +22,7 @@ func main() {
 	}
 	//authorize.StartB24()
 
-	authorize.CustomAuthorizeBitrix()
+	//authorize.CustomAuthorizeBitrix()
 
 	routes.Router()
 
