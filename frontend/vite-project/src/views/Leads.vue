@@ -22,8 +22,8 @@
 <p>HELLO</p>
     <div class="table-container">
       <ul class="table">
-        <li v-for="deal in jsonArray" :key="ID" class="list-item">
-          <div class="button-container">
+        <li v-for="deal in jsonArray" :key="deal.ID" class="list-item">
+        <div class="button-container">
             <button @click="toggleMenu(deal.ID)" class="table-button">
               {{ deal.TITLE }} ({{ deal.ID }})
             </button>
@@ -59,11 +59,9 @@ export default {
     }
   },
   created() {
-    axios.get('https://b24app.rwp2.com//api/deals_get')
+    axios.get('https://b24app.rwp2.com/api/deals_get')
         .then((response) => {
-          alert(response);
-          console.log(response.data.toString()); // Log the response data to see its structure
-          this.jsonArray = JSON.stringify; // Make sure this path matches the response's structure
+          this.jsonArray = response.data.result; // Correct path to the data
         })
         .catch((error) => {
           console.error('Error fetching data:', error);
