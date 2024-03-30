@@ -9,6 +9,8 @@ import (
 
 func TransferDealsOnVue(w http.ResponseWriter, r *http.Request) {
 
+	w.Write([]byte("Hello"))
+
 	deals, err := GetDeals(authorize.GlobalAuthId)
 	if err != nil {
 		log.Println("error getting service: ", err.Error())
