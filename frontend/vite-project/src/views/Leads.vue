@@ -19,13 +19,14 @@
       <button @click="applyFilter">Apply Filter</button>
     </div>
 
-<p>HELLO</p>
     <div class="table-container">
       <ul class="table">
         <li v-for="deal in jsonArray" :key="deal.ID" class="list-item">
         <div class="button-container">
             <button @click="toggleMenu(deal.ID)" class="table-button">
-              {{ deal.TITLE }} ({{ deal.ID }})
+              {{ deal.TITLE }}
+              ID сделки: ({{ deal.ID }})
+              Стадия сделки: {{ deal.STAGE_ID}}
             </button>
           </div>
           <div v-if="activeItem === deal.ID" class="item-details">
@@ -114,6 +115,7 @@ export default {
 
 /* Remove bullet points from list items */
 .list-item {
+  width: 100%;
   list-style-type: none;
   margin-left: 0;
   padding-left: 0;
