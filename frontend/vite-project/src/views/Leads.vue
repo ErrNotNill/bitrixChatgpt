@@ -21,7 +21,20 @@
 
     <div class="table-container">
       <ul class="table">
-        <li v-for="deal in filteredItems" :key="deal.ID" class="list-item"></li>
+        <li v-for="deal in jsonArray" :key="deal.ID" class="list-item">
+          <div class="button-container">
+            <button @click="toggleMenu(deal.ID)" class="table-button">
+              {{ deal.TITLE }} ({{ deal.ID }})
+            </button>
+          </div>
+          <div v-if="activeItem === deal.ID" class="item-details">
+            <!-- Adjust according to the actual properties of a deal -->
+            <p>Title: {{ deal.TITLE }}</p>
+            <p>Currency: {{ deal.CURRENCY_ID }}</p>
+            <p>Opportunity: {{ deal.OPPORTUNITY }}</p>
+            <!-- Add more details as needed -->
+          </div>
+        </li>
       </ul>
 
     </div>
