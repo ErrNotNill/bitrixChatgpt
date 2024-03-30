@@ -60,7 +60,7 @@ export default {
   created() {
     axios.get('https://b24app.rwp2.com//api/deals_get')
         .then((response) => {
-          console.log(response.data); // Log the response data to see its structure
+          console.log(response.data.toString()); // Log the response data to see its structure
           this.jsonArray = response.data.result.jsonArray; // Make sure this path matches the response's structure
         })
         .catch((error) => {
