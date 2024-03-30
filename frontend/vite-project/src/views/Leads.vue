@@ -22,7 +22,7 @@
 
     <div class="table-container">
       <ul class="table">
-        <li v-for="deal in jsonArray" :key="deal.ID" class="list-item">
+        <li v-for="deal in jsonArray" :key="ID" class="list-item">
           <div class="button-container">
             <button @click="toggleMenu(deal.ID)" class="table-button">
               {{ deal.TITLE }} ({{ deal.ID }})

@@ -2,7 +2,6 @@ package service
 
 import (
 	"bitrix_app/backend/bitrix/authorize"
-	"fmt"
 	"log"
 	"net/http"
 )
@@ -22,7 +21,7 @@ func TransferDealsOnVue(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
 
 		// Log the deals for debugging
-		fmt.Println("TransferDealsOnVue deals: ", string(deals))
+		//fmt.Println("TransferDealsOnVue deals: ", string(deals))
 
 		// Write the JSON data to the response
 		_, writeErr := w.Write(deals)
