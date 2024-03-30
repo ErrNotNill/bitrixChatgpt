@@ -21,17 +21,17 @@
 
     <div class="table-container">
       <ul class="table">
-        <li v-for="deal in jsonArray" :key="deal.ID" class="list-item">
+        <li v-for="deal in jsonArray" :key="deal" class="list-item">
           <div class="button-container">
-            <button @click="toggleMenu(deal.ID)" class="table-button">
-              {{ deal.TITLE }} ({{ deal.ID }})
+            <button @click="toggleMenu(deal)" class="table-button">
+              {{ deal }} ({{ deal }})
             </button>
           </div>
-          <div v-if="activeItem === deal.ID" class="item-details">
+          <div v-if="activeItem === deal" class="item-details">
             <!-- Adjust according to the actual properties of a deal -->
-            <p>Title: {{ deal.TITLE }}</p>
-            <p>Currency: {{ deal.CURRENCY_ID }}</p>
-            <p>Opportunity: {{ deal.OPPORTUNITY }}</p>
+            <p>Title: {{ deal }}</p>
+            <p>Currency: {{ deal }}</p>
+            <p>Opportunity: {{ deal }}</p>
             <!-- Add more details as needed -->
           </div>
         </li>
