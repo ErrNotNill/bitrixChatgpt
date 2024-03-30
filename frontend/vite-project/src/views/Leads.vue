@@ -21,17 +21,17 @@
 
     <div class="table-container">
       <ul class="table">
-        <li v-for="deal in jsonArray" :key="deal" class="list-item">
+        <li v-for="deal in jsonArray" :key="deal.ID" class="list-item">
           <div class="button-container">
-            <button @click="toggleMenu(deal)" class="table-button">
-              {{ deal }} ({{ deal }})
+            <button @click="toggleMenu(deal.ID)" class="table-button">
+              {{ deal.TITLE }} ({{ deal.ID }})
             </button>
           </div>
-          <div v-if="activeItem === deal" class="item-details">
+          <div v-if="activeItem === deal.ID" class="item-details">
             <!-- Adjust according to the actual properties of a deal -->
-            <p>Title: {{ deal }}</p>
-            <p>Currency: {{ deal }}</p>
-            <p>Opportunity: {{ deal }}</p>
+            <p>Title: {{ deal.TITLE }}</p>
+            <p>Currency: {{ deal.CURRENCY_ID }}</p>
+            <p>Opportunity: {{ deal.OPPORTUNITY }}</p>
             <!-- Add more details as needed -->
           </div>
         </li>
@@ -58,7 +58,7 @@ export default {
     }
   },
   created() {
-    axios.get('http://localhost:9090/api/deals_get')
+    axios.get('https://b24app.rwp2.com/api/deals_get')
         .then((response) => {
           console.log(response.data); // Log the response data to see its structure
           this.jsonArray = response.data.result; // Make sure this path matches the response's structure

@@ -10,6 +10,7 @@ import (
 func Router() {
 
 	//http.HandleFunc("/api/check", authorize.BotBitrix)
+
 	http.HandleFunc("/api/connect", authorize.ConnectionBitrixLocalApp)
 	http.HandleFunc("/api/deals_get", service.TransferDealsOnVue)
 	http.HandleFunc("/api/event_deal_add", events.OnCrmDealAddEvent)
