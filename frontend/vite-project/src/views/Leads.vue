@@ -19,6 +19,7 @@
       <button @click="applyFilter">Apply Filter</button>
     </div>
 
+
     <div class="table-container">
       <ul class="table">
         <li v-for="deal in jsonArray" :key="deal.ID" class="list-item">
