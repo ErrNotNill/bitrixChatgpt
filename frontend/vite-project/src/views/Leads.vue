@@ -49,14 +49,10 @@ export default {
   data() {
     return {
       jsonArray: [],
-      activeItem: null,
-      selectedFilter: 'all', // Default to "All"
-      itemsPerPage: 50, // Number of items to show initially
-      itemsToShow: 50, // Number of items to show currently
     }
   },
   created() {
-    axios.get('https://b24app.rwp2.com/api/deals_get')
+    axios.get('http://localhost:9090/api/deals_get')
         .then((response) => {
           console.log(response.data); // Log the response data to see its structure
           this.jsonArray = response.data.result; // Make sure this path matches the response's structure
