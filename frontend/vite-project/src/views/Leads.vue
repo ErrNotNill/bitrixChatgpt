@@ -19,7 +19,7 @@
       <button @click="applyFilter">Apply Filter</button>
     </div>
 
-
+<p>HELLO</p>
     <div class="table-container">
       <ul class="table">
         <li v-for="deal in jsonArray" :key="ID" class="list-item">
@@ -61,8 +61,9 @@ export default {
   created() {
     axios.get('https://b24app.rwp2.com//api/deals_get')
         .then((response) => {
+          alert(response);
           console.log(response.data.toString()); // Log the response data to see its structure
-          this.jsonArray = response.data.result.jsonArray; // Make sure this path matches the response's structure
+          this.jsonArray = JSON.stringify; // Make sure this path matches the response's structure
         })
         .catch((error) => {
           console.error('Error fetching data:', error);
