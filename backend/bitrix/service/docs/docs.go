@@ -32,7 +32,7 @@ func DocumentHandler(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.Println("Error: ", err)
 	}
-	fmt.Println("docs: ", docs)
+	fmt.Println("docs: ", string(docs))
 	fmt.Fprintf(w, "Requested documents for ID: %s", docs)
 }
 
