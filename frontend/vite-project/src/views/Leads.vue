@@ -22,23 +22,25 @@
     <div class="table-container">
       <ul class="table">
         <li v-for="deal in jsonArray" :key="deal.ID" class="list-item">
-        <div class="button-container">
+          <div class="button-container">
             <button @click="toggleMenu(deal.ID)" class="table-button">
               {{ deal.TITLE }}
-              ID сделки: ({{ deal.ID }})
-              Стадия сделки: {{ deal.STAGE_ID}}
+              <p>ID сделки: ({{ deal.ID }})</p>
+              Стадия сделки: {{ deal.STAGE_ID }}
             </button>
           </div>
           <div v-if="activeItem === deal.ID" class="item-details">
             <!-- Adjust according to the actual properties of a deal -->
+            <!-- Example detail -->
             <p>Title: {{ deal.TITLE }}</p>
-            <p>Currency: {{ deal.CURRENCY_ID }}</p>
-            <p>Opportunity: {{ deal.OPPORTUNITY }}</p>
-            <!-- Add more details as needed -->
+
+            <!-- Additional Buttons -->
+            <button @click="showDocuments(deal.ID)" class="detail-button">Documents</button>
+            <button @click="showCommentary(deal.ID)" class="detail-button">Commentary</button>
+            <button @click="showDescription(deal.ID)" class="detail-button">Description</button>
           </div>
         </li>
       </ul>
-
     </div>
   </main>
 
@@ -60,7 +62,7 @@ export default {
     }
   },
   created() {
-    axios.get('https://b24app.rwp2.com/api/deals_get')
+    axios.get('http://localhost:9090/api/deals_gett')
         .then((response) => {
           this.jsonArray = response.data.result; // Correct path to the data
         })
@@ -89,13 +91,34 @@ export default {
     loadMore() {
       this.itemsToShow += 10; // Increase the number of items to show
     },
+    showDocuments(ID) {
+      // Correctly constructs the URL based on the deal's ID
+      axios.get(`http://localhost:9090/api/documents/${ID}`)
+          .then(response => {
+            console.log('Documents for deal ID:', ID, response.data);
+            // Handle the response data here
+          })
+          .catch(error => {
+            console.error('Error fetching documents:', error);
+          });
+    },
+    showCommentary(ID) {
+      console.log('Showing commentary for deal ID:', ID);
+      // Implement the functionality to show commentary
+    },
+    showDescription(ID) {
+      console.log('Showing description for deal ID:', ID);
+      // Implement the functionality to show description
+    },
   },
 };
 </script>
 
+
 <style>
 /* Style for the table button */
 .table-button {
+  width: 300px;
   background-color: green;
   border: none;
   color: white;
@@ -107,6 +130,8 @@ export default {
 
 /* Style for the item details */
 .item-details {
+  width: 500px;
+  height: 300px;
   margin-top: 10px;
   background-color: lightgray;
   padding: 5px;
@@ -130,11 +155,25 @@ export default {
 /* Position the table on the left side */
 /* Position the table on the left side */
 .table-container {
-  text-align: center;
-  width: 50%;
-  margin: 0 auto;
+  text-align: left;
+  width: 100%;
+  margin-top: 40px;
 }
 .table li {
   float: left;
 }
+.detail-button {
+  background-color: #f0f0f0; /* Light grey, customizable */
+  border: 1px solid #d0d0d0; /* Slightly darker grey border */
+  color: #333; /* Dark grey text */
+  padding: 5px 15px;
+  margin: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease; /* Smooth transition for hover effect */
+}
+
+.detail-button:hover {
+  background-color: #e0e0e0; /* Slightly darker grey on hover */
+}
+
 </style>

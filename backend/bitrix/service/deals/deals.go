@@ -1,4 +1,4 @@
-package service
+package deals
 
 import (
 	"bitrix_app/backend/bitrix/models"
