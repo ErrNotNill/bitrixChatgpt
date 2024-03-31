@@ -37,7 +37,8 @@
             <!-- Additional Buttons -->
             <button @click="showDocuments(deal.ID)" class="detail-button">Documents</button>
             <!-- Conditional rendering based on whether documentsData for this deal.ID exists -->
-            <div v-if="documentsData[deal.ID] && documentsData[deal.ID].length">
+            <div v-if="activeItem === deal.ID" :class="{'item-details': true, 'visible': activeContent[deal.ID] === 'documents'}">
+              <div v-if="documentsData[deal.ID] && documentsData[deal.ID].length">
               <ul>
                 <li v-for="doc in documentsData[deal.ID]" :key="doc.id">
                   {{ doc.title }}
@@ -48,8 +49,13 @@
                 </li>
               </ul>
             </div>
+            </div>
+            <div v-if="activeItem === deal.ID" :class="{'item-details': true, 'visible': activeContent[deal.ID] === 'commentary'}">
             <button @click="showCommentary(deal.ID)" class="detail-button">Commentary</button>
+            </div>
+            <div v-if="activeItem === deal.ID" :class="{'item-details': true, 'visible': activeContent[deal.ID] === 'description'}">
             <button @click="showDescription(deal.ID)" class="detail-button">Description</button>
+            </div>
           </div>
         </li>
       </ul>
@@ -72,6 +78,7 @@ export default {
       itemsPerPage: 50, // Number of items to show initially
       itemsToShow: 50, // Number of items to show currently
       documentsData: {},
+      activeContent: {},
     }
   },
   created() {
@@ -105,23 +112,28 @@ export default {
       this.itemsToShow += 10; // Increase the number of items to show
     },
     showDocuments(ID) {
-      axios.get(`https://b24app.rwp2.com/api/documents/${ID}`)
-          .then(response => {
-            // Direct assignment for Vue 3 reactivity
-            this.documentsData[ID] = response.data.result.documents;
-          })
-          .catch(error => {
-            console.error('Error fetching documents:', error);
-          });
+      if (this.activeContent[ID] !== 'documents') {
+        this.activeContent[ID] = 'documents';
+        axios.get(`https://b24app.rwp2.com/api/documents/${ID}`)
+            .then(response => {
+              // Direct assignment for Vue 3 reactivity
+              this.documentsData[ID] = response.data.result.documents;
+            })
+            .catch(error => {
+              console.error('Error fetching documents:', error);
+            });
+      } else {
+        this.activeContent[ID] = ''; // Collapse if already open
+      }
     },
 
     showCommentary(ID) {
-      console.log('Showing commentary for deal ID:', ID);
-      // Implement the functionality to show commentary
+      this.activeContent[ID] = this.activeContent[ID] !== 'commentary' ? 'commentary' : '';
+      // Fetch commentary logic...
     },
     showDescription(ID) {
-      console.log('Showing description for deal ID:', ID);
-      // Implement the functionality to show description
+      this.activeContent[ID] = this.activeContent[ID] !== 'description' ? 'description' : '';
+      // Fetch description logic...
     },
   },
 };
@@ -129,6 +141,7 @@ export default {
 
 
 <style>
+
 /* Style for the table button */
 .table-button {
   width: 300px;
@@ -149,6 +162,15 @@ export default {
   background-color: lightgray;
   padding: 5px;
   border-radius: 5px;
+  transition: max-height 0.3s ease-out, opacity 0.3s ease; /* Smooth transition */
+  overflow: hidden; /* Keeps content clipped */
+  max-height: 0; /* Start with content collapsed */
+  opacity: 0; /* Content is initially invisible */
+}
+
+.item-details.visible {
+  opacity: 1; /* Make content visible */
+  max-height: 500px; /* Enough height to show content */
 }
 
 /* Remove bullet points from list items */
@@ -188,5 +210,12 @@ export default {
 .detail-button:hover {
   background-color: #e0e0e0; /* Slightly darker grey on hover */
 }
+
+.button-container {
+  display: flex;
+  justify-content: space-around; /* Adjust spacing as needed */
+  margin-bottom: 10px; /* Adds space between buttons and content */
+}
+
 
 </style>
