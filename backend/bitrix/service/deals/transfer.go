@@ -40,7 +40,7 @@ func TransferDealsOnVueMock(w http.ResponseWriter, r *http.Request) {
 }
 
 func TransferDealsOnVue(w http.ResponseWriter, r *http.Request) {
-
+	(w).Header().Set("Access-Control-Allow-Origin", "*")
 	if r.Method == "GET" {
 		log.Println("TransferDealsOnVue method is GET")
 		deals, err := GetDeals(authorize.GlobalAuthId)

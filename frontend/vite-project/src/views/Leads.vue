@@ -62,7 +62,7 @@ export default {
     }
   },
   created() {
-    axios.get('https://b24app.rwp2.com/api/deals_gett')
+    axios.get('https://b24app.rwp2.com/api/deals_get')
         .then((response) => {
           this.jsonArray = response.data.result; // Correct path to the data
         })

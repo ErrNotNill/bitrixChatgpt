@@ -16,7 +16,7 @@ func Router() {
 	http.HandleFunc("/api/deals_get", deals.TransferDealsOnVue)
 	http.HandleFunc("/api/event_deal_add", events.OnCrmDealAddEvent)
 
-	http.HandleFunc("/api/deals_gett", deals.TransferDealsOnVueMock)
+	//http.HandleFunc("/api/deals_gett", deals.TransferDealsOnVueMock)
 	http.HandleFunc("/api/documents/", docs.DocumentHandler)
 
 	//http.HandleFunc("/api/check_widget", widget.CheckWidget) //here we create widget in bitrix
