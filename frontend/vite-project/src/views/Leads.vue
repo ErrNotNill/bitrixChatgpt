@@ -36,6 +36,18 @@
 
             <!-- Additional Buttons -->
             <button @click="showDocuments(deal.ID)" class="detail-button">Documents</button>
+            <!-- Conditional rendering based on whether documentsData for this deal.ID exists -->
+            <div v-if="documentsData[deal.ID] && documentsData[deal.ID].length">
+              <ul>
+                <li v-for="doc in documentsData[deal.ID]" :key="doc.id">
+                  {{ doc.title }}
+                  <!-- Links -->
+                  <a :href="doc.downloadUrl" target="_blank">Download</a>
+                  <a :href="doc.pdfUrl" target="_blank">PDF</a>
+                  <a :href="doc.imageUrl" target="_blank">Image</a>
+                </li>
+              </ul>
+            </div>
             <button @click="showCommentary(deal.ID)" class="detail-button">Commentary</button>
             <button @click="showDescription(deal.ID)" class="detail-button">Description</button>
           </div>
@@ -59,10 +71,11 @@ export default {
       selectedFilter: 'all', // Default to "All"
       itemsPerPage: 50, // Number of items to show initially
       itemsToShow: 50, // Number of items to show currently
+      documentsData: {},
     }
   },
   created() {
-    axios.get('https://b24app.rwp2.com/api/deals_get')
+    axios.get('http://localhost:9090/api/deals_gett')
         .then((response) => {
           this.jsonArray = response.data.result; // Correct path to the data
         })
@@ -92,11 +105,13 @@ export default {
       this.itemsToShow += 10; // Increase the number of items to show
     },
     showDocuments(ID) {
-      // Correctly constructs the URL based on the deal's ID
-      axios.get(`https://b24app.rwp2.com/api/documents/${ID}`)
+      axios.get(`http://localhost:9090/api/documents/${ID}`)
           .then(response => {
-            console.log('Documents for deal ID:', ID, response.data);
-            // Handle the response data here
+            if(response.data && response.data.result && Array.isArray(response.data.result.documents)) {
+              this.$set(this.documentsData, ID, response.data.result.documents);
+            } else {
+              console.error('Documents data is missing or in an unexpected format', response.data);
+            }
           })
           .catch(error => {
             console.error('Error fetching documents:', error);
