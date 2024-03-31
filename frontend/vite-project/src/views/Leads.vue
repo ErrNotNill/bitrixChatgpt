@@ -75,7 +75,7 @@ export default {
     }
   },
   created() {
-    axios.get('http://localhost:9090/api/deals_gett')
+    axios.get('https://b24app.rwp2.com/api/deals_get')
         .then((response) => {
           this.jsonArray = response.data.result; // Correct path to the data
         })
@@ -105,18 +105,16 @@ export default {
       this.itemsToShow += 10; // Increase the number of items to show
     },
     showDocuments(ID) {
-      axios.get(`http://localhost:9090/api/documents/${ID}`)
+      axios.get(`https://b24app.rwp2.com/api/documents/${ID}`)
           .then(response => {
-            if(response.data && response.data.result && Array.isArray(response.data.result.documents)) {
-              this.$set(this.documentsData, ID, response.data.result.documents);
-            } else {
-              console.error('Documents data is missing or in an unexpected format', response.data);
-            }
+            // Direct assignment for Vue 3 reactivity
+            this.documentsData[ID] = response.data.result.documents;
           })
           .catch(error => {
             console.error('Error fetching documents:', error);
           });
     },
+
     showCommentary(ID) {
       console.log('Showing commentary for deal ID:', ID);
       // Implement the functionality to show commentary
