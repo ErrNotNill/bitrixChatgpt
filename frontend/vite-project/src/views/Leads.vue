@@ -62,7 +62,7 @@ export default {
     }
   },
   created() {
-    axios.get('http://localhost:9090/api/deals_gett')
+    axios.get('https://b24app.rwp2.com/api/deals_gett')
         .then((response) => {
           this.jsonArray = response.data.result; // Correct path to the data
         })
@@ -93,7 +93,7 @@ export default {
     },
     showDocuments(ID) {
       // Correctly constructs the URL based on the deal's ID
-      axios.get(`http://localhost:9090/api/documents/${ID}`)
+      axios.get(`https://b24app.rwp2.com/api/documents/${ID}`)
           .then(response => {
             console.log('Documents for deal ID:', ID, response.data);
             // Handle the response data here
