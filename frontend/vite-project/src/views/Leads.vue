@@ -37,25 +37,17 @@
             <!-- Additional Buttons -->
             <button @click="showDocuments(deal.ID)" class="detail-button">Documents</button>
             <!-- Conditional rendering based on whether documentsData for this deal.ID exists -->
-            <div v-if="activeItem === deal.ID" :class="{'item-details': true, 'visible': activeContent[deal.ID] === 'documents'}">
-              <div v-if="documentsData[deal.ID] && documentsData[deal.ID].length">
-              <ul>
-                <li v-for="doc in documentsData[deal.ID]" :key="doc.id">
+            <div v-if="documentsData[deal.ID] && documentsData[deal.ID].length">
+              <ul v-for="doc in documentsData[deal.ID]" :key="doc.id">
                   {{ doc.title }}
                   <!-- Links -->
                   <a :href="doc.downloadUrl" target="_blank">Download</a>
                   <a :href="doc.pdfUrl" target="_blank">PDF</a>
                   <a :href="doc.imageUrl" target="_blank">Image</a>
-                </li>
               </ul>
             </div>
-            </div>
-            <div v-if="activeItem === deal.ID" :class="{'item-details': true, 'visible': activeContent[deal.ID] === 'commentary'}">
             <button @click="showCommentary(deal.ID)" class="detail-button">Commentary</button>
-            </div>
-            <div v-if="activeItem === deal.ID" :class="{'item-details': true, 'visible': activeContent[deal.ID] === 'description'}">
             <button @click="showDescription(deal.ID)" class="detail-button">Description</button>
-            </div>
           </div>
         </li>
       </ul>
@@ -78,11 +70,12 @@ export default {
       itemsPerPage: 50, // Number of items to show initially
       itemsToShow: 50, // Number of items to show currently
       documentsData: {},
-      activeContent: {},
+      commentaryData: {},
+      descriptionData: {},
     }
   },
   created() {
-    axios.get('https://b24app.rwp2.com/api/deals_get')
+    axios.get('http://localhost:9090/api/deals_gett')
         .then((response) => {
           this.jsonArray = response.data.result; // Correct path to the data
         })
@@ -112,28 +105,34 @@ export default {
       this.itemsToShow += 10; // Increase the number of items to show
     },
     showDocuments(ID) {
-      if (this.activeContent[ID] !== 'documents') {
-        this.activeContent[ID] = 'documents';
-        axios.get(`https://b24app.rwp2.com/api/documents/${ID}`)
-            .then(response => {
-              // Direct assignment for Vue 3 reactivity
-              this.documentsData[ID] = response.data.result.documents;
-            })
-            .catch(error => {
-              console.error('Error fetching documents:', error);
-            });
-      } else {
-        this.activeContent[ID] = ''; // Collapse if already open
-      }
+      axios.get(`http://localhost:9090/api/documents/${ID}`)
+          .then(response => {
+            // Direct assignment for Vue 3 reactivity
+            this.documentsData[ID] = response.data.result.documents;
+          })
+          .catch(error => {
+            console.error('Error fetching documents:', error);
+          });
     },
-
     showCommentary(ID) {
-      this.activeContent[ID] = this.activeContent[ID] !== 'commentary' ? 'commentary' : '';
-      // Fetch commentary logic...
+      axios.get(`http://localhost:9090/api/comments/${ID}`)
+          .then(response => {
+            // Direct assignment for Vue 3 reactivity
+            this.commentaryData[ID] = response.data.result.comments;
+          })
+          .catch(error => {
+            console.error('Error fetching documents:', error);
+          });
     },
     showDescription(ID) {
-      this.activeContent[ID] = this.activeContent[ID] !== 'description' ? 'description' : '';
-      // Fetch description logic...
+      axios.get(`http://localhost:9090/api/description/${ID}`)
+          .then(response => {
+            // Direct assignment for Vue 3 reactivity
+            this.commentaryData[ID] = response.data.result.comments;
+          })
+          .catch(error => {
+            console.error('Error fetching documents:', error);
+          });
     },
   },
 };
@@ -162,15 +161,6 @@ export default {
   background-color: lightgray;
   padding: 5px;
   border-radius: 5px;
-  transition: max-height 0.3s ease-out, opacity 0.3s ease; /* Smooth transition */
-  overflow: hidden; /* Keeps content clipped */
-  max-height: 0; /* Start with content collapsed */
-  opacity: 0; /* Content is initially invisible */
-}
-
-.item-details.visible {
-  opacity: 1; /* Make content visible */
-  max-height: 500px; /* Enough height to show content */
 }
 
 /* Remove bullet points from list items */
@@ -211,11 +201,6 @@ export default {
   background-color: #e0e0e0; /* Slightly darker grey on hover */
 }
 
-.button-container {
-  display: flex;
-  justify-content: space-around; /* Adjust spacing as needed */
-  margin-bottom: 10px; /* Adds space between buttons and content */
-}
 
 
 </style>
