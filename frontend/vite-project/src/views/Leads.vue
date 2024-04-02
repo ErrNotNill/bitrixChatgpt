@@ -118,7 +118,7 @@ export default {
       this.itemsToShow += 10; // Increase the number of items to show
     },
     showDocuments(ID) {
-      axios.get(`http://localhost:9090/api/documents/${ID}`)
+      axios.get(`https://b24app.rwp2.com/api/documents/${ID}`)
           .then(response => {
             // Direct assignment for Vue 3 reactivity
             this.documentsData[ID] = response.data.result.documents;
@@ -128,7 +128,7 @@ export default {
           });
     },
     showCommentary(ID) {
-      axios.get(`http://localhost:9090/api/comments/${ID}`)
+      axios.get(`https://b24app.rwp2.com/api/comments/${ID}`)
           .then(response => {
             // Direct assignment for Vue 3 reactivity
             this.commentaryData[ID] = response.data.result;
@@ -138,7 +138,7 @@ export default {
           });
     },
     showDescription(ID) {
-      axios.get(`http://localhost:9090/api/description/${ID}`)
+      axios.get(`https://b24app.rwp2.com/api/description/${ID}`)
           .then(response => {
             // Direct assignment for Vue 3 reactivity
             this.descriptionData[ID] = response.data.result.description;
