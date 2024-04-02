@@ -57,14 +57,14 @@ type Deal struct {
 
 // ResponseTime represents the timing information in the response
 type ResponseTime struct {
-	Start            float64   `json:"start"`
-	Finish           float64   `json:"finish"`
-	Duration         float64   `json:"duration"`
-	Processing       float64   `json:"processing"`
-	DateStart        time.Time `json:"date_start"`
-	DateFinish       time.Time `json:"date_finish"`
-	OperatingResetAt int64     `json:"operating_reset_at"`
-	Operating        int       `json:"operating"`
+	Start            float64 `json:"start"`
+	Finish           float64 `json:"finish"`
+	Duration         float64 `json:"duration"`
+	Processing       float64 `json:"processing"`
+	DateStart        string  `json:"date_start"`
+	DateFinish       string  `json:"date_finish"`
+	OperatingResetAt int64   `json:"operating_reset_at"`
+	Operating        float64 `json:"operating"` // This field should be a float64
 }
 
 // DealResponse represents the top-level structure of the JSON response
