@@ -2,7 +2,6 @@ package description
 
 import (
 	"bitrix_app/backend/bitrix/authorize"
-	"bitrix_app/backend/bitrix/models"
 	"bytes"
 	"encoding/json"
 	"fmt"
@@ -42,51 +41,49 @@ func DescriptionHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func GetDescription(authID string, dealId string) ([]byte, error) {
-	method := "POST"
 	bitrixMethod := "crm.deal.get"
-	body := fmt.Sprintf(`{"id":"%s"}`, dealId)
-	// Format the URL with the provided authID parameter
-	requestUrl := fmt.Sprintf("https://b24-9f7fvg.bitrix24.ru/rest/%s?auth=%s", bitrixMethod, authID)
-	jsonData, err := json.Marshal(body)
+	requestURL := fmt.Sprintf("https://b24-9f7fvg.bitrix24.ru/rest/%s?auth=%s", bitrixMethod, authID)
+
+	// The body here needs to be an object that matches the expected structure for the Bitrix24 API call
+	bodyObj := map[string]string{"id": dealId}
+	jsonData, err := json.Marshal(bodyObj)
 	if err != nil {
-		log.Println("error marshaling request body:", err)
+		log.Println("Error marshaling request body:", err)
 		return nil, err
 	}
 
-	req, err := http.NewRequest(method, requestUrl, bytes.NewBuffer(jsonData))
+	req, err := http.NewRequest("POST", requestURL, bytes.NewBuffer(jsonData))
 	if err != nil {
-		log.Println("error creating new request:", err)
+		log.Println("Error creating new request:", err)
 		return nil, err
 	}
 
-	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+	req.Header.Set("Content-Type", "application/json") // Ensure the content type is set to application/json
 
 	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
-		log.Println("error sending request:", err)
+		log.Println("Error sending request:", err)
 		return nil, err
 	}
 	defer resp.Body.Close()
 
-	bz, err := io.ReadAll(resp.Body)
+	responseData, err := io.ReadAll(resp.Body)
 	if err != nil {
-		log.Println("error reading response body:", err)
+		log.Println("Error reading response body:", err)
 		return nil, err
 	}
 
-	log.Println("resp_at_last_GetDescription:", string(bz))
-
-	var apiResponse models.ApiResponse
-	if err := json.Unmarshal(bz, &apiResponse); err != nil {
-		log.Printf("error unmarshalling response to ApiResponse: %v", err)
+	// Assuming the response will be a single deal
+	var dealResponse DealResponse
+	if err := json.Unmarshal(responseData, &dealResponse); err != nil {
+		log.Printf("Error unmarshalling response into DealResponse: %v", err)
 		return nil, err
 	}
 
-	// If you need to return the data as JSON (for example, to send to another system or client),
-	// you can re-marshal the ApiResponse struct back into JSON.
-	jsonResponse, err := json.Marshal(apiResponse)
+	// If needed, marshal the DealResponse (or just the Deal part of it) back into JSON to return
+	jsonResponse, err := json.Marshal(dealResponse)
 	if err != nil {
-		log.Printf("error marshalling ApiResponse back to JSON: %v", err)
+		log.Printf("Error marshalling DealResponse back to JSON: %v", err)
 		return nil, err
 	}
 
