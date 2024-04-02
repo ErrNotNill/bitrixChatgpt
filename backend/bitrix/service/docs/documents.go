@@ -10,6 +10,7 @@ import (
 	"net/http"
 	"net/url"
 	"strconv"
+	"strings"
 )
 
 func GetDocsByDealMock() ([]byte, error) {
@@ -25,6 +26,18 @@ func GetDocsByDealMock() ([]byte, error) {
 func DocumentHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	w.Header().Set("Access-Control-Allow-Origin", "*")
+	pathSegments := strings.Split(r.URL.Path, "/")
+
+	// Assuming the URL format is /api/documents/{ID}
+	// The ID is expected to be the fourth segment, hence index 3 (0-based index)
+	if len(pathSegments) < 4 {
+		http.Error(w, "Invalid request path", http.StatusBadRequest)
+		return
+	}
+	id := pathSegments[3]
+
+	// Use the extracted ID as needed, for now, we'll just print it
+	fmt.Fprintf(w, "Requested documents for ID: %s", id)
 
 	bs, err := io.ReadAll(r.Body)
 	if err != nil {
