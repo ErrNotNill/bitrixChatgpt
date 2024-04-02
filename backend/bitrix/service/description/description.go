@@ -86,6 +86,7 @@ func GetDescription(authID string, dealId string) ([]byte, error) {
 		log.Printf("Error marshalling DealResponse back to JSON: %v", err)
 		return nil, err
 	}
+	fmt.Println("string(jsonResponse): ", string(jsonResponse))
 
 	return jsonResponse, nil
 }
