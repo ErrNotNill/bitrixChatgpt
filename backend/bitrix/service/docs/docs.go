@@ -1,6 +1,7 @@
 package docs
 
 import (
+	"bitrix_app/backend/bitrix/authorize"
 	"bytes"
 	"encoding/json"
 	"fmt"
@@ -19,46 +20,19 @@ func GetDocsByDealMock() ([]byte, error) {
 	return []byte(mockJSON), nil
 }
 
-func CommentsHandler(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
-	w.Header().Set("Access-Control-Allow-Origin", "*")
-
-	docs, err := GetDocsByDealMock()
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
-
-	// Directly write the mock JSON as the response
-	_, err = w.Write(docs) // docs already contains the JSON
-	if err != nil {
-		log.Println("Error writing the mock response:", err)
-	}
-}
-
-func DescriptionHandler(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
-	w.Header().Set("Access-Control-Allow-Origin", "*")
-
-	docs, err := GetDocsByDealMock()
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
-
-	// Directly write the mock JSON as the response
-	_, err = w.Write(docs) // docs already contains the JSON
-	if err != nil {
-		log.Println("Error writing the mock response:", err)
-	}
-}
-
 func DocumentHandler(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "application/json")
 	w.Header().Set("Access-Control-Allow-Origin", "*")
+	responseData, err := io.ReadAll(r.Body)
+	if err != nil {
+		log.Println("error reading response body:", err)
+	}
 
-	docs, err := GetDocsByDealMock()
+	log.Println("Response DocumentHandler:", string(responseData))
+
+	entityId := "23"
+	docs, err := GetDocsByDeal(authorize.GlobalAuthId, entityId)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return

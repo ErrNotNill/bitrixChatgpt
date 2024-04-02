@@ -46,8 +46,21 @@
                   <a :href="doc.imageUrl" target="_blank">Image</a>
               </ul>
             </div>
-            <button @click="showCommentary(deal.ID)" class="detail-button">Commentary</button>
+            <button @click="showCommentary(deal.ID)" class="detail-button">Commentaries</button>
+            <div v-if="commentaryData[deal.ID] && commentaryData[deal.ID].length">
+              <ul v-for="com in commentaryData[deal.ID]" :key="com.id">
+                {{ com.ID }}
+                {{ com.COMMENT }}
+                <!-- Links -->
+              </ul>
+            </div>
             <button @click="showDescription(deal.ID)" class="detail-button">Description</button>
+            <div v-if="descriptionData[deal.ID] && descriptionData[deal.ID].length">
+              <ul v-for="desc in descriptionData[deal.ID]" :key="desc.id">
+                {{ desc }}
+                <!-- Links -->
+              </ul>
+            </div>
           </div>
         </li>
       </ul>
@@ -118,7 +131,7 @@ export default {
       axios.get(`http://localhost:9090/api/comments/${ID}`)
           .then(response => {
             // Direct assignment for Vue 3 reactivity
-            this.commentaryData[ID] = response.data.result.comments;
+            this.commentaryData[ID] = response.data.result;
           })
           .catch(error => {
             console.error('Error fetching documents:', error);
@@ -128,7 +141,7 @@ export default {
       axios.get(`http://localhost:9090/api/description/${ID}`)
           .then(response => {
             // Direct assignment for Vue 3 reactivity
-            this.commentaryData[ID] = response.data.result.comments;
+            this.descriptionData[ID] = response.data.result.description;
           })
           .catch(error => {
             console.error('Error fetching documents:', error);
