@@ -1,86 +1,82 @@
 <template>
-  <!-- Sidebar -->
+
+    <!-- Sidebar -->
   <Sidebar />
 
   <main id="Home-page">
     <h1>Сделки</h1>
+    <p></p>
+    <!-- Filter dropdown -->
     <div>
-      <!-- Filter dropdown -->
-      <div>
-        <label for="filter">Filter by: </label>
-        <select id="filter" v-model="selectedFilter">
-          <option value="all">All</option>
-          <option value="Евгений">Евгений</option>
-          <!-- Add more filter options here as needed -->
-        </select>
-        <button @click="applyFilter">Apply Filter</button>
-      </div>
+      <label for="filter">Filter by: </label>
+      <select id="filter" v-model="selectedFilter">
+        <option value="all">All</option>
+        <option value="Евгений">Opts...</option>
 
-      <div class="table-container">
-        <ul class="table">
-          <li v-for="deal in jsonArray" :key="deal.ID" class="list-item">
-            <div class="button-container">
-              <button @click="toggleMenu(deal.ID)" class="table-button">
-                {{ deal.TITLE }}
-                <p>ID сделки: ({{ deal.ID }})</p>
-                Стадия сделки: {{ deal.STAGE_ID }}
-              </button>
-            </div>
+        <!-- Add more filter options here as needed -->
+      </select>
+      <p></p>
+      <button @click="applyFilter">Apply Filter</button>
+    </div>
 
-            <!-- Document Details -->
-            <div v-if="activeItem === deal.ID && activeSection[deal.ID] === 'documents'" class="item-details">
-              <button @click="showDocuments(deal.ID)" class="detail-button">Documents</button>
-              <div v-if="documentsData[deal.ID]">
-                <ul>
-                  <li v-for="doc in documentsData[deal.ID]" :key="doc.id">
-                    {{ doc.title }}
-                    <!-- Links -->
-                    <a :href="doc.downloadUrl" target="_blank">Download</a>
-                    <a :href="doc.pdfUrl" target="_blank">PDF</a>
-                    <a :href="doc.imageUrl" target="_blank">Image</a>
-                  </li>
-                </ul>
-              </div>
-            </div>
+    <div class="table-container">
+      <ul class="table">
+        <li v-for="deal in jsonArray" :key="deal.ID" class="list-item">
+          <div class="button-container">
+            <button @click="toggleMenu(deal.ID)" class="table-button">
+              {{ deal.TITLE }}
+              <p>ID сделки: ({{ deal.ID }})</p>
+              Стадия сделки: {{ deal.STAGE_ID }}
+            </button>
+          </div>
+          <div v-if="activeItem === deal.ID" class="item-details">
+            <!-- Adjust according to the actual properties of a deal -->
+            <!-- Example detail -->
+            <p>Title: {{ deal.TITLE }}</p>
 
-            <!-- Commentary Details -->
-            <div v-if="activeItem === deal.ID && activeSection[deal.ID] === 'commentary'" class="item-details">
-              <button @click="showCommentary(deal.ID)" class="detail-button">Commentaries</button>
-              <div v-if="commentaryData[deal.ID]">
-                <ul>
-                  <li v-for="com in commentaryData[deal.ID]" :key="com.id">
-                    {{ com.ID }}: {{ com.COMMENT }}
-                  </li>
-                </ul>
-              </div>
+            <!-- Additional Buttons -->
+            <button @click="showDocuments(deal.ID)" class="detail-button">Documents</button>
+            <!-- Conditional rendering based on whether documentsData for this deal.ID exists -->
+            <div v-if="documentsData[deal.ID] && documentsData[deal.ID].length">
+              <ul v-for="doc in documentsData[deal.ID]" :key="doc.id">
+                  {{ doc.title }}
+                  <!-- Links -->
+                  <a :href="doc.downloadUrl" target="_blank">Download</a>
+                  <a :href="doc.pdfUrl" target="_blank">PDF</a>
+                  <a :href="doc.imageUrl" target="_blank">Image</a>
+              </ul>
             </div>
-
-            <!-- Description Details -->
-            <div v-if="activeItem === deal.ID && activeSection[deal.ID] === 'description'" class="item-details">
-              <button @click="showDescription(deal.ID)" class="detail-button">Description</button>
-              <div v-if="descriptionData[deal.ID]">
-                <!-- Display Description Fields -->
-                <p>ID: {{ descriptionData[deal.ID].ID }}</p>
-                <p>Title: {{ descriptionData[deal.ID].TITLE }}</p>
-                <p>Type ID: {{ descriptionData[deal.ID].TYPE_ID }}</p>
-                <p>Stage ID: {{ descriptionData[deal.ID].STAGE_ID }}</p>
-                <p>Opportunity: {{ descriptionData[deal.ID].OPPORTUNITY }}</p>
-                <p>Currency ID: {{ descriptionData[deal.ID].CURRENCY_ID }}</p>
-                <p>Begindate: {{ descriptionData[deal.ID].BEGINDATE }}</p>
-                <p>Closedate: {{ descriptionData[deal.ID].CLOSEDATE }}</p>
-                <p>Assigned_by_id: {{ descriptionData[deal.ID].ASSIGNED_BY_ID }}</p>
-                <p>Created+by_id: {{ descriptionData[deal.ID].CREATED_BY_ID }}</p>
-                <p>Modify_by_id: {{ descriptionData[deal.ID].MODIFY_BY_ID }}</p>
-                <p>Date_create: {{ descriptionData[deal.ID].DATE_CREATE }}</p>
-                <p>Date_modify: {{ descriptionData[deal.ID].DATE_MODIFY }}</p>
-                <!-- Add more fields as needed -->
-              </div>
+            <button @click="showCommentary(deal.ID)" class="detail-button">Commentaries</button>
+            <div v-if="commentaryData[deal.ID] && commentaryData[deal.ID].length">
+              <ul v-for="com in commentaryData[deal.ID]" :key="com.id">
+                {{ com.ID }}
+                {{ com.COMMENT }}
+                <!-- Links -->
+              </ul>
             </div>
-          </li>
-        </ul>
-      </div>
+            <button @click="showDescription(deal.ID)" class="detail-button">Description</button>
+            <div v-if="descriptionData[deal.ID]">
+              <p>ID: {{ descriptionData[deal.ID].ID }}</p>
+              <p>Title: {{ descriptionData[deal.ID].TITLE }}</p>
+              <p>Type ID: {{ descriptionData[deal.ID].TYPE_ID }}</p>
+              <p>Stage ID: {{ descriptionData[deal.ID].STAGE_ID }}</p>
+              <p>Opportunity: {{ descriptionData[deal.ID].OPPORTUNITY }}</p>
+              <p>Currency ID: {{ descriptionData[deal.ID].CURRENCY_ID }}</p>
+              <p>Begindate: {{ descriptionData[deal.ID].BEGINDATE }}</p>
+              <p>Closedate: {{ descriptionData[deal.ID].CLOSEDATE }}</p>
+              <p>Assigned_by_id: {{ descriptionData[deal.ID].ASSIGNED_BY_ID }}</p>
+              <p>Created+by_id: {{ descriptionData[deal.ID].CREATED_BY_ID }}</p>
+              <p>Modify_by_id: {{ descriptionData[deal.ID].MODIFY_BY_ID }}</p>
+              <p>Date_create: {{ descriptionData[deal.ID].DATE_CREATE }}</p>
+              <p>Date_modify: {{ descriptionData[deal.ID].DATE_MODIFY }}</p>
+              <!-- Display other fields as needed -->
+            </div>
+          </div>
+        </li>
+      </ul>
     </div>
   </main>
+
 </template>
 
 <script>
@@ -99,11 +95,16 @@ export default {
       documentsData: {},
       commentaryData: {},
       descriptionData: {},
-      activeSection: {},
     }
   },
   created() {
-    this.fetchDeals();
+    axios.get('https://b24app.rwp2.com/api/deals_get')
+        .then((response) => {
+          this.jsonArray = response.data.result; // Correct path to the data
+        })
+        .catch((error) => {
+          console.error('Error fetching data:', error);
+        });
   },
   computed: {
     filteredItems() {
@@ -115,23 +116,16 @@ export default {
     }
   },
   methods: {
-    fetchDeals() {
-      axios.get('https://b24app.rwp2.com/api/deals_get')
-          .then(response => {
-            this.jsonArray = response.data.result;
-          })
-          .catch(error => {
-            console.error('Error fetching data:', error);
-          });
+    toggleMenu(ID) {
+      this.activeItem = this.activeItem === ID ? null : ID;
     },
-    toggleMenu(dealID, section) {
-      if (this.activeItem === dealID && this.activeSection[dealID] === section) {
-        this.activeItem = null; // Close the current section
-        this.activeSection[dealID] = null;
-      } else {
-        this.activeItem = dealID; // Open the new section
-        this.activeSection[dealID] = section;
+    applyFilter() {
+      if (this.selectedFilter === 'Евгений') {
+        this.selectedFilter = 'Евгений';
       }
+    },
+    loadMore() {
+      this.itemsToShow += 10; // Increase the number of items to show
     },
     showDocuments(ID) {
       axios.get(`https://b24app.rwp2.com/api/documents/${ID}`)
@@ -142,7 +136,6 @@ export default {
           .catch(error => {
             console.error('Error fetching documents:', error);
           });
-      this.toggleMenu(dealID, 'documents');
     },
     showCommentary(ID) {
       axios.get(`https://b24app.rwp2.com/api/comments/${ID}`)
@@ -153,7 +146,6 @@ export default {
           .catch(error => {
             console.error('Error fetching documents:', error);
           });
-      this.toggleMenu(dealID, 'commentary');
     },
     showDescription(ID) {
       axios.get(`https://b24app.rwp2.com/api/description/${ID}`)
@@ -164,15 +156,6 @@ export default {
           .catch(error => {
             console.error('Error fetching documents:', error);
           });
-      this.toggleMenu(dealID, 'description');
-    },
-    applyFilter() {
-      if (this.selectedFilter === 'Евгений') {
-        this.selectedFilter = 'Евгений';
-      }
-    },
-    loadMore() {
-      this.itemsToShow += 10; // Increase the number of items to show
     },
   },
 };
