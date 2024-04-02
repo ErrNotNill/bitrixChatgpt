@@ -35,6 +35,7 @@ func DocumentHandler(w http.ResponseWriter, r *http.Request) {
 	id := pathSegments[3]
 
 	// Use the extracted ID as needed, for now, we'll just print it
+	fmt.Println("Extracted ID: ", id)
 	fmt.Fprintf(w, "Requested documents for ID: %s", id)
 
 	entityId := "23"
