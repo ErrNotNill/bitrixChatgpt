@@ -25,7 +25,6 @@ func ConnectionBitrixLocalApp(w http.ResponseWriter, r *http.Request) {
 	auth := ParseValues(w, bs) //todo here we must to add this data in dbase?
 	fmt.Printf("auth.AuthID : %s, auth.MemberID: %s", auth.AuthID, auth.MemberID)
 
-	w.Write([]byte(auth.AuthID))
 	redirectURL := "https://b24app.rwp2.com/"
 
 	// Use http.Redirect to redirect the client
