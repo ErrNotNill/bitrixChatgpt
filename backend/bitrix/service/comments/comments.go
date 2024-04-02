@@ -17,6 +17,9 @@ func CommentsHandler(w http.ResponseWriter, r *http.Request) {
 	// Assuming the URL format is /api/documents/{ID}
 	// The ID is expected to be the fourth segment, hence index 3 (0-based index)
 
+	rdr, _ := io.ReadAll(r.Body)
+	fmt.Println("rdr:____: ", rdr)
+
 	pathSegments := strings.Split(r.URL.Path, "/")
 
 	// Assuming the URL format is /api/documents/{ID}
