@@ -30,6 +30,7 @@ func DescriptionHandler(w http.ResponseWriter, r *http.Request) {
 
 	docs, err := GetDescription(authorize.GlobalAuthId, entityId)
 	if err != nil {
+		log.Println("Error getting documentation in DescriptionHandler")
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
 
