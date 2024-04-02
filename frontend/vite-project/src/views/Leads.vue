@@ -144,7 +144,7 @@ export default {
       axios.get(`https://b24app.rwp2.com/api/description/${ID}`)
           .then(response => {
             // Direct assignment for Vue 3 reactivity
-            this.descriptionData[ID] = response.data.result.description;
+            this.descriptionData[ID] = response.data.result;
           })
           .catch(error => {
             console.error('Error fetching documents:', error);
