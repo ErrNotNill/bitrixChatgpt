@@ -55,11 +55,14 @@
               </ul>
             </div>
             <button @click="showDescription(deal.ID)" class="detail-button">Description</button>
-            <div v-if="descriptionData[deal.ID] && descriptionData[deal.ID].length">
-              <ul v-for="desc in descriptionData[deal.ID]" :key="desc.id">
-                {{ desc }}
-                <!-- Links -->
-              </ul>
+            <div v-if="descriptionData[deal.ID]">
+              <p>ID: {{ descriptionData[deal.ID].ID }}</p>
+              <p>Title: {{ descriptionData[deal.ID].TITLE }}</p>
+              <p>Type ID: {{ descriptionData[deal.ID].TYPE_ID }}</p>
+              <p>Stage ID: {{ descriptionData[deal.ID].STAGE_ID }}</p>
+              <p>Opportunity: {{ descriptionData[deal.ID].OPPORTUNITY }}</p>
+              <p>Currency ID: {{ descriptionData[deal.ID].CURRENCY_ID }}</p>
+              <!-- Display other fields as needed -->
             </div>
           </div>
         </li>
