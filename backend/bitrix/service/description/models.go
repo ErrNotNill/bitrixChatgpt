@@ -4,50 +4,50 @@ import "time"
 
 // Deal represents the structure of a deal in the response
 type Deal struct {
-	ID                  string    `json:"ID"`
-	Title               string    `json:"TITLE"`
-	TypeID              string    `json:"TYPE_ID"`
-	StageID             string    `json:"STAGE_ID"`
-	Probability         *float64  `json:"PROBABILITY"` // Use pointer to represent null
-	CurrencyID          string    `json:"CURRENCY_ID"`
-	Opportunity         string    `json:"OPPORTUNITY"`
-	IsManualOpportunity string    `json:"IS_MANUAL_OPPORTUNITY"`
-	TaxValue            string    `json:"TAX_VALUE"`
-	LeadID              *string   `json:"LEAD_ID"` // Use pointer to represent null
-	CompanyID           string    `json:"COMPANY_ID"`
-	ContactID           *string   `json:"CONTACT_ID"` // Use pointer to represent null
-	QuoteID             *string   `json:"QUOTE_ID"`   // Use pointer to represent null
-	BeginDate           time.Time `json:"BEGINDATE"`
-	CloseDate           time.Time `json:"CLOSEDATE"`
-	AssignedByID        string    `json:"ASSIGNED_BY_ID"`
-	CreatedByID         string    `json:"CREATED_BY_ID"`
-	ModifyByID          string    `json:"MODIFY_BY_ID"`
-	DateCreate          time.Time `json:"DATE_CREATE"`
-	DateModify          time.Time `json:"DATE_MODIFY"`
-	Opened              string    `json:"OPENED"`
-	Closed              string    `json:"CLOSED"`
-	Comments            string    `json:"COMMENTS"`
-	AdditionalInfo      *string   `json:"ADDITIONAL_INFO"` // Use pointer to represent null
-	LocationID          *string   `json:"LOCATION_ID"`     // Use pointer to represent null
-	CategoryID          string    `json:"CATEGORY_ID"`
-	StageSemanticID     string    `json:"STAGE_SEMANTIC_ID"`
-	IsNew               string    `json:"IS_NEW"`
-	IsRecurring         string    `json:"IS_RECURRING"`
-	IsReturnCustomer    string    `json:"IS_RETURN_CUSTOMER"`
-	IsRepeatedApproach  string    `json:"IS_REPEATED_APPROACH"`
-	SourceID            string    `json:"SOURCE_ID"`
-	SourceDescription   *string   `json:"SOURCE_DESCRIPTION"` // Use pointer to represent null
-	OriginatorID        *string   `json:"ORIGINATOR_ID"`      // Use pointer to represent null
-	OriginID            *string   `json:"ORIGIN_ID"`          // Use pointer to represent null
-	MovedByID           string    `json:"MOVED_BY_ID"`
-	MovedTime           time.Time `json:"MOVED_TIME"`
-	LastActivityTime    time.Time `json:"LAST_ACTIVITY_TIME"`
-	UTMSource           *string   `json:"UTM_SOURCE"`   // Use pointer to represent null
-	UTMMedium           *string   `json:"UTM_MEDIUM"`   // Use pointer to represent null
-	UTMCampaign         *string   `json:"UTM_CAMPAIGN"` // Use pointer to represent null
-	UTMContent          *string   `json:"UTM_CONTENT"`  // Use pointer to represent null
-	UTMTerm             *string   `json:"UTM_TERM"`     // Use pointer to represent null
-	LastActivityBy      string    `json:"LAST_ACTIVITY_BY"`
+	ID                  string   `json:"ID"`
+	Title               string   `json:"TITLE"`
+	TypeID              string   `json:"TYPE_ID"`
+	StageID             string   `json:"STAGE_ID"`
+	Probability         *float64 `json:"PROBABILITY"` // Use pointer to represent null
+	CurrencyID          string   `json:"CURRENCY_ID"`
+	Opportunity         string   `json:"OPPORTUNITY"`
+	IsManualOpportunity string   `json:"IS_MANUAL_OPPORTUNITY"`
+	TaxValue            string   `json:"TAX_VALUE"`
+	LeadID              *string  `json:"LEAD_ID"` // Use pointer to represent null
+	CompanyID           string   `json:"COMPANY_ID"`
+	ContactID           *string  `json:"CONTACT_ID"` // Use pointer to represent null
+	QuoteID             *string  `json:"QUOTE_ID"`   // Use pointer to represent null
+	BeginDate           string   `json:"BEGINDATE"`
+	CloseDate           string   `json:"CLOSEDATE"`
+	AssignedByID        string   `json:"ASSIGNED_BY_ID"`
+	CreatedByID         string   `json:"CREATED_BY_ID"`
+	ModifyByID          string   `json:"MODIFY_BY_ID"`
+	DateCreate          string   `json:"DATE_CREATE"`
+	DateModify          string   `json:"DATE_MODIFY"`
+	Opened              string   `json:"OPENED"`
+	Closed              string   `json:"CLOSED"`
+	Comments            string   `json:"COMMENTS"`
+	AdditionalInfo      *string  `json:"ADDITIONAL_INFO"` // Use pointer to represent null
+	LocationID          *string  `json:"LOCATION_ID"`     // Use pointer to represent null
+	CategoryID          string   `json:"CATEGORY_ID"`
+	StageSemanticID     string   `json:"STAGE_SEMANTIC_ID"`
+	IsNew               string   `json:"IS_NEW"`
+	IsRecurring         string   `json:"IS_RECURRING"`
+	IsReturnCustomer    string   `json:"IS_RETURN_CUSTOMER"`
+	IsRepeatedApproach  string   `json:"IS_REPEATED_APPROACH"`
+	SourceID            string   `json:"SOURCE_ID"`
+	SourceDescription   *string  `json:"SOURCE_DESCRIPTION"` // Use pointer to represent null
+	OriginatorID        *string  `json:"ORIGINATOR_ID"`      // Use pointer to represent null
+	OriginID            *string  `json:"ORIGIN_ID"`          // Use pointer to represent null
+	MovedByID           string   `json:"MOVED_BY_ID"`
+	MovedTime           string   `json:"MOVED_TIME"`
+	LastActivityTime    string   `json:"LAST_ACTIVITY_TIME"`
+	UTMSource           *string  `json:"UTM_SOURCE"`   // Use pointer to represent null
+	UTMMedium           *string  `json:"UTM_MEDIUM"`   // Use pointer to represent null
+	UTMCampaign         *string  `json:"UTM_CAMPAIGN"` // Use pointer to represent null
+	UTMContent          *string  `json:"UTM_CONTENT"`  // Use pointer to represent null
+	UTMTerm             *string  `json:"UTM_TERM"`     // Use pointer to represent null
+	LastActivityBy      string   `json:"LAST_ACTIVITY_BY"`
 	// Add custom fields as needed
 	UFCRM1710943349299 string `json:"UF_CRM_1710943349299"`
 	UFCRM1710943898    string `json:"UF_CRM_1710943898"`
