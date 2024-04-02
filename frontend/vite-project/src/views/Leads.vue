@@ -62,6 +62,13 @@
               <p>Stage ID: {{ descriptionData[deal.ID].STAGE_ID }}</p>
               <p>Opportunity: {{ descriptionData[deal.ID].OPPORTUNITY }}</p>
               <p>Currency ID: {{ descriptionData[deal.ID].CURRENCY_ID }}</p>
+              <p>Begindate: {{ descriptionData[deal.ID].BEGINDATE }}</p>
+              <p>Closedate: {{ descriptionData[deal.ID].CLOSEDATE }}</p>
+              <p>Assigned_by_id: {{ descriptionData[deal.ID].ASSIGNED_BY_ID }}</p>
+              <p>Created+by_id: {{ descriptionData[deal.ID].CREATED_BY_ID }}</p>
+              <p>Modify_by_id: {{ descriptionData[deal.ID].MODIFY_BY_ID }}</p>
+              <p>Date_create: {{ descriptionData[deal.ID].DATE_CREATE }}</p>
+              <p>Date_modify: {{ descriptionData[deal.ID].DATE_MODIFY }}</p>
               <!-- Display other fields as needed -->
             </div>
           </div>
