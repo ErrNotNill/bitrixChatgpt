@@ -9,17 +9,30 @@ import (
 	"io"
 	"log"
 	"net/http"
+	"net/url"
+	"strconv"
 )
 
 func DescriptionHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	w.Header().Set("Access-Control-Allow-Origin", "*")
-	responseData, err := io.ReadAll(r.Body)
+	bs, err := io.ReadAll(r.Body)
 	if err != nil {
-		log.Println("error reading response body:", err)
+		log.Println("error reading request body:", err)
+		http.Error(w, "Bad request", http.StatusBadRequest)
 	}
 
-	log.Println("Response DocumentHandler:", string(responseData))
+	values, err := url.ParseQuery(string(bs))
+	if err != nil {
+		log.Println("error parsing query:", err)
+		http.Error(w, "Bad request", http.StatusBadRequest)
+	}
+	id, err := strconv.Atoi(values.Get("ID"))
+	if err != nil {
+		log.Println("error converting AUTH_EXPIRES to int:", err)
+		http.Error(w, "Bad request", http.StatusBadRequest)
+	}
+	fmt.Println("DocumentHandler ID: ", id)
 
 	entityId := "23"
 

@@ -55,7 +55,7 @@ func GetDeals(authID string) ([]byte, error) {
 	return jsonResponse, nil
 }
 
-func AddDeal(authID string) error {
+/*func AddDeal(authID string) error {
 	method := "POST"
 	// Format the URL with the provided authID parameter
 	requestUrl := fmt.Sprintf("https://b24-9f7fvg.bitrix24.ru/rest/crm.deal.add?auth=%s&fields[TITLE]=TEST_DEAL", authID)
@@ -83,7 +83,7 @@ func AddDeal(authID string) error {
 
 	log.Println("resp_at_last_AddDeal:", string(bz))
 	return nil
-}
+}*/
 
 /*ts, err := template.ParseFiles("backend/bitrix/authorize/index.html")
 if err != nil {
