@@ -84,88 +84,95 @@
 </template>
 
 <script>
-import axios from 'axios';
-import Sidebar from '@/components/Sidebar.vue';
+import axios from 'axios'
+import Sidebar from '@/components/Sidebar.vue'
 
 export default {
   components: { Sidebar },
   data() {
     return {
       jsonArray: [],
-      activeItems: {},
-      selectedFilter: 'all',
+      activeItem: null,
+      selectedFilter: 'all', // Default to "All"
+      itemsPerPage: 50, // Number of items to show initially
+      itemsToShow: 50, // Number of items to show currently
       documentsData: {},
       commentaryData: {},
       descriptionData: {},
-    };
+      activeSection: {},
+    }
   },
   created() {
     this.fetchDeals();
   },
   computed: {
     filteredItems() {
-      return this.selectedFilter === 'all'
-          ? this.jsonArray
-          : this.jsonArray.filter(deal => deal.ASSIGNED_BY_ID === this.selectedFilter);
-    },
+      if (this.selectedFilter === 'all') {
+        return this.jsonArray;
+      } else {
+        return this.jsonArray.filter((deal) => deal.ASSIGNED_BY_ID === this.selectedFilter);
+      }
+    }
   },
   methods: {
     fetchDeals() {
-      // API call to fetch deals
-    },
-    toggleSection(dealID, section) {
-      if (this.activeItems[dealID] === section) {
-        this.$set(this.activeItems, dealID, null); // Close the section
-      } else {
-        this.$set(this.activeItems, dealID, section); // Open the section
-        this.loadData(dealID, section); // Fetch data for the section
-      }
-    },
-    isActive(dealID, section) {
-      return this.activeItems[dealID] === section;
-    },
-    applyFilter() {
-      // Implementation for applying selected filter
-    },
-    loadData(dealID, section) {
-      switch (section) {
-        case 'documents':
-          this.showDocuments(dealID);
-          break;
-        case 'commentary':
-          this.showCommentary(dealID);
-          break;
-        case 'description':
-          this.showDescription(dealID);
-          break;
-      }
-    },
-    showDocuments(dealID) {
-      axios.get(`https://b24app.rwp2.com/api/documents/${dealID}`)
+      axios.get('https://b24app.rwp2.com/api/deals_get')
           .then(response => {
-            this.$set(this.documentsData, dealID, response.data.result.documents);
+            this.jsonArray = response.data.result;
+          })
+          .catch(error => {
+            console.error('Error fetching data:', error);
+          });
+    },
+    toggleMenu(dealID, section) {
+      if (this.activeItem === dealID && this.activeSection[dealID] === section) {
+        this.activeItem = null; // Close the current section
+        this.activeSection[dealID] = null;
+      } else {
+        this.activeItem = dealID; // Open the new section
+        this.activeSection[dealID] = section;
+      }
+    },
+    showDocuments(ID) {
+      axios.get(`https://b24app.rwp2.com/api/documents/${ID}`)
+          .then(response => {
+            // Direct assignment for Vue 3 reactivity
+            this.documentsData[ID] = response.data.result.documents;
           })
           .catch(error => {
             console.error('Error fetching documents:', error);
           });
+      this.toggleMenu(dealID, 'documents');
     },
-    showCommentary(dealID) {
-      axios.get(`https://b24app.rwp2.com/api/comments/${dealID}`)
+    showCommentary(ID) {
+      axios.get(`https://b24app.rwp2.com/api/comments/${ID}`)
           .then(response => {
-            this.$set(this.commentaryData, dealID, response.data.result);
+            // Direct assignment for Vue 3 reactivity
+            this.commentaryData[ID] = response.data.result;
           })
           .catch(error => {
-            console.error('Error fetching commentary:', error);
+            console.error('Error fetching documents:', error);
           });
+      this.toggleMenu(dealID, 'commentary');
     },
-    showDescription(dealID) {
-      axios.get(`https://b24app.rwp2.com/api/description/${dealID}`)
+    showDescription(ID) {
+      axios.get(`https://b24app.rwp2.com/api/description/${ID}`)
           .then(response => {
-            this.$set(this.descriptionData, dealID, response.data.result);
+            // Direct assignment for Vue 3 reactivity
+            this.descriptionData[ID] = response.data.result;
           })
           .catch(error => {
-            console.error('Error fetching description:', error);
+            console.error('Error fetching documents:', error);
           });
+      this.toggleMenu(dealID, 'description');
+    },
+    applyFilter() {
+      if (this.selectedFilter === 'Евгений') {
+        this.selectedFilter = 'Евгений';
+      }
+    },
+    loadMore() {
+      this.itemsToShow += 10; // Increase the number of items to show
     },
   },
 };
