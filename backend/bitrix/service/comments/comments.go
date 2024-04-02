@@ -33,7 +33,7 @@ func CommentsHandler(w http.ResponseWriter, r *http.Request) {
 	// Use the extracted ID as needed, for now, we'll just print it
 	fmt.Println("Extracted ID CommentsHandler: ", entityId)
 
-	comments, err := GetComments(authorize.GlobalAuthId, entityId)
+	comments, err := GetCommentsByEntity(authorize.GlobalAuthId, entityId)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
@@ -47,30 +47,41 @@ func CommentsHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func GetComments(authID string, entityId string) ([]byte, error) {
+type CommentRequestBody struct {
+	Filter struct {
+		ENTITY_ID   string `json:"ENTITY_ID"`
+		ENTITY_TYPE string `json:"ENTITY_TYPE"`
+	} `json:"filter"`
+	Select []string `json:"select"`
+}
+
+func GetCommentsByEntity(authID string, entityId string) ([]byte, error) {
 	bitrixMethod := "crm.timeline.comment.list"
+	requestURL := fmt.Sprintf("https://b24-9f7fvg.bitrix24.ru/rest/%s?auth=%s", bitrixMethod, authID)
 
-	requestUrl := fmt.Sprintf("https://b24-9f7fvg.bitrix24.ru/rest/%s?auth=%s", bitrixMethod, authID)
-
-	// Construct the request body
-	body := fmt.Sprintf(`{"filter": {
-			"ENTITY_ID": %s,
-			"ENTITY_TYPE": "deal"
+	// Construct the new request body based on the new structure
+	body := CommentRequestBody{
+		Filter: struct {
+			ENTITY_ID   string `json:"ENTITY_ID"`
+			ENTITY_TYPE string `json:"ENTITY_TYPE"`
+		}{
+			ENTITY_ID:   entityId, // Assuming entityId is a string. If not, convert it appropriately.
+			ENTITY_TYPE: "deal",   // Assuming you are filtering comments related to deals.
 		},
-		"select": [ "ID", "COMMENT"]
-}`, entityId)
+		Select: []string{"ID", "COMMENT"}, // Specify which fields to select.
+	}
 
 	// Marshal the request body into JSON
 	jsonData, err := json.Marshal(body)
 	if err != nil {
-		log.Println("error marshaling request body:", err)
+		log.Println("Error marshaling request body:", err)
 		return nil, err
 	}
 
 	// Create a new request with JSON body
-	req, err := http.NewRequest("POST", requestUrl, bytes.NewBuffer(jsonData)) // Switch to POST if applicable
+	req, err := http.NewRequest("POST", requestURL, bytes.NewBuffer(jsonData))
 	if err != nil {
-		log.Println("error creating new request:", err)
+		log.Println("Error creating new request:", err)
 		return nil, err
 	}
 
@@ -79,7 +90,7 @@ func GetComments(authID string, entityId string) ([]byte, error) {
 	// Send the request
 	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
-		log.Println("error sending request:", err)
+		log.Println("Error sending request:", err)
 		return nil, err
 	}
 	defer resp.Body.Close()
@@ -87,11 +98,11 @@ func GetComments(authID string, entityId string) ([]byte, error) {
 	// Read and return the response body
 	responseData, err := io.ReadAll(resp.Body)
 	if err != nil {
-		log.Println("error reading response body:", err)
+		log.Println("Error reading response body:", err)
 		return nil, err
 	}
 
-	log.Println("GetComments Response:", string(responseData))
+	log.Println("GetCommentsByEntity Response:", string(responseData))
 
 	return responseData, nil
 }
