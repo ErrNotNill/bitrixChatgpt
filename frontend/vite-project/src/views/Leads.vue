@@ -1,161 +1,129 @@
 <template>
+  <div>
+    <Sidebar />
 
-    <!-- Sidebar -->
-  <Sidebar />
+    <main id="Home-page">
+      <h1>Сделки</h1>
+      <div>
+        <label for="filter">Filter by:</label>
+        <select id="filter" v-model="selectedFilter">
+          <option value="all">All</option>
+          <option value="Евгений">Евгений</option>
+        </select>
+        <button @click="applyFilter">Apply Filter</button>
+      </div>
 
-  <main id="Home-page">
-    <h1>Сделки</h1>
-    <p></p>
-    <!-- Filter dropdown -->
-    <div>
-      <label for="filter">Filter by: </label>
-      <select id="filter" v-model="selectedFilter">
-        <option value="all">All</option>
-        <option value="Евгений">Opts...</option>
-
-        <!-- Add more filter options here as needed -->
-      </select>
-      <p></p>
-      <button @click="applyFilter">Apply Filter</button>
-    </div>
-
-    <div class="table-container">
-      <ul class="table">
-        <li v-for="deal in jsonArray" :key="deal.ID" class="list-item">
-          <div class="button-container">
-            <button @click="toggleMenu(deal.ID)" class="table-button">
-              {{ deal.TITLE }}
-              <p>ID сделки: ({{ deal.ID }})</p>
-              Стадия сделки: {{ deal.STAGE_ID }}
-            </button>
-          </div>
-          <div v-if="activeItem === deal.ID" class="item-details">
-            <!-- Adjust according to the actual properties of a deal -->
-            <!-- Example detail -->
-            <p>Title: {{ deal.TITLE }}</p>
-
-            <!-- Additional Buttons -->
-            <button @click="showDocuments(deal.ID)" class="detail-button">Documents</button>
-            <!-- Conditional rendering based on whether documentsData for this deal.ID exists -->
-            <div v-if="documentsData[deal.ID] && documentsData[deal.ID].length">
-              <ul v-for="doc in documentsData[deal.ID]" :key="doc.id">
-                  {{ doc.title }}
-                  <!-- Links -->
-                  <a :href="doc.downloadUrl" target="_blank">Download</a>
-                  <a :href="doc.pdfUrl" target="_blank">PDF</a>
-                  <a :href="doc.imageUrl" target="_blank">Image</a>
-              </ul>
+      <div class="table-container">
+        <ul class="table">
+          <li v-for="deal in filteredItems" :key="deal.ID" class="list-item">
+            <div class="button-container">
+              <button @click="toggleMenu(deal.ID, 'general')" class="table-button">
+                {{ deal.TITLE }}
+                <p>ID сделки: ({{ deal.ID }})</p>
+                Стадия сделки: {{ deal.STAGE_ID }}
+              </button>
+              <button @click="toggleMenu(deal.ID, 'documents')" class="detail-button">Documents</button>
+              <button @click="toggleMenu(deal.ID, 'commentary')" class="detail-button">Commentaries</button>
+              <button @click="toggleMenu(deal.ID, 'description')" class="detail-button">Description</button>
             </div>
-            <button @click="showCommentary(deal.ID)" class="detail-button">Commentaries</button>
-            <div v-if="commentaryData[deal.ID] && commentaryData[deal.ID].length">
-              <ul v-for="com in commentaryData[deal.ID]" :key="com.id">
-                {{ com.ID }}
-                {{ com.COMMENT }}
-                <!-- Links -->
-              </ul>
-            </div>
-            <button @click="showDescription(deal.ID)" class="detail-button">Description</button>
-            <div v-if="descriptionData[deal.ID]">
-              <p>ID: {{ descriptionData[deal.ID].ID }}</p>
-              <p>Title: {{ descriptionData[deal.ID].TITLE }}</p>
-              <p>Type ID: {{ descriptionData[deal.ID].TYPE_ID }}</p>
-              <p>Stage ID: {{ descriptionData[deal.ID].STAGE_ID }}</p>
-              <p>Opportunity: {{ descriptionData[deal.ID].OPPORTUNITY }}</p>
-              <p>Currency ID: {{ descriptionData[deal.ID].CURRENCY_ID }}</p>
-              <p>Begindate: {{ descriptionData[deal.ID].BEGINDATE }}</p>
-              <p>Closedate: {{ descriptionData[deal.ID].CLOSEDATE }}</p>
-              <p>Assigned_by_id: {{ descriptionData[deal.ID].ASSIGNED_BY_ID }}</p>
-              <p>Created+by_id: {{ descriptionData[deal.ID].CREATED_BY_ID }}</p>
-              <p>Modify_by_id: {{ descriptionData[deal.ID].MODIFY_BY_ID }}</p>
-              <p>Date_create: {{ descriptionData[deal.ID].DATE_CREATE }}</p>
-              <p>Date_modify: {{ descriptionData[deal.ID].DATE_MODIFY }}</p>
-              <!-- Display other fields as needed -->
-            </div>
-          </div>
-        </li>
-      </ul>
-    </div>
-  </main>
 
+            <div v-if="activeItem === deal.ID">
+              <div v-if="activeSection[deal.ID] === 'documents'" class="item-details">
+                <p>Documents for Deal ID: {{ deal.ID }}</p>
+                <ul v-if="documentsData[deal.ID]">
+                  <li v-for="doc in documentsData[deal.ID]" :key="doc.id">
+                    {{ doc.title }}
+                    <a :href="doc.downloadUrl" target="_blank">Download</a>
+                    <a :href="doc.pdfUrl" target="_blank">PDF</a>
+                    <a :href="doc.imageUrl" target="_blank">Image</a>
+                  </li>
+                </ul>
+              </div>
+
+              <div v-if="activeSection[deal.ID] === 'commentary'" class="item-details">
+                <p>Commentaries for Deal ID: {{ deal.ID }}</p>
+                <ul v-if="commentaryData[deal.ID]">
+                  <li v-for="comment in commentaryData[deal.ID]" :key="comment.id">
+                    {{ comment.ID }}: {{ comment.COMMENT }}
+                  </li>
+                </ul>
+              </div>
+
+              <div v-if="activeSection[deal.ID] === 'description'" class="item-details">
+                <p>Description for Deal ID: {{ deal.ID }}</p>
+                <ul v-if="descriptionData[deal.ID]">
+                  <li>
+                    <!-- Display Description Data -->
+                    <p>Title: {{ descriptionData[deal.ID].TITLE }}</p>
+                    <!-- Add more fields as necessary -->
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </main>
+  </div>
 </template>
 
 <script>
-import axios from 'axios'
-import Sidebar from '@/components/Sidebar.vue'
+import axios from 'axios';
+import Sidebar from './Sidebar.vue';
 
 export default {
-  components: { Sidebar },
+  components: {
+    Sidebar,
+  },
   data() {
     return {
       jsonArray: [],
       activeItem: null,
-      selectedFilter: 'all', // Default to "All"
-      itemsPerPage: 50, // Number of items to show initially
-      itemsToShow: 50, // Number of items to show currently
+      selectedFilter: 'all',
       documentsData: {},
       commentaryData: {},
       descriptionData: {},
-    }
-  },
-  created() {
-    axios.get('https://b24app.rwp2.com/api/deals_get')
-        .then((response) => {
-          this.jsonArray = response.data.result; // Correct path to the data
-        })
-        .catch((error) => {
-          console.error('Error fetching data:', error);
-        });
+      activeSection: {},
+    };
   },
   computed: {
     filteredItems() {
-      if (this.selectedFilter === 'all') {
-        return this.jsonArray;
-      } else {
-        return this.jsonArray.filter((deal) => deal.ASSIGNED_BY_ID === this.selectedFilter);
-      }
-    }
+      return this.selectedFilter === 'all'
+          ? this.jsonArray
+          : this.jsonArray.filter((deal) => deal.ASSIGNED_BY_ID === this.selectedFilter);
+    },
+  },
+  created() {
+    this.fetchData();
   },
   methods: {
-    toggleMenu(ID) {
-      this.activeItem = this.activeItem === ID ? null : ID;
+    fetchData() {
+      // Your API call to fetch deals
     },
-    applyFilter() {
-      if (this.selectedFilter === 'Евгений') {
-        this.selectedFilter = 'Евгений';
+    toggleMenu(dealID, section) {
+      if (this.activeItem === dealID && this.activeSection[dealID] === section) {
+        this.activeItem = null;
+        this.activeSection[dealID] = null;
+      } else {
+        this.activeItem = dealID;
+        this.activeSection[dealID] = section;
+        // Call the appropriate function based on the section
+        if (section === 'documents') this.showDocuments(dealID);
+        if (section === 'commentary') this.showCommentary(dealID);
+        if (section === 'description') this.showDescription(dealID);
       }
     },
-    loadMore() {
-      this.itemsToShow += 10; // Increase the number of items to show
+    showDocuments(dealID) {
+      // Fetch and assign documents data
     },
-    showDocuments(ID) {
-      axios.get(`https://b24app.rwp2.com/api/documents/${ID}`)
-          .then(response => {
-            // Direct assignment for Vue 3 reactivity
-            this.documentsData[ID] = response.data.result.documents;
-          })
-          .catch(error => {
-            console.error('Error fetching documents:', error);
-          });
+    showCommentary(dealID) {
+      // Fetch and assign commentary data
     },
-    showCommentary(ID) {
-      axios.get(`https://b24app.rwp2.com/api/comments/${ID}`)
-          .then(response => {
-            // Direct assignment for Vue 3 reactivity
-            this.commentaryData[ID] = response.data.result;
-          })
-          .catch(error => {
-            console.error('Error fetching documents:', error);
-          });
+    showDescription(dealID) {
+      // Fetch and assign description data
     },
-    showDescription(ID) {
-      axios.get(`https://b24app.rwp2.com/api/description/${ID}`)
-          .then(response => {
-            // Direct assignment for Vue 3 reactivity
-            this.descriptionData[ID] = response.data.result;
-          })
-          .catch(error => {
-            console.error('Error fetching documents:', error);
-          });
+    applyFilter() {
+      // Filter application logic
     },
   },
 };
