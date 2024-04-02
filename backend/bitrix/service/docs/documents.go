@@ -24,6 +24,9 @@ func GetDocsByDealMock() ([]byte, error) {
 func DocumentHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	w.Header().Set("Access-Control-Allow-Origin", "*")
+	rdr, _ := io.ReadAll(r.Body)
+	fmt.Println("rdr:____DocumentHandler: ", rdr)
+
 	pathSegments := strings.Split(r.URL.Path, "/")
 
 	// Assuming the URL format is /api/documents/{ID}
