@@ -1,16 +1,36 @@
 package comments
 
 import (
+	"bitrix_app/backend/bitrix/authorize"
+	"bytes"
+	"encoding/json"
 	"fmt"
+	"io"
 	"log"
 	"net/http"
+	"strings"
 )
 
 func CommentsHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	w.Header().Set("Access-Control-Allow-Origin", "*")
+	// Assuming the URL format is /api/documents/{ID}
+	// The ID is expected to be the fourth segment, hence index 3 (0-based index)
 
-	comments, err := GetCommentsDealMock()
+	pathSegments := strings.Split(r.URL.Path, "/")
+
+	// Assuming the URL format is /api/documents/{ID}
+	// The ID is expected to be the fourth segment, hence index 3 (0-based index)
+	if len(pathSegments) < 4 {
+		http.Error(w, "Invalid request path", http.StatusBadRequest)
+		return
+	}
+	entityId := pathSegments[3]
+
+	// Use the extracted ID as needed, for now, we'll just print it
+	fmt.Println("Extracted ID CommentsHandler: ", entityId)
+
+	comments, err := GetComments(authorize.GlobalAuthId, entityId)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
@@ -24,25 +44,51 @@ func CommentsHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func GetCommentsDealMock() ([]byte, error) {
-	mockJSON := `{
-		"result": [
-			{
-				"ID": "515",
-				"COMMENT": "Text commentary..."
-			}
-		],
-		"total": 1,
-		"time": {
-			"start": 1711892133.7379389,
-			"finish": 1711892133.7726719,
-			"duration": 0.034733057022094727,
-			"processing": 0.012963056564331055,
-			"date_start": "2024-03-31T16:35:33+03:00",
-			"date_finish": "2024-03-31T16:35:33+03:00",
-			"operating_reset_at": 1711892733,
-			"operating": 0
-		}
-	}`
-	return []byte(mockJSON), nil
+func GetComments(authID string, entityId string) ([]byte, error) {
+	bitrixMethod := "crm.timeline.comment.list"
+
+	requestUrl := fmt.Sprintf("https://b24-9f7fvg.bitrix24.ru/rest/%s?auth=%s", bitrixMethod, authID)
+
+	// Construct the request body
+	body := fmt.Sprintf(`{"filter": {
+			"ENTITY_ID": %s,
+			"ENTITY_TYPE": "deal"
+		},
+		"select": [ "ID", "COMMENT"]
+}`, entityId)
+
+	// Marshal the request body into JSON
+	jsonData, err := json.Marshal(body)
+	if err != nil {
+		log.Println("error marshaling request body:", err)
+		return nil, err
+	}
+
+	// Create a new request with JSON body
+	req, err := http.NewRequest("POST", requestUrl, bytes.NewBuffer(jsonData)) // Switch to POST if applicable
+	if err != nil {
+		log.Println("error creating new request:", err)
+		return nil, err
+	}
+
+	req.Header.Set("Content-Type", "application/json")
+
+	// Send the request
+	resp, err := http.DefaultClient.Do(req)
+	if err != nil {
+		log.Println("error sending request:", err)
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	// Read and return the response body
+	responseData, err := io.ReadAll(resp.Body)
+	if err != nil {
+		log.Println("error reading response body:", err)
+		return nil, err
+	}
+
+	log.Println("GetComments Response:", string(responseData))
+
+	return responseData, nil
 }

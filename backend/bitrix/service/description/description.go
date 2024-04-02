@@ -9,32 +9,25 @@ import (
 	"io"
 	"log"
 	"net/http"
-	"net/url"
-	"strconv"
+	"strings"
 )
 
 func DescriptionHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	w.Header().Set("Access-Control-Allow-Origin", "*")
-	bs, err := io.ReadAll(r.Body)
-	if err != nil {
-		log.Println("error reading request body:", err)
-		http.Error(w, "Bad request", http.StatusBadRequest)
-	}
 
-	values, err := url.ParseQuery(string(bs))
-	if err != nil {
-		log.Println("error parsing query:", err)
-		http.Error(w, "Bad request", http.StatusBadRequest)
-	}
-	id, err := strconv.Atoi(values.Get("ID"))
-	if err != nil {
-		log.Println("error converting AUTH_EXPIRES to int:", err)
-		http.Error(w, "Bad request", http.StatusBadRequest)
-	}
-	fmt.Println("DocumentHandler ID: ", id)
+	pathSegments := strings.Split(r.URL.Path, "/")
 
-	entityId := "23"
+	// Assuming the URL format is /api/documents/{ID}
+	// The ID is expected to be the fourth segment, hence index 3 (0-based index)
+	if len(pathSegments) < 4 {
+		http.Error(w, "Invalid request path", http.StatusBadRequest)
+		return
+	}
+	entityId := pathSegments[3]
+
+	// Use the extracted ID as needed, for now, we'll just print it
+	fmt.Println("Extracted ID DescriptionHandler: ", entityId)
 
 	docs, err := GetDescription(authorize.GlobalAuthId, entityId)
 	if err != nil {
@@ -81,7 +74,7 @@ func GetDescription(authID string, dealId string) ([]byte, error) {
 		return nil, err
 	}
 
-	log.Println("resp_at_last_AddDeal:", string(bz))
+	log.Println("resp_at_last_GetDescription:", string(bz))
 
 	var apiResponse models.ApiResponse
 	if err := json.Unmarshal(bz, &apiResponse); err != nil {

@@ -32,13 +32,11 @@ func DocumentHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Invalid request path", http.StatusBadRequest)
 		return
 	}
-	id := pathSegments[3]
+	entityId := pathSegments[3]
 
 	// Use the extracted ID as needed, for now, we'll just print it
-	fmt.Println("Extracted ID: ", id)
-	fmt.Fprintf(w, "Requested documents for ID: %s", id)
+	fmt.Println("DocumentHandler Extracted ID: ", entityId)
 
-	entityId := "23"
 	docs, err := GetDocsByDeal(authorize.GlobalAuthId, entityId)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -107,7 +105,7 @@ func GetDocsByDeal(authID string, entityId string) ([]byte, error) {
 		return nil, err
 	}
 
-	log.Println("Response:", string(responseData))
+	log.Println("GetDocsByDeal Response:", string(responseData))
 
 	return responseData, nil
 }
