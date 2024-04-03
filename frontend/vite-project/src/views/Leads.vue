@@ -177,11 +177,12 @@ export default {
 
 .send-button {
   background-color: white;
-  width: 100px;
+  width: 150px;
   height: 50px;
   text-align: right;
   border: #181818;
   border-radius: 5px;
+  margin-left: 5px;
 }
 
 .text-block{
