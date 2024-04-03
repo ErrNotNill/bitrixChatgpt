@@ -79,7 +79,7 @@
           </div>
           <div v-if="activeItem === deal.ID" class="input-window">
             <input class="text-block" type="text" placeholder="Enter your message here" />
-            <button type="button" class="send-button">Send</button>
+            <button type="button" class="send-button">Send to Analyze</button>
           </div>
 
         </li>
@@ -177,22 +177,27 @@ export default {
 
 .send-button {
   background-color: white;
+  width: 100px;
+  height: 50px;
   text-align: right;
   border: #181818;
+  border-radius: 5px;
 }
+
 .text-block{
   width: 300px;
   height: 250px;
   margin-top: 10px;
-  background-color: #d3d3d3;
+  background-color: white;
   padding: 5px;
   border-radius: 5px;
 }
+
 .input-window {
   width: 500px;
   height: 300px;
   margin-top: 10px;
-  background-color: #d3d3d3;
+  background-color: lightgray;
   padding: 5px;
   border-radius: 5px;
 }
