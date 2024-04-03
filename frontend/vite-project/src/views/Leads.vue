@@ -46,6 +46,8 @@
                   <a :href="doc.imageUrl" target="_blank">Image</a>
               </ul>
             </div>
+          </div>
+          <div v-if="activeItem === deal.ID" class="item-details">
             <button @click="showCommentary(deal.ID)" class="detail-button">Commentaries</button>
             <div v-if="commentaryData[deal.ID] && commentaryData[deal.ID].length">
               <ul v-for="com in commentaryData[deal.ID]" :key="com.id">
@@ -54,6 +56,8 @@
                 <!-- Links -->
               </ul>
             </div>
+          </div>
+          <div v-if="activeItem === deal.ID" class="item-details">
             <button @click="showDescription(deal.ID)" class="detail-button">Description</button>
             <div v-if="descriptionData[deal.ID]">
               <p>ID: {{ descriptionData[deal.ID].ID }}</p>
@@ -71,6 +75,7 @@
               <p>Date_modify: {{ descriptionData[deal.ID].DATE_MODIFY }}</p>
               <!-- Display other fields as needed -->
             </div>
+
           </div>
         </li>
       </ul>
