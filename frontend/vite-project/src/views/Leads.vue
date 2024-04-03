@@ -76,12 +76,12 @@
               <!-- Display other fields as needed -->
             </div>
 
+          </div>
           <div v-if="activeItem === deal.ID" class="item-details">
             <input type="text" placeholder="Enter your message here" />
             <button type="button">Send</button>
           </div>
 
-          </div>
         </li>
       </ul>
     </div>
