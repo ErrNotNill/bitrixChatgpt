@@ -77,9 +77,9 @@
             </div>
 
           </div>
-          <div v-if="activeItem === deal.ID" class="item-details">
+          <div v-if="activeItem === deal.ID" class="input-window">
             <input type="text" placeholder="Enter your message here" />
-            <button type="button">Send</button>
+            <button type="button" class="send-button">Send</button>
           </div>
 
         </li>
@@ -172,7 +172,19 @@ export default {
 </script>
 
 
+
 <style>
+
+.send-button {
+  background-color: white;
+  text-align: right;
+  border: #181818;
+}
+
+.input-window {
+  width: 70%;
+  height: 100%;
+}
 
 /* Style for the table button */
 .table-button {
