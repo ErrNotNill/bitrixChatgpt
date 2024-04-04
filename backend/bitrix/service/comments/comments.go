@@ -59,7 +59,7 @@ type CommentRequestBody struct {
 func GetCommentsByEntity(authID string, entityId string) ([]byte, error) {
 	bitrixMethod := "crm.timeline.comment.list"
 
-	requestURL := fmt.Sprintf("%srest/%s?auth=%s", endpoints.BitrixDomain, bitrixMethod, authID)
+	requestURL := fmt.Sprintf("%s/rest/%s?auth=%s", endpoints.BitrixDomain, bitrixMethod, authID)
 
 	// Construct the new request body based on the new structure
 	body := CommentRequestBody{
