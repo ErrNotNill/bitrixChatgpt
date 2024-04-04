@@ -15,7 +15,7 @@ func GetDeals(authID string) ([]byte, error) {
 	method := "GET"
 
 	// Format the URL with the provided authID parameter
-	requestUrl := fmt.Sprintf("%srest/crm.deal.list?auth=%s", endpoints.BitrixDomain, authID)
+	requestUrl := fmt.Sprintf("%s/rest/crm.deal.list?auth=%s", endpoints.BitrixDomain, authID)
 
 	req, err := http.NewRequest(method, requestUrl, nil)
 	if err != nil {

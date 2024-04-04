@@ -45,7 +45,7 @@ func DescriptionHandler(w http.ResponseWriter, r *http.Request) {
 func GetDescription(authID string, dealId string) ([]byte, error) {
 	bitrixMethod := "crm.deal.get"
 
-	requestURL := fmt.Sprintf("%srest/%s?auth=%s", endpoints.BitrixDomain, bitrixMethod, authID)
+	requestURL := fmt.Sprintf("%s/rest/%s?auth=%s", endpoints.BitrixDomain, bitrixMethod, authID)
 
 	// The body here needs to be an object that matches the expected structure for the Bitrix24 API call
 	bodyObj := map[string]string{"id": dealId}
