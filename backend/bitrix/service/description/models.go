@@ -8,7 +8,7 @@ type Deal struct {
 	Title               string    `json:"TITLE"`
 	TypeID              string    `json:"TYPE_ID"`
 	StageID             string    `json:"STAGE_ID"`
-	Probability         *float64  `json:"PROBABILITY"` // Use pointer to represent null
+	Probability         string    `json:"PROBABILITY"` // Use pointer to represent null
 	CurrencyID          string    `json:"CURRENCY_ID"`
 	Opportunity         string    `json:"OPPORTUNITY"`
 	IsManualOpportunity string    `json:"IS_MANUAL_OPPORTUNITY"`
@@ -57,14 +57,14 @@ type Deal struct {
 
 // ResponseTime represents the timing information in the response
 type ResponseTime struct {
-	Start            float64 `json:"start"`
-	Finish           float64 `json:"finish"`
-	Duration         float64 `json:"duration"`
-	Processing       float64 `json:"processing"`
-	DateStart        string  `json:"date_start"`
-	DateFinish       string  `json:"date_finish"`
-	OperatingResetAt int64   `json:"operating_reset_at"`
-	Operating        float64 `json:"operating"` // This field should be a float64
+	Start            string `json:"start"`
+	Finish           string `json:"finish"`
+	Duration         string `json:"duration"`
+	Processing       string `json:"processing"`
+	DateStart        string `json:"date_start"`
+	DateFinish       string `json:"date_finish"`
+	OperatingResetAt int64  `json:"operating_reset_at"`
+	Operating        string `json:"operating"` // This field should be a float64
 }
 
 // DealResponse represents the top-level structure of the JSON response
