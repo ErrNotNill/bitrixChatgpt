@@ -12,7 +12,7 @@ func OnCrmDealAddEventRegistration(authId string) {
 
 	method := "POST"
 	event := "OnCrmDealAdd"
-	handler := "https://b24app.rwp2.com/api/event_deal_add"
+	handler := fmt.Sprintf("%s/api/event_deal_add", endpoints.BitrixDomain)
 
 	// Format the URL with the provided authID parameter
 	requestUrl := fmt.Sprintf("%srest/event.bind.json?auth=%s&auth_type=0&event=%s&event_type=offline&handler=%s", endpoints.BitrixDomain, authId, event, handler)
