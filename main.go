@@ -22,12 +22,10 @@ func main() {
 		fmt.Println("Loaded .env file")
 	}
 	//authorize.StartB24()
-
+	endpoints.BitrixDomain = os.Getenv("BITRIX_DOMAIN")
 	//authorize.CustomAuthorizeBitrix()
 
 	routes.Router()
-
-	endpoints.BitrixDomain = os.Getenv("BITRIX_DOMAIN")
 
 	/*	err := authorize.AuthorizeBitrix()
 		if err != nil {
