@@ -15,7 +15,7 @@ func OnCrmDealAddEventRegistration(authId string) {
 	handler := fmt.Sprintf("%s/api/event_deal_add", endpoints.BitrixDomain)
 
 	// Format the URL with the provided authID parameter
-	requestUrl := fmt.Sprintf("%srest/event.bind.json?auth=%s&auth_type=0&event=%s&event_type=offline&handler=%s", endpoints.BitrixDomain, authId, event, handler)
+	requestUrl := fmt.Sprintf("%s/rest/event.bind.json?auth=%s&auth_type=0&event=%s&event_type=offline&handler=%s", endpoints.BitrixDomain, authId, event, handler)
 
 	req, err := http.NewRequest(method, requestUrl, nil)
 	if err != nil {
