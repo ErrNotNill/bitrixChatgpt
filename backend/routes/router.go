@@ -7,6 +7,7 @@ import (
 	"bitrix_app/backend/bitrix/service/description"
 	"bitrix_app/backend/bitrix/service/docs"
 	"bitrix_app/backend/bitrix/service/events"
+	"bitrix_app/backend/bitrix/service/settings"
 	"net/http"
 )
 
@@ -23,6 +24,8 @@ func Router() {
 	http.HandleFunc("/api/documents/", docs.DocumentHandler)
 	http.HandleFunc("/api/comments/", comments.CommentsHandler)
 	http.HandleFunc("/api/description/", description.DescriptionHandler)
+
+	http.HandleFunc("/api/save_settings", settings.SaveSettingsHandler)
 
 	//http.HandleFunc("/api/check_widget", widget.CheckWidget) //here we create widget in bitrix
 

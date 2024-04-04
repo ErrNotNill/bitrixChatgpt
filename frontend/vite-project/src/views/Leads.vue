@@ -73,6 +73,10 @@
               <p>Modify_by_id: {{ descriptionData[deal.ID].MODIFY_BY_ID }}</p>
               <p>Date_create: {{ descriptionData[deal.ID].DATE_CREATE }}</p>
               <p>Date_modify: {{ descriptionData[deal.ID].DATE_MODIFY }}</p>
+              <p>Is_new: {{ descriptionData[deal.ID].IS_NEW }}</p>
+              <p>Closed?: {{ descriptionData[deal.ID].CLOSED }}</p>
+              <p>Opened?: {{ descriptionData[deal.ID].OPENED }}</p>
+
               <!-- Display other fields as needed -->
             </div>
 
