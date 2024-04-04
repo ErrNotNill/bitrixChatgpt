@@ -1,6 +1,7 @@
 package events
 
 import (
+	"bitrix_app/backend/bitrix/endpoints"
 	"fmt"
 	"io"
 	"log"
@@ -14,7 +15,7 @@ func OnCrmDealAddEventRegistration(authId string) {
 	handler := "https://b24app.rwp2.com/api/event_deal_add"
 
 	// Format the URL with the provided authID parameter
-	requestUrl := fmt.Sprintf("https://b24-9f7fvg.bitrix24.ru/rest/event.bind.json?auth=%s&auth_type=0&event=%s&event_type=offline&handler=%s", authId, event, handler)
+	requestUrl := fmt.Sprintf("%srest/event.bind.json?auth=%s&auth_type=0&event=%s&event_type=offline&handler=%s", endpoints.BitrixDomain, authId, event, handler)
 
 	req, err := http.NewRequest(method, requestUrl, nil)
 	if err != nil {

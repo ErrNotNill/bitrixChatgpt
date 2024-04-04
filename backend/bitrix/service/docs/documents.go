@@ -2,6 +2,7 @@ package docs
 
 import (
 	"bitrix_app/backend/bitrix/authorize"
+	"bitrix_app/backend/bitrix/endpoints"
 	"bytes"
 	"encoding/json"
 	"fmt"
@@ -63,7 +64,8 @@ type requestBody struct {
 
 func GetDocsByDeal(authID string, entityId string) ([]byte, error) {
 	bitrixMethod := "crm.documentgenerator.document.list"
-	requestUrl := fmt.Sprintf("https://b24-9f7fvg.bitrix24.ru/rest/%s?auth=%s", bitrixMethod, authID)
+
+	requestUrl := fmt.Sprintf("%s/rest/%s?auth=%s", endpoints.BitrixDomain, bitrixMethod, authID)
 
 	// Construct the request body
 	body := requestBody{

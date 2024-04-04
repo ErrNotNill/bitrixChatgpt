@@ -2,6 +2,7 @@ package description
 
 import (
 	"bitrix_app/backend/bitrix/authorize"
+	"bitrix_app/backend/bitrix/endpoints"
 	"bytes"
 	"encoding/json"
 	"fmt"
@@ -43,7 +44,8 @@ func DescriptionHandler(w http.ResponseWriter, r *http.Request) {
 
 func GetDescription(authID string, dealId string) ([]byte, error) {
 	bitrixMethod := "crm.deal.get"
-	requestURL := fmt.Sprintf("https://b24-9f7fvg.bitrix24.ru/rest/%s?auth=%s", bitrixMethod, authID)
+
+	requestURL := fmt.Sprintf("%srest/%s?auth=%s", endpoints.BitrixDomain, bitrixMethod, authID)
 
 	// The body here needs to be an object that matches the expected structure for the Bitrix24 API call
 	bodyObj := map[string]string{"id": dealId}

@@ -2,6 +2,7 @@ package comments
 
 import (
 	"bitrix_app/backend/bitrix/authorize"
+	"bitrix_app/backend/bitrix/endpoints"
 	"bytes"
 	"encoding/json"
 	"fmt"
@@ -57,7 +58,8 @@ type CommentRequestBody struct {
 
 func GetCommentsByEntity(authID string, entityId string) ([]byte, error) {
 	bitrixMethod := "crm.timeline.comment.list"
-	requestURL := fmt.Sprintf("https://b24-9f7fvg.bitrix24.ru/rest/%s?auth=%s", bitrixMethod, authID)
+
+	requestURL := fmt.Sprintf("%srest/%s?auth=%s", endpoints.BitrixDomain, bitrixMethod, authID)
 
 	// Construct the new request body based on the new structure
 	body := CommentRequestBody{

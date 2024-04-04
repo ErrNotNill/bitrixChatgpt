@@ -1,6 +1,7 @@
 package deals
 
 import (
+	"bitrix_app/backend/bitrix/endpoints"
 	"bitrix_app/backend/bitrix/models"
 	"encoding/json"
 	"fmt"
@@ -12,8 +13,9 @@ import (
 
 func GetDeals(authID string) ([]byte, error) {
 	method := "GET"
+
 	// Format the URL with the provided authID parameter
-	requestUrl := fmt.Sprintf("https://b24-9f7fvg.bitrix24.ru/rest/crm.deal.list?auth=%s", authID)
+	requestUrl := fmt.Sprintf("%srest/crm.deal.list?auth=%s", endpoints.BitrixDomain, authID)
 
 	req, err := http.NewRequest(method, requestUrl, nil)
 	if err != nil {

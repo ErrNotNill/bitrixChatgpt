@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bitrix_app/backend/bitrix/endpoints"
 	"bitrix_app/backend/bitrix/repo/mysql"
 	"bitrix_app/backend/routes"
 	"fmt"
@@ -25,6 +26,8 @@ func main() {
 	//authorize.CustomAuthorizeBitrix()
 
 	routes.Router()
+
+	endpoints.BitrixDomain = os.Getenv("BITRIX_DOMAIN")
 
 	/*	err := authorize.AuthorizeBitrix()
 		if err != nil {
