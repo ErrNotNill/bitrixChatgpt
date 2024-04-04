@@ -8,7 +8,7 @@ type Deal struct {
 	Title               string    `json:"TITLE"`
 	TypeID              string    `json:"TYPE_ID"`
 	StageID             string    `json:"STAGE_ID"`
-	Probability         string    `json:"PROBABILITY"` // Use pointer to represent null
+	Probability         float64   `json:"PROBABILITY"` // Use pointer to represent null
 	CurrencyID          string    `json:"CURRENCY_ID"`
 	Opportunity         string    `json:"OPPORTUNITY"`
 	IsManualOpportunity string    `json:"IS_MANUAL_OPPORTUNITY"`
