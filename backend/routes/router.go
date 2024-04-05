@@ -8,6 +8,7 @@ import (
 	"bitrix_app/backend/bitrix/service/docs"
 	"bitrix_app/backend/bitrix/service/events"
 	"bitrix_app/backend/bitrix/service/settings"
+	"bitrix_app/backend/chatgpt"
 	"net/http"
 )
 
@@ -26,6 +27,9 @@ func Router() {
 	http.HandleFunc("/api/description/", description.DescriptionHandler)
 
 	http.HandleFunc("/api/save_settings", settings.SaveSettingsHandler)
+
+	http.HandleFunc("/api/gpt", chatgpt.SendRequest)
+	http.HandleFunc("/api/gpt-request", chatgpt.RequestFromVue)
 
 	//http.HandleFunc("/api/check_widget", widget.CheckWidget) //here we create widget in bitrix
 

@@ -82,10 +82,13 @@
 
           </div>
           <div v-if="activeItem === deal.ID" class="input-window">
-            <input class="text-block" type="text" placeholder="Enter your message here" />
-            <button type="button" class="send-button">Send to Analyze</button>
+            <input class="text-block" v-model="inputMessage" type="text" placeholder="Enter your message here" />
+            <button type="button" @click="sendToServer(activeItem)">Send to Analyze</button>
           </div>
 
+          <div v-if="activeItem === deal.ID" class="output-window">
+            <p>{{ outputMessage }}</p>
+          </div>
         </li>
       </ul>
     </div>
@@ -109,6 +112,8 @@ export default {
       documentsData: {},
       commentaryData: {},
       descriptionData: {},
+      inputMessage: '', // Bind to the input field
+      outputMessage: '', // Store server response or output message
     }
   },
   mounted() {
@@ -193,7 +198,23 @@ export default {
           }
         });
       });
-    }
+    },
+    sendToServer(dealId) {
+      if (!this.inputMessage) {
+        alert('Please enter a message');
+        return;
+      }
+
+      axios.post('https://b24app.rwp2.com/api/gpt-request', {
+        message: this.inputMessage,
+        dealId: dealId,
+      }).then(response => {
+        this.outputMessage = response.data; // Assuming the response is the message you want to display
+      }).catch(error => {
+        console.error('Error sending message to server:', error);
+        this.outputMessage = 'Failed to get response';
+      });
+    },
   },
 };
 </script>
@@ -201,6 +222,16 @@ export default {
 
 
 <style>
+
+.output-window {
+  width: 490px; /* Adjusted for indentation */
+  height: auto; /* Flexible height */
+  margin-top: 5px; /* Indentation from the input-window block */
+  margin-left: 5px; /* Additional left indentation */
+  background-color: lightgray;
+  padding: 5px;
+  border-radius: 5px;
+}
 
 .send-button {
   background-color: white;

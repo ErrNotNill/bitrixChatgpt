@@ -4,10 +4,11 @@ import (
 	"context"
 	"fmt"
 	"github.com/sashabaranov/go-openai"
+	"net/http"
 	"os"
 )
 
-func SendRequest() {
+func SendRequest(w http.ResponseWriter, r *http.Request) {
 	apiKey := os.Getenv("CHATGPT_API_KEY")
 	client := openai.NewClient(apiKey)
 	resp, err := client.CreateChatCompletion(
@@ -29,4 +30,5 @@ func SendRequest() {
 	}
 
 	fmt.Println(resp.Choices[0].Message.Content)
+
 }

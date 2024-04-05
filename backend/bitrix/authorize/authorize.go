@@ -2,6 +2,7 @@ package authorize
 
 import (
 	"bitrix_app/backend/bitrix/authorize/auth"
+	"bitrix_app/backend/bitrix/service/events"
 	"fmt"
 	"io"
 	"log"
@@ -34,7 +35,7 @@ func ConnectionBitrixLocalApp(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("redirect is done...")
 	GlobalAuthId = auth.AuthID
 
-	//events.OnCrmDealAddEventRegistration(auth.AuthID) //todo return this method
+	events.OnCrmDealAddEventRegistration(auth.AuthID) //todo return this method
 
 }
 

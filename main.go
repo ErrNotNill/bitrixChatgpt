@@ -3,7 +3,6 @@ package main
 import (
 	"bitrix_app/backend/bitrix/endpoints"
 	"bitrix_app/backend/bitrix/repo/mysql"
-	"bitrix_app/backend/chatgpt"
 	"bitrix_app/backend/routes"
 	"fmt"
 	"github.com/joho/godotenv"
@@ -25,7 +24,7 @@ func main() {
 	//authorize.StartB24()
 	endpoints.BitrixDomain = os.Getenv("BITRIX_DOMAIN")
 	//authorize.CustomAuthorizeBitrix()
-	chatgpt.SendRequest()
+
 	routes.Router()
 
 	/*	err := authorize.AuthorizeBitrix()
