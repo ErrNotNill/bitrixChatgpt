@@ -1,6 +1,7 @@
 package chatgpt
 
 import (
+	"fmt"
 	"github.com/go-resty/resty/v2"
 	"log"
 	"os"
@@ -13,12 +14,13 @@ const (
 func SendRequest() {
 	apiKey := os.Getenv("CHATGPT_API_KEY")
 
+	fmt.Println("apiKey: ", apiKey)
 	client := resty.New()
 	response, err := client.R().
 		SetAuthToken(apiKey).
 		SetHeader("Content-Type", "application/json").
 		SetBody(map[string]interface{}{
-			"model":      "gpt-4",
+			"model":      "gpt-3.5-turbo",
 			"messages":   []interface{}{map[string]interface{}{"role": "system", "content": "Hi can you tell me what is the factorial of 10?"}},
 			"max_tokens": 50,
 		}).
