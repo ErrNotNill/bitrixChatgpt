@@ -18,7 +18,7 @@ func SendRequest() {
 		SetAuthToken(apiKey).
 		SetHeader("Content-Type", "application/json").
 		SetBody(map[string]interface{}{
-			"model":      "gpt-3.5-turbo",
+			"model":      "gpt-4",
 			"messages":   []interface{}{map[string]interface{}{"role": "system", "content": "Hi can you tell me what is the factorial of 10?"}},
 			"max_tokens": 50,
 		}).
