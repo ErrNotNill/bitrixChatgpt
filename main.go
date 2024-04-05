@@ -25,10 +25,9 @@ func main() {
 	//authorize.StartB24()
 	endpoints.BitrixDomain = os.Getenv("BITRIX_DOMAIN")
 	//authorize.CustomAuthorizeBitrix()
-
+	chatgpt.SendRequest()
 	routes.Router()
 
-	chatgpt.SendRequest()
 	/*	err := authorize.AuthorizeBitrix()
 		if err != nil {
 			log.Println("Bitrix authorization error...")
