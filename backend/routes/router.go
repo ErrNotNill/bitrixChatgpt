@@ -28,7 +28,7 @@ func Router() {
 
 	http.HandleFunc("/api/save_settings", settings.SaveSettingsHandler)
 
-	http.HandleFunc("/api/gpt", chatgpt.SendRequest)
+	//http.HandleFunc("/api/gpt", chatgpt.SendRequest)
 	http.HandleFunc("/api/gpt-request", chatgpt.RequestFromVue)
 
 	//http.HandleFunc("/api/check_widget", widget.CheckWidget) //here we create widget in bitrix

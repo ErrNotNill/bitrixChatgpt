@@ -4,11 +4,10 @@ import (
 	"context"
 	"fmt"
 	"github.com/sashabaranov/go-openai"
-	"net/http"
 	"os"
 )
 
-func SendRequest(w http.ResponseWriter, r *http.Request) {
+func SendRequest(vueReq string) string {
 	apiKey := os.Getenv("CHATGPT_API_KEY")
 	client := openai.NewClient(apiKey)
 	resp, err := client.CreateChatCompletion(
@@ -18,7 +17,7 @@ func SendRequest(w http.ResponseWriter, r *http.Request) {
 			Messages: []openai.ChatCompletionMessage{
 				{
 					Role:    openai.ChatMessageRoleUser,
-					Content: "Hello!",
+					Content: vueReq,
 				},
 			},
 		},
@@ -26,9 +25,9 @@ func SendRequest(w http.ResponseWriter, r *http.Request) {
 
 	if err != nil {
 		fmt.Printf("ChatCompletion error: %v\n", err)
-		return
+		return ""
 	}
-
+	var text = resp.Choices[0].Message.Content
 	fmt.Println(resp.Choices[0].Message.Content)
-
+	return text
 }
