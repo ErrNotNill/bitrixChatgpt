@@ -1,37 +1,32 @@
 package chatgpt
 
 import (
+	"context"
 	"fmt"
-	"github.com/go-resty/resty/v2"
-	"log"
+	"github.com/sashabaranov/go-openai"
 	"os"
-)
-
-const (
-	apiEndpoint = "https://api.openai.com/v1/chat/completions"
 )
 
 func SendRequest() {
 	apiKey := os.Getenv("CHATGPT_API_KEY")
-
-	fmt.Println("apiKey: ", apiKey)
-	client := resty.New()
-	response, err := client.R().
-		SetAuthToken(apiKey).
-		SetHeader("Content-Type", "application/json").
-		SetBody(map[string]interface{}{
-			"model":      "gpt-3.5-turbo",
-			"messages":   []interface{}{map[string]interface{}{"role": "system", "content": "Hi can you tell me what is the factorial of 10?"}},
-			"max_tokens": 50,
-		}).
-		Post(apiEndpoint)
+	client := openai.NewClient(apiKey)
+	resp, err := client.CreateChatCompletion(
+		context.Background(),
+		openai.ChatCompletionRequest{
+			Model: openai.GPT3Dot5Turbo,
+			Messages: []openai.ChatCompletionMessage{
+				{
+					Role:    openai.ChatMessageRoleUser,
+					Content: "Hello!",
+				},
+			},
+		},
+	)
 
 	if err != nil {
-		log.Fatalf("Error while sending the request: %v", err)
+		fmt.Printf("ChatCompletion error: %v\n", err)
+		return
 	}
 
-	// Log the raw response body for debugging
-	log.Printf("Raw response body: %s\n", response)
-
-	// Proceed with your existing unmarshalling and data handling logic...
+	fmt.Println(resp.Choices[0].Message.Content)
 }
