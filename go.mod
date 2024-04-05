@@ -7,6 +7,7 @@ require (
 	github.com/andybalholm/brotli v1.0.5 // indirect
 	github.com/appscode/go-querystring v0.0.0-20170504095604-0126cfb3f1dc // indirect
 	github.com/asaskevich/govalidator v0.0.0-20230301143203-a9d515a09cc2 // indirect
+	github.com/go-resty/resty/v2 v2.12.0 // indirect
 	github.com/go-sql-driver/mysql v1.8.0 // indirect
 	github.com/gofiber/fiber/v2 v2.43.0 // indirect
 	github.com/google/uuid v1.3.0 // indirect
@@ -28,7 +29,7 @@ require (
 	github.com/valyala/fasthttp v1.45.0 // indirect
 	github.com/valyala/tcplisten v1.0.0 // indirect
 	github.com/whatcrm/go-bitrix24 v0.0.0-20231211095234-ac4569e0fe00 // indirect
-	golang.org/x/net v0.8.0 // indirect
-	golang.org/x/sys v0.6.0 // indirect
+	golang.org/x/net v0.22.0 // indirect
+	golang.org/x/sys v0.18.0 // indirect
 	gopkg.in/resty.v1 v1.12.0 // indirect
 )
