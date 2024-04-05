@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/go-resty/resty/v2"
 	"log"
+	"os"
 )
 
 const (
@@ -12,7 +13,8 @@ const (
 )
 
 func SendRequest() {
-	apiKey := "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" //todo in env
+	apiKey := os.Getenv("CHATGPT_API_KEY")
+
 	client := resty.New()
 	response, err := client.R().
 		SetAuthToken(apiKey).
