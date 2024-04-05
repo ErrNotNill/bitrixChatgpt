@@ -29,7 +29,7 @@
               Стадия сделки: {{ deal.STAGE_ID }}
             </button>
           </div>
-          <div v-if="activeItem === deal.ID" class="item-details">
+          <div v-if="activeItem === deal.ID" class="item-details-documents">
             <!-- Adjust according to the actual properties of a deal -->
             <!-- Example detail -->
             <p>Title: {{ deal.TITLE }}</p>
@@ -47,7 +47,7 @@
               </ul>
             </div>
           </div>
-          <div v-if="activeItem === deal.ID" class="item-details">
+          <div v-if="activeItem === deal.ID" class="item-details-comments">
             <button @click="showCommentary(deal.ID)" class="detail-button">Commentaries</button>
             <div v-if="commentaryData[deal.ID] && commentaryData[deal.ID].length">
               <ul v-for="com in commentaryData[deal.ID]" :key="com.id">
@@ -57,7 +57,7 @@
               </ul>
             </div>
           </div>
-          <div v-if="activeItem === deal.ID" class="item-details">
+          <div v-if="activeItem === deal.ID" class="item-details-description">
             <button @click="showDescription(deal.ID)" class="detail-button">Description</button>
             <div v-if="descriptionData[deal.ID]">
               <p>ID: {{ descriptionData[deal.ID].ID }}</p>
@@ -242,8 +242,28 @@ export default {
   text-align: center;
 }
 
+.item-details-documents {
+  width: 500px;
+  height: auto; /* Maximum height before scrolling */
+  overflow-y: auto; /* Enables vertical scrolling when content overflows */
+  margin-top: 10px;
+  background-color: lightgray;
+  padding: 5px;
+  border-radius: 5px;
+}
+
+.item-details-comments {
+  width: 500px;
+  height: auto; /* Maximum height before scrolling */
+  overflow-y: auto; /* Enables vertical scrolling when content overflows */
+  margin-top: 10px;
+  background-color: lightgray;
+  padding: 5px;
+  border-radius: 5px;
+}
+
 /* Style for the item details */
-.item-details {
+.item-details-description {
   width: 500px;
   max-height: 300px; /* Maximum height before scrolling */
   overflow-y: auto; /* Enables vertical scrolling when content overflows */
