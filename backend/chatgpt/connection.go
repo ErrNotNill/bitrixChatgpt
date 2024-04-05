@@ -27,20 +27,28 @@ func SendRequest() {
 		Post(apiEndpoint)
 
 	if err != nil {
-		log.Fatalf("Error while sending send the request: %v", err)
+		log.Fatalf("Error while sending the request: %v", err)
 	}
 	body := response.Body()
 
 	var data map[string]interface{}
 	err = json.Unmarshal(body, &data)
 	if err != nil {
-		fmt.Println("Error while decoding JSON response:", err)
+		log.Printf("Error while decoding JSON response: %v", err)
 		return
 	}
 
-	// Extract the content from the JSON response
-	content := data["choices"].([]interface{})[0].(map[string]interface{})["message"].(map[string]interface{})["content"].(string)
+	// Improved error handling
+	if choices, ok := data["choices"].([]interface{}); ok && len(choices) > 0 {
+		if choice, ok := choices[0].(map[string]interface{}); ok {
+			if message, ok := choice["message"].(map[string]interface{}); ok {
+				if content, ok := message["content"].(string); ok {
+					fmt.Println("response of chatgpt: content: ", content)
+					return
+				}
+			}
+		}
+	}
 
-	fmt.Println("response of chatgpt: content: ", content)
-
+	log.Println("The 'choices' field is missing or does not contain expected data")
 }
