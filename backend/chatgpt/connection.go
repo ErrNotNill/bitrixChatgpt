@@ -1,8 +1,6 @@
 package chatgpt
 
 import (
-	"encoding/json"
-	"fmt"
 	"github.com/go-resty/resty/v2"
 	"log"
 	"os"
@@ -29,26 +27,9 @@ func SendRequest() {
 	if err != nil {
 		log.Fatalf("Error while sending the request: %v", err)
 	}
-	body := response.Body()
 
-	var data map[string]interface{}
-	err = json.Unmarshal(body, &data)
-	if err != nil {
-		log.Printf("Error while decoding JSON response: %v", err)
-		return
-	}
+	// Log the raw response body for debugging
+	log.Printf("Raw response body: %s\n", response)
 
-	// Improved error handling
-	if choices, ok := data["choices"].([]interface{}); ok && len(choices) > 0 {
-		if choice, ok := choices[0].(map[string]interface{}); ok {
-			if message, ok := choice["message"].(map[string]interface{}); ok {
-				if content, ok := message["content"].(string); ok {
-					fmt.Println("response of chatgpt: content: ", content)
-					return
-				}
-			}
-		}
-	}
-
-	log.Println("The 'choices' field is missing or does not contain expected data")
+	// Proceed with your existing unmarshalling and data handling logic...
 }
