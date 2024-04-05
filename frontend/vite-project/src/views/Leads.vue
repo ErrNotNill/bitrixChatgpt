@@ -111,6 +111,12 @@ export default {
       descriptionData: {},
     }
   },
+  mounted() {
+    this.adjustItemDetailsHeight();
+  },
+  updated() {
+    this.adjustItemDetailsHeight();
+  },
   created() {
     axios.get('https://b24app.rwp2.com/api/deals_get')
         .then((response) => {
@@ -132,6 +138,9 @@ export default {
   methods: {
     toggleMenu(ID) {
       this.activeItem = this.activeItem === ID ? null : ID;
+      this.$nextTick(() => {
+        this.adjustItemDetailsHeight(); // Adjust heights after toggling
+      });
     },
     applyFilter() {
       if (this.selectedFilter === 'Евгений') {
@@ -169,8 +178,22 @@ export default {
           })
           .catch(error => {
             console.error('Error fetching documents:', error);
-          });
+          })
+
     },
+    adjustItemDetailsHeight() {
+      this.$nextTick(() => {
+        document.querySelectorAll('.item-details').forEach(element => {
+          // Reset style to ensure accurate measurement
+          element.style.height = 'auto';
+          if (element.scrollHeight > 290) {
+            element.style.height = 'auto';
+          } else {
+            element.style.height = '300px'; // Set fixed height if content is not overflowing
+          }
+        });
+      });
+    }
   },
 };
 </script>
@@ -222,7 +245,8 @@ export default {
 /* Style for the item details */
 .item-details {
   width: 500px;
-  height: 300px;
+  max-height: 300px; /* Maximum height before scrolling */
+  overflow-y: auto; /* Enables vertical scrolling when content overflows */
   margin-top: 10px;
   background-color: lightgray;
   padding: 5px;
