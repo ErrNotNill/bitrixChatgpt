@@ -10,46 +10,50 @@ import (
 )
 
 type Feedback struct {
-	Rating  string `json:"rating"` // Assuming rating is sent as a string; change to int if it's sent as a number
+	Rating  string `json:"rating"` // Make sure the JSON tags match the keys in your JSON object.
 	Comment string `json:"comment"`
 }
 
 var UserGlobalId string
 
 func UserForm(w http.ResponseWriter, r *http.Request) {
-	// Read the entire request body
-	fmt.Println("this data calls")
+	if r.Method == "POST" {
+		w.WriteHeader(http.StatusOK)
+		// Read the entire request body
+		fmt.Println("this data calls")
 
-	w.Header().Set("Access-Control-Allow-Origin", "*")                   // Allow any origin
-	w.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS") // Allowed methods
-	w.Header().Set("Access-Control-Allow-Headers", "Content-Type")       // Allow Content-Type header
+		w.Header().Set("Access-Control-Allow-Origin", "*")                   // Allow any origin
+		w.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS") // Allowed methods
+		w.Header().Set("Access-Control-Allow-Headers", "Content-Type")       // Allow Content-Type header
 
-	body, err := io.ReadAll(r.Body)
-	if err != nil {
-		log.Println("error reading response body:", err)
-		http.Error(w, "Error reading request", http.StatusBadRequest)
-		return
+		body, err := io.ReadAll(r.Body)
+		if err != nil {
+			log.Println("error reading response body:", err)
+			http.Error(w, "Error reading request", http.StatusBadRequest)
+			return
+		}
+		defer r.Body.Close()
+
+		log.Println("Received raw data:", string(body))
+
+		// Parse the JSON body into the Feedback struct
+		var feedback Feedback
+		err = json.Unmarshal(body, &feedback)
+		if err != nil {
+			log.Println("error parsing JSON:", err)
+			http.Error(w, "Error parsing JSON", http.StatusBadRequest)
+			return
+		}
+
+		// Log the parsed data
+		log.Printf("Parsed feedback data: %+v\n", feedback)
+		log.Printf("feedback.Rating: %s, feedback.Comment: %s", feedback.Rating, feedback.Comment)
+
+		// Respond to the client to indicate success
+		w.WriteHeader(http.StatusOK)
+		w.Write([]byte("Feedback received successfully"))
 	}
-	defer r.Body.Close()
 
-	log.Println("Received raw data:", string(body))
-
-	// Parse the JSON body into the Feedback struct
-	var feedback Feedback
-	err = json.Unmarshal(body, &feedback)
-	if err != nil {
-		log.Println("error parsing JSON:", err)
-		http.Error(w, "Error parsing JSON", http.StatusBadRequest)
-		return
-	}
-
-	// Log the parsed data
-	log.Printf("Parsed feedback data: %+v\n", feedback)
-	log.Printf("feedback.Rating: %s, feedback.Comment: %s", feedback.Rating, feedback.Comment)
-
-	// Respond to the client to indicate success
-	w.WriteHeader(http.StatusOK)
-	w.Write([]byte("Feedback received successfully"))
 }
 
 func UserRedirect(w http.ResponseWriter, r *http.Request) {

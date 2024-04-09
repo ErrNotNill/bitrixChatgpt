@@ -75,24 +75,28 @@
         console.log(feedbackData); // Log the data to the console for debugging
 
         // Sending the data to the server using fetch
-       fetch('https://b24app.rwp2.com/api/user-form', {
+        fetch('https://b24app.rwp2.com/api/user-form', {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify(feedbackData)
-        });
-           /* .then(response => {
+        })
+            /*.then(response => {
                 if (!response.ok) {
                     throw new Error('Network response was not OK');
                 }
-                return response.text(); // Change .json() to .text() if the response might not be JSON
+                return response.json(); // Assuming the server responds with JSON.
             })
             .then(data => {
                 console.log('Success:', data);
+                alert('Feedback submitted successfully');
             })
             .catch(error => {
                 console.error('Error:', error);
+                alert('Failed to submit feedback');
             });*/
+
     });
+
 </script>
 
 </body>
