@@ -13,9 +13,12 @@ type Feedback struct {
 	Comment string `json:"comment"`
 }
 
-var UserGlobalId string
+var DealGlobalId string
 var RatingGlobalText string
 var CommentGlobalText string
+var DateGlobal string
+var PhoneNumberGlobal string
+var BranchGlobal string
 
 func UserForm(w http.ResponseWriter, r *http.Request) {
 	// Handle preflight request for CORS
@@ -67,9 +70,12 @@ func UserForm(w http.ResponseWriter, r *http.Request) {
 }
 
 type ResponseData struct {
-	UserID  string `json:"user_id"`
-	Rating  string `json:"rating"`
-	Comment string `json:"comment"`
+	DealID      string `json:"deal_id"`
+	Rating      string `json:"rating"`
+	Comment     string `json:"comment"`
+	Date        string `json:"date"`
+	PhoneNumber string `json:"phone_number"`
+	Branch      string `json:"branch"`
 }
 
 func SendJsonInGoogle(w http.ResponseWriter, r *http.Request) {
@@ -78,9 +84,12 @@ func SendJsonInGoogle(w http.ResponseWriter, r *http.Request) {
 
 	// Populate data structure with your global variables
 	data := ResponseData{
-		UserID:  "UserGlobalId",
-		Rating:  "RatingGlobalText",
-		Comment: "CommentGlobalText",
+		DealID:      "DealGlobalId",
+		Rating:      "RatingGlobalText",
+		Comment:     "CommentGlobalText",
+		Date:        "DateGlobal",
+		PhoneNumber: "PhoneNumberGlobal",
+		Branch:      "BranchGlobal",
 	}
 
 	// Encode data to JSON and send as response
@@ -113,6 +122,11 @@ func UserRedirect(w http.ResponseWriter, r *http.Request) {
 	log.Printf("Received Date: %s", date)
 	log.Printf("Received Phone Number: %s", phoneNumber)
 	log.Printf("Received Branch: %s", decodedBranch)
+
+	DealGlobalId = id
+	DateGlobal = date
+	PhoneNumberGlobal = phoneNumber
+	BranchGlobal = decodedBranch
 
 	// Redirect or process further as required
 	redirectURL := "https://b24-yeth0y.bitrix24site.ru/empty/"
