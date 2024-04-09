@@ -83,13 +83,14 @@ func SendJsonInGoogle(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
 	// Populate data structure with your global variables
+
 	data := ResponseData{
-		DealID:      "DealGlobalId",
-		Rating:      "RatingGlobalText",
-		Comment:     "CommentGlobalText",
-		Date:        "DateGlobal",
-		PhoneNumber: "PhoneNumberGlobal",
-		Branch:      "BranchGlobal",
+		DealID:      "STR",
+		Rating:      "SSSSS",
+		Comment:     "ZXCZXC",
+		Date:        "ASDADSAD",
+		PhoneNumber: "QWEQEQEWQE",
+		Branch:      "GDSGDSGDSGSGDSG",
 	}
 
 	// Encode data to JSON and send as response
