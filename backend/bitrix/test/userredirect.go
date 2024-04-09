@@ -2,7 +2,6 @@ package test
 
 import (
 	"encoding/json"
-	"fmt"
 	"io"
 	"log"
 	"net/http"
@@ -17,15 +16,19 @@ type Feedback struct {
 var UserGlobalId string
 
 func UserForm(w http.ResponseWriter, r *http.Request) {
-	if r.Method == "POST" {
-		w.WriteHeader(http.StatusOK)
-		// Read the entire request body
-		fmt.Println("this data calls")
-
+	// Handle preflight request for CORS
+	if r.Method == "OPTIONS" {
 		w.Header().Set("Access-Control-Allow-Origin", "*")                   // Allow any origin
 		w.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS") // Allowed methods
 		w.Header().Set("Access-Control-Allow-Headers", "Content-Type")       // Allow Content-Type header
+		w.WriteHeader(http.StatusOK)
+		return
+	}
 
+	// Main handling for POST request
+	if r.Method == "POST" {
+		w.Header().Set("Access-Control-Allow-Origin", "*") // Allow any origin
+		// Reading the request body
 		body, err := io.ReadAll(r.Body)
 		if err != nil {
 			log.Println("error reading response body:", err)
@@ -36,7 +39,7 @@ func UserForm(w http.ResponseWriter, r *http.Request) {
 
 		log.Println("Received raw data:", string(body))
 
-		// Parse the JSON body into the Feedback struct
+		// Parsing the JSON body into the Feedback struct
 		var feedback Feedback
 		err = json.Unmarshal(body, &feedback)
 		if err != nil {
@@ -45,15 +48,17 @@ func UserForm(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		// Log the parsed data
+		// Logging the parsed data
 		log.Printf("Parsed feedback data: %+v\n", feedback)
 		log.Printf("feedback.Rating: %s, feedback.Comment: %s", feedback.Rating, feedback.Comment)
 
 		// Respond to the client to indicate success
-		w.WriteHeader(http.StatusOK)
+		w.WriteHeader(http.StatusOK) // This is now only set once in this block
 		w.Write([]byte("Feedback received successfully"))
+	} else {
+		// If not OPTIONS or POST, inform the client that the method is not allowed
+		http.Error(w, "Method Not Allowed", http.StatusMethodNotAllowed)
 	}
-
 }
 
 func UserRedirect(w http.ResponseWriter, r *http.Request) {
