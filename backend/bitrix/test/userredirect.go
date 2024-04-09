@@ -14,6 +14,8 @@ type Feedback struct {
 }
 
 var UserGlobalId string
+var RatingGlobalText string
+var CommentGlobalText string
 
 func UserForm(w http.ResponseWriter, r *http.Request) {
 	// Handle preflight request for CORS
@@ -52,12 +54,39 @@ func UserForm(w http.ResponseWriter, r *http.Request) {
 		log.Printf("Parsed feedback data: %+v\n", feedback)
 		log.Printf("feedback.Rating: %s, feedback.Comment: %s", feedback.Rating, feedback.Comment)
 
+		RatingGlobalText = feedback.Rating
+		CommentGlobalText = feedback.Comment
 		// Respond to the client to indicate success
 		w.WriteHeader(http.StatusOK) // This is now only set once in this block
 		w.Write([]byte("Feedback received successfully"))
 	} else {
 		// If not OPTIONS or POST, inform the client that the method is not allowed
 		http.Error(w, "Method Not Allowed", http.StatusMethodNotAllowed)
+	}
+
+}
+
+type ResponseData struct {
+	UserID  string `json:"user_id"`
+	Rating  string `json:"rating"`
+	Comment string `json:"comment"`
+}
+
+func SendJsonInGoogle(w http.ResponseWriter, r *http.Request) {
+	// Set Content-Type header
+	w.Header().Set("Content-Type", "application/json")
+
+	// Populate data structure with your global variables
+	data := ResponseData{
+		UserID:  "UserGlobalId",
+		Rating:  "RatingGlobalText",
+		Comment: "CommentGlobalText",
+	}
+
+	// Encode data to JSON and send as response
+	if err := json.NewEncoder(w).Encode(data); err != nil {
+		log.Printf("Error encoding JSON: %v", err)
+		http.Error(w, "Error encoding JSON", http.StatusInternalServerError)
 	}
 }
 
