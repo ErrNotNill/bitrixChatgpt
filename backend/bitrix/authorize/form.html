@@ -79,21 +79,7 @@
             method: 'POST', // Using the POST method to send data
             headers: {'Content-Type': 'application/json'}, // Specifying the content type as JSON
             body: JSON.stringify(feedbackData) // Converting the JavaScript object to a JSON string
-        })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                return response.json(); // Parsing the JSON response from the server
-            })
-            .then(data => {
-                console.log('Success:', data); // Logging the success response
-                alert('Feedback submitted successfully'); // Informing the user of success
-            })
-            .catch(error => {
-                console.error('Error:', error); // Logging any errors that occur
-                alert('Failed to submit feedback'); // Informing the user of failure
-            });
+        });
     });
 </script>
 
