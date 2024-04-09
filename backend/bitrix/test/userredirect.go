@@ -2,6 +2,7 @@ package test
 
 import (
 	"encoding/json"
+	"fmt"
 	"io"
 	"log"
 	"net/http"
@@ -17,6 +18,8 @@ var UserGlobalId string
 
 func UserForm(w http.ResponseWriter, r *http.Request) {
 	// Read the entire request body
+	fmt.Println("this data calls")
+
 	w.Header().Set("Access-Control-Allow-Origin", "*")                   // Allow any origin
 	w.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS") // Allowed methods
 	w.Header().Set("Access-Control-Allow-Headers", "Content-Type")       // Allow Content-Type header
