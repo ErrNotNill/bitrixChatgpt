@@ -2,7 +2,6 @@ package test
 
 import (
 	"encoding/json"
-	"fmt"
 	"io"
 	"log"
 	"net/http"
@@ -69,9 +68,6 @@ func UserRedirect(w http.ResponseWriter, r *http.Request) {
 	log.Printf("Received Date: %s", date)
 	log.Printf("Received Phone Number: %s", phoneNumber)
 	log.Printf("Received Branch: %s", decodedBranch)
-
-	// Respond back to the client
-	fmt.Fprintf(w, "Received data - ID: %s, Date: %s, Phone Number: %s, Branch: %s", id, date, phoneNumber, decodedBranch)
 
 	// Redirect or process further as required
 	redirectURL := "https://b24-yeth0y.bitrix24site.ru/empty/"
