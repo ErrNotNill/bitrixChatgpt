@@ -2,9 +2,11 @@ package test
 
 import (
 	"encoding/json"
+	"fmt"
 	"io"
 	"log"
 	"net/http"
+	"net/url"
 )
 
 type Feedback struct {
@@ -45,15 +47,31 @@ func UserForm(w http.ResponseWriter, r *http.Request) {
 }
 
 func UserRedirect(w http.ResponseWriter, r *http.Request) {
-	// Since we're dealing with query parameters, reading the body might not be necessary unless you expect a POST request with additional data.
-	queryParams := r.URL.Query()
-	id := queryParams.Get("id")
-	date := queryParams.Get("date")
-	phoneNumber := queryParams.Get("phone_number")
-	branch := queryParams.Get("branch")
+	// Parse the query parameters from the URL
+	query := r.URL.Query()
 
-	// Use these values as needed
-	log.Printf("Received - ID: %s, Date: %s, Phone Number: %s, Branch: %s\n", id, date, phoneNumber, branch)
+	// Retrieve individual query parameter values
+	id := query.Get("id")
+	date := query.Get("date")
+	phoneNumber := query.Get("phone_number")
+	branch := query.Get("branch")
+
+	// URL decode values that may contain URL-encoded characters (e.g., Cyrillic text or spaces)
+	decodedBranch, err := url.QueryUnescape(branch)
+	if err != nil {
+		log.Printf("Error decoding branch parameter: %v", err)
+		http.Error(w, "Error processing request", http.StatusBadRequest)
+		return
+	}
+
+	// Log the values for debugging (or use them as needed)
+	log.Printf("Received ID: %s", id)
+	log.Printf("Received Date: %s", date)
+	log.Printf("Received Phone Number: %s", phoneNumber)
+	log.Printf("Received Branch: %s", decodedBranch)
+
+	// Respond back to the client
+	fmt.Fprintf(w, "Received data - ID: %s, Date: %s, Phone Number: %s, Branch: %s", id, date, phoneNumber, decodedBranch)
 
 	// Redirect or process further as required
 	redirectURL := "https://b24-yeth0y.bitrix24site.ru/empty/"
