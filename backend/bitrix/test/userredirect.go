@@ -20,9 +20,7 @@ func UserForm(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Access-Control-Allow-Origin", "*")                   // Allow any origin
 	w.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS") // Allowed methods
 	w.Header().Set("Access-Control-Allow-Headers", "Content-Type")       // Allow Content-Type header
-	if r.Method == "OPTIONS" {
-		w.WriteHeader(http.StatusOK)
-	}
+
 	body, err := io.ReadAll(r.Body)
 	if err != nil {
 		log.Println("error reading response body:", err)

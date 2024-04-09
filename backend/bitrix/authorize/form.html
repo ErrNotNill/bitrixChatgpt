@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -75,11 +75,23 @@
         console.log(feedbackData); // Log the data to the console for debugging
 
         // Sending the data to the server using fetch
-        fetch('https://b24app.rwp2.com/api/user-form', {
-            method: 'POST', // Using the POST method to send data
-            headers: {'Content-Type': 'application/json'}, // Specifying the content type as JSON
-            body: JSON.stringify(feedbackData) // Converting the JavaScript object to a JSON string
+       fetch('https://b24app.rwp2.com/api/user-form', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify(feedbackData)
         });
+           /* .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not OK');
+                }
+                return response.text(); // Change .json() to .text() if the response might not be JSON
+            })
+            .then(data => {
+                console.log('Success:', data);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });*/
     });
 </script>
 
