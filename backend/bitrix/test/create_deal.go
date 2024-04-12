@@ -9,10 +9,9 @@ import (
 	"log"
 	"net/http"
 	"os"
-	"time"
 )
 
-func CreateDeal(commentary, category, link, contactId, branch, rating string, dateCreate time.Time) error {
+func CreateDeal(commentary string, category string, link string, contactId string, branch int, rating int, dateCreate string) error {
 	method := "POST"
 	requestBody := fmt.Sprintf(`{"fields":
 {"TITLE":"Сбор обратной связи harizma-service",
@@ -22,7 +21,7 @@ func CreateDeal(commentary, category, link, contactId, branch, rating string, da
 "CONTACT_ID":"%s",
 "DATE_CREATE":"%s",
 "UF_CRM_1690982742603":"%s",
-"UF_CRM_1712927909": "%s",
+"UF_CRM_1712927909": "%s"
 }
 }`, commentary, category, link, contactId, dateCreate, branch, rating)
 	//UF_CRM_1712927864 = Ссылка на сделку (NPS)

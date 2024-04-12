@@ -6,7 +6,6 @@ import (
 	"io"
 	"log"
 	"net/http"
-	"os"
 )
 
 type Feedback struct {
@@ -22,19 +21,16 @@ var PhoneNumberGlobal string
 var BranchGlobal string
 
 func UserForm(w http.ResponseWriter, r *http.Request) {
-	// Handle preflight request for CORS
 	if r.Method == "OPTIONS" {
-		w.Header().Set("Access-Control-Allow-Origin", "*")                   // Allow any origin
-		w.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS") // Allowed methods
-		w.Header().Set("Access-Control-Allow-Headers", "Content-Type")       // Allow Content-Type header
+		w.Header().Set("Access-Control-Allow-Origin", "*")
+		w.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS")
+		w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
 		w.WriteHeader(http.StatusOK)
 		return
 	}
 
-	// Main handling for POST request
 	if r.Method == "POST" {
-		w.Header().Set("Access-Control-Allow-Origin", "*") // Allow any origin
-		// Reading the request body
+		w.Header().Set("Access-Control-Allow-Origin", "*")
 		body, err := io.ReadAll(r.Body)
 		if err != nil {
 			log.Println("error reading response body:", err)
@@ -43,9 +39,6 @@ func UserForm(w http.ResponseWriter, r *http.Request) {
 		}
 		defer r.Body.Close()
 
-		log.Println("Received raw data:", string(body))
-
-		// Parsing the JSON body into the Feedback struct
 		var feedback Feedback
 		err = json.Unmarshal(body, &feedback)
 		if err != nil {
@@ -54,34 +47,61 @@ func UserForm(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		// Logging the parsed data
 		log.Printf("Parsed feedback data: %+v\n", feedback)
 		log.Printf("feedback.Rating: %s, feedback.Comment: %s", feedback.Rating, feedback.Comment)
 
-		RatingGlobalText = feedback.Rating
-		CommentGlobalText = feedback.Comment
-		// Respond to the client to indicate success
-		w.WriteHeader(http.StatusOK) // This is now only set once in this block
-		w.Write([]byte("Feedback received successfully"))
+		// Lookup for Rating
+		ratingMap := map[string]int{
+			"1":  857,
+			"2":  859,
+			"3":  861,
+			"4":  863,
+			"5":  865,
+			"6":  867,
+			"7":  869,
+			"8":  871,
+			"9":  873,
+			"10": 875,
+		}
+		numericRating, exists := ratingMap[feedback.Rating]
+		if !exists {
+			log.Printf("Invalid rating value: %s", feedback.Rating)
+		}
 
-		category := os.Getenv("CATEGORY_DEAL_HARIZMA_DEAL_ADD")
-		link := fmt.Sprintf(`https://harizma.bitrix24.ru/crm/deal/details/%s/`, DealGlobalId)
-
+		// Get Deal information and branch mapping
 		apiResponse, err := GetDealById(DealGlobalId)
 		if err != nil {
 			log.Println("Error getting deal info")
+			http.Error(w, "Failed to get deal info", http.StatusInternalServerError)
+			return
 		}
 
-		err = CreateDeal(feedback.Comment, category, link, apiResponse.Result.ContactID, apiResponse.Result.Branch, feedback.Rating, apiResponse.Result.DateCreate)
+		branchMap := map[string]int{
+			"м. Бауманская, ул. Бакунинская 32/36 с1":      471,
+			"м. Лубянка, ул. Сретенский переулок, 4":       473,
+			"м. Молодежная, Рублёвское шоссе, 28к1":        475,
+			"м. Сухаревская, Москва, ул. Сретенка, 30":     477,
+			"м. Новослободская,  ул. Новослободская, 20с6": 479,
+		}
+		numericBranch, branchExists := branchMap[apiResponse.Result.Branch]
+		if !branchExists {
+			log.Printf("Invalid branch value: %s", apiResponse.Result.Branch)
+		}
+
+		// Assuming CreateDeal handles the error internally and logs as needed
+		err = CreateDeal(feedback.Comment, "17", fmt.Sprintf("https://harizma.bitrix24.ru/crm/deal/details/%s/", DealGlobalId),
+			apiResponse.Result.ContactID, numericBranch, numericRating, apiResponse.Result.DateCreate)
 		if err != nil {
 			log.Println("CreateDeal failed")
+			http.Error(w, "Failed to create deal", http.StatusInternalServerError)
+			return
 		}
 
+		w.WriteHeader(http.StatusOK)
+		w.Write([]byte("Feedback received successfully"))
 	} else {
-		// If not OPTIONS or POST, inform the client that the method is not allowed
 		http.Error(w, "Method Not Allowed", http.StatusMethodNotAllowed)
 	}
-
 }
 
 type ResponseData struct {

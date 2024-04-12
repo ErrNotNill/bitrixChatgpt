@@ -51,7 +51,7 @@ type Deal struct {
 	AssignedByID        string      `json:"ASSIGNED_BY_ID"`
 	CreatedByID         string      `json:"CREATED_BY_ID"`
 	ModifyByID          string      `json:"MODIFY_BY_ID"`
-	DateCreate          time.Time   `json:"DATE_CREATE"`
+	DateCreate          string      `json:"DATE_CREATE"`
 	DateModify          time.Time   `json:"DATE_MODIFY"`
 	Opened              string      `json:"OPENED"`
 	Closed              string      `json:"CLOSED"`
