@@ -15,7 +15,7 @@ func CreateDeal(commentary string, category string, link string, contactId strin
 	method := "POST"
 	requestBody := fmt.Sprintf(`{"fields":
 {"TITLE":"Сбор обратной связи harizma-service",
-"COMMENTS":"%s", 
+"UF_CRM_1712936072":"%s", 
 "CATEGORY_ID":"%s",
 "UF_CRM_1712927864":"%s",
 "CONTACT_ID":"%s",
