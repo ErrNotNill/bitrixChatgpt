@@ -11,7 +11,7 @@ import (
 	"os"
 )
 
-func CreateDeal(commentary string, category string, link string, contactId string, branch int, rating int, dateCreate string) error {
+func CreateDeal(commentary string, category string, link string, contactId string, branch string, rating int, dateCreate string) error {
 	method := "POST"
 	requestBody := fmt.Sprintf(`{"fields":
 {"TITLE":"Сбор обратной связи harizma-service",

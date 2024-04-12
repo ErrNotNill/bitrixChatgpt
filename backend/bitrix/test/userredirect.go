@@ -76,21 +76,9 @@ func UserForm(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		branchMap := map[string]int{
-			"м. Бауманская, ул. Бакунинская 32/36 с1":      471,
-			"м. Лубянка, ул. Сретенский переулок, 4":       473,
-			"м. Молодежная, Рублёвское шоссе, 28к1":        475,
-			"м. Сухаревская, Москва, ул. Сретенка, 30":     477,
-			"м. Новослободская,  ул. Новослободская, 20с6": 479,
-		}
-		numericBranch, branchExists := branchMap[apiResponse.Result.Branch]
-		if !branchExists {
-			log.Printf("Invalid branch value: %s", apiResponse.Result.Branch)
-		}
-
 		// Assuming CreateDeal handles the error internally and logs as needed
 		err = CreateDeal(feedback.Comment, "17", fmt.Sprintf("https://harizma.bitrix24.ru/crm/deal/details/%s/", DealGlobalId),
-			apiResponse.Result.ContactID, numericBranch, numericRating, apiResponse.Result.DateCreate)
+			apiResponse.Result.ContactID, apiResponse.Result.Branch, numericRating, apiResponse.Result.DateCreate)
 		if err != nil {
 			log.Println("CreateDeal failed")
 			http.Error(w, "Failed to create deal", http.StatusInternalServerError)
