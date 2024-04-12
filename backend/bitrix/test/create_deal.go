@@ -20,8 +20,8 @@ func CreateDeal(commentary string, category string, link string, contactId strin
 "UF_CRM_1712927864":"%s",
 "CONTACT_ID":"%s",
 "DATE_CREATE":"%s",
-"UF_CRM_1690982742603":"%s",
-"UF_CRM_1712927909": "%s"
+"UF_CRM_1690982742603":"%v",
+"UF_CRM_1712927909": "%v"
 }
 }`, commentary, category, link, contactId, dateCreate, branch, rating)
 	//UF_CRM_1712927864 = Ссылка на сделку (NPS)
