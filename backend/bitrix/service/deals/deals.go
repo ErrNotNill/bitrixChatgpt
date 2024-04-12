@@ -2,7 +2,7 @@ package deals
 
 import (
 	"bitrix_app/backend/bitrix/endpoints"
-	"bitrix_app/backend/bitrix/models"
+	"bitrix_app/backend/bitrix/test"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -40,7 +40,7 @@ func GetDeals(authID string) ([]byte, error) {
 
 	log.Println("resp_at_last_AddDeal:", string(bz))
 
-	var apiResponse models.ApiResponse
+	var apiResponse test.ApiResponse
 	if err := json.Unmarshal(bz, &apiResponse); err != nil {
 		log.Printf("error unmarshalling response to ApiResponse: %v", err)
 		return nil, err
