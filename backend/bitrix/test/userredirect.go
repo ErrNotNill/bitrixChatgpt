@@ -2,10 +2,12 @@ package test
 
 import (
 	"encoding/json"
+	"fmt"
 	"io"
 	"log"
 	"net/http"
-	"net/url"
+	"os"
+	"time"
 )
 
 type Feedback struct {
@@ -62,6 +64,26 @@ func UserForm(w http.ResponseWriter, r *http.Request) {
 		// Respond to the client to indicate success
 		w.WriteHeader(http.StatusOK) // This is now only set once in this block
 		w.Write([]byte("Feedback received successfully"))
+
+		category := os.Getenv("CATEGORY_DEAL_HARIZMA_DEAL_ADD")
+		link := fmt.Sprintf(`https://harizma.bitrix24.ru/crm/deal/details/%s/`, DealGlobalId)
+
+		apiResponse, err := GetDealById(DealGlobalId)
+		if err != nil {
+			log.Println("Error getting deal info")
+		}
+
+		var contactId, branch string
+		var dateCreate time.Time
+		for _, v := range apiResponse.Result {
+			contactId, branch = v.ContactID, v.Branch
+			dateCreate = v.DateCreate
+		}
+		err = CreateDeal(feedback.Comment, category, link, contactId, branch, feedback.Rating, dateCreate)
+		if err != nil {
+			log.Println("CreateDeal failed")
+		}
+
 	} else {
 		// If not OPTIONS or POST, inform the client that the method is not allowed
 		http.Error(w, "Method Not Allowed", http.StatusMethodNotAllowed)
@@ -106,28 +128,11 @@ func UserRedirect(w http.ResponseWriter, r *http.Request) {
 
 	// Retrieve individual query parameter values
 	id := query.Get("id")
-	date := query.Get("date")
-	phoneNumber := query.Get("phone_number")
-	branch := query.Get("branch")
-
-	// URL decode values that may contain URL-encoded characters (e.g., Cyrillic text or spaces)
-	decodedBranch, err := url.QueryUnescape(branch)
-	if err != nil {
-		log.Printf("Error decoding branch parameter: %v", err)
-		http.Error(w, "Error processing request", http.StatusBadRequest)
-		return
-	}
 
 	// Log the values for debugging (or use them as needed)
 	log.Printf("Received ID: %s", id)
-	log.Printf("Received Date: %s", date)
-	log.Printf("Received Phone Number: %s", phoneNumber)
-	log.Printf("Received Branch: %s", decodedBranch)
 
 	DealGlobalId = id
-	DateGlobal = date
-	PhoneNumberGlobal = phoneNumber
-	BranchGlobal = decodedBranch
 
 	// Redirect or process further as required
 	redirectURL := "https://b24-yeth0y.bitrix24site.ru/empty/"

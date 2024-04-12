@@ -1,4 +1,4 @@
-package models
+package test
 
 import (
 	"encoding/json"
@@ -44,7 +44,7 @@ type Deal struct {
 	TaxValue            string      `json:"TAX_VALUE"`
 	LeadID              *string     `json:"LEAD_ID"` // Nullable
 	CompanyID           string      `json:"COMPANY_ID"`
-	ContactID           string      `json:"CONTACT_ID"` // Nullable
+	ContactID           *string     `json:"CONTACT_ID"` // Nullable
 	QuoteID             *string     `json:"QUOTE_ID"`   // Nullable
 	BeginDate           time.Time   `json:"BEGINDATE"`
 	CloseDate           time.Time   `json:"CLOSEDATE"`
@@ -77,9 +77,6 @@ type Deal struct {
 	UtmContent          *string     `json:"UTM_CONTENT"`  // Nullable
 	UtmTerm             *string     `json:"UTM_TERM"`     // Nullable
 	LastActivityBy      string      `json:"LAST_ACTIVITY_BY"`
-	LinkOnParentDealNps string      `json:"UF_CRM_1712927864"`
-	Branch              string      `json:"UF_CRM_1690982742603"`
-	RatingNps           string      `json:"UF_CRM_1712927909"`
 }
 
 type RequestTime struct {
@@ -93,7 +90,7 @@ type RequestTime struct {
 	Operating        float64   `json:"operating"`
 }
 
-type ApiResponseHarizma struct {
+type ApiResponse struct {
 	Result []Deal      `json:"result"`
 	Total  int         `json:"total"`
 	Time   RequestTime `json:"time"`
