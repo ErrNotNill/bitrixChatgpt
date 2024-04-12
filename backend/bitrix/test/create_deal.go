@@ -11,7 +11,7 @@ import (
 	"os"
 )
 
-func CreateDeal(commentary string, category string, link string, contactId string, branch string, rating int, dateCreate string) error {
+func CreateDeal(commentary string, category string, link string, contactId string, branch string, rating int, dateCreate string, stageId string) error {
 	method := "POST"
 	requestBody := fmt.Sprintf(`{"fields":
 {"TITLE":"Сбор обратной связи harizma-service",
@@ -21,9 +21,10 @@ func CreateDeal(commentary string, category string, link string, contactId strin
 "CONTACT_ID":"%s",
 "DATE_CREATE":"%s",
 "UF_CRM_1690982742603":"%v",
-"UF_CRM_1712927909": "%v"
+"UF_CRM_1712927909": "%v",
+"STAGE_ID": "%s"
 }
-}`, commentary, category, link, contactId, dateCreate, branch, rating)
+}`, commentary, category, link, contactId, dateCreate, branch, rating, stageId)
 	//UF_CRM_1712927864 = Ссылка на сделку (NPS)
 	//UF_CRM_1690982742603 = Адрес филиала
 	//UF_CRM_1712927909 = Оценка (NPS)

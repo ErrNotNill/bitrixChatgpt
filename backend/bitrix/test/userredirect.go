@@ -75,10 +75,30 @@ func UserForm(w http.ResponseWriter, r *http.Request) {
 			http.Error(w, "Failed to get deal info", http.StatusInternalServerError)
 			return
 		}
+		//C17:NEW НОВАЯ
+		//C17:UC_LRSZUX ОТРИЦ (1-5)
+		//C17:1 НЕЙТР (6-8)
+		//C17:UC_NBQJD0 ПОЛОЖ (9-10)
+		stageMap := map[string]string{
+			"1":  "C17:UC_LRSZUX",
+			"2":  "C17:UC_LRSZUX",
+			"3":  "C17:UC_LRSZUX",
+			"4":  "C17:UC_LRSZUX",
+			"5":  "C17:UC_LRSZUX",
+			"6":  "C17:1",
+			"7":  "C17:1",
+			"8":  "C17:1",
+			"9":  "C17:UC_NBQJD0",
+			"10": "C17:UC_NBQJD0",
+		}
+		stageValue, exists := stageMap[feedback.Rating]
+		if !exists {
+			log.Printf("Invalid rating value: %s", feedback.Rating)
+		}
 
 		// Assuming CreateDeal handles the error internally and logs as needed
 		err = CreateDeal(feedback.Comment, "17", fmt.Sprintf("https://harizma.bitrix24.ru/crm/deal/details/%s/", DealGlobalId),
-			apiResponse.Result.ContactID, apiResponse.Result.Branch, numericRating, apiResponse.Result.DateCreate)
+			apiResponse.Result.ContactID, apiResponse.Result.Branch, numericRating, apiResponse.Result.DateCreate, stageValue)
 		if err != nil {
 			log.Println("CreateDeal failed")
 			http.Error(w, "Failed to create deal", http.StatusInternalServerError)
