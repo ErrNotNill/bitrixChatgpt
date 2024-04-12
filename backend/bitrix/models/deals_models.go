@@ -94,7 +94,7 @@ type RequestTime struct {
 }
 
 type ApiResponseHarizma struct {
-	Result []Deal      `json:"result"`
+	Result Deal        `json:"result"`
 	Total  int         `json:"total"`
 	Time   RequestTime `json:"time"`
 }
