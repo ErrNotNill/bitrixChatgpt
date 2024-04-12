@@ -7,7 +7,6 @@ import (
 	"log"
 	"net/http"
 	"os"
-	"time"
 )
 
 type Feedback struct {
@@ -73,13 +72,7 @@ func UserForm(w http.ResponseWriter, r *http.Request) {
 			log.Println("Error getting deal info")
 		}
 
-		var contactId, branch string
-		var dateCreate time.Time
-		for _, v := range apiResponse.Result {
-			contactId, branch = v.ContactID, v.Branch
-			dateCreate = v.DateCreate
-		}
-		err = CreateDeal(feedback.Comment, category, link, contactId, branch, feedback.Rating, dateCreate)
+		err = CreateDeal(feedback.Comment, category, link, apiResponse.Result.ContactID, apiResponse.Result.Branch, feedback.Rating, apiResponse.Result.DateCreate)
 		if err != nil {
 			log.Println("CreateDeal failed")
 		}
