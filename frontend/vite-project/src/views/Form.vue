@@ -7,7 +7,7 @@
       <h2 class="form-heading">Оцени Харизму</h2>
       <form @submit.prevent="submitFeedback">
         <div class="form-field">
-          <label for="rating">Ваша оценка (1-10): *</label>
+          <label for="rating">Оценка (1-10): *</label>
           <select v-model="rating" required class="rating-select">
             <option value="" disabled hidden>Поставь оценку</option>
             <option v-for="num in 10" :value="num" :key="num">{{ num }}</option>
