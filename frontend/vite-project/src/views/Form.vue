@@ -96,13 +96,14 @@ export default {
 }
 
 .form-heading {
+  font-weight: normal;
   color: #FFB500;
   text-align: center;
-  margin-bottom: 30px;
+  margin-bottom: 45px;
 }
 
 .form-field {
-  margin-bottom: 20px;
+  margin-bottom: 30px;
 }
 
 .form-field label {
