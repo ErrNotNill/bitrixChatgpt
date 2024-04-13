@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <div class="page-container">
-      <img src="../../public/harizma.jpg" alt="Image Description" class="logo">
+
     </div>
     <div class="feedback-form-container">
       <h2 class="form-heading">Оцени Харизму</h2>
