@@ -4,15 +4,15 @@
       <img src="../../public/harizma.jpg" alt="Image Description" class="logo">
     </div>
     <div class="feedback-form-container">
-      <h2 class="form-heading">Оцените Харизму</h2>
+      <h2 class="form-heading">Оцени Харизму</h2>
       <form @submit.prevent="submitFeedback">
         <div class="form-field">
           <label for="rating">Ваша оценка (1-10): *</label>
           <select v-model="rating" required class="rating-select">
-            <option value="0">Выберите вариант</option>
+            <option value="" disabled hidden>Поставь оценку</option>
             <option v-for="num in 10" :value="num" :key="num">{{ num }}</option>
           </select>
-          <div class="mandatory-note">оценка обязательна</div>
+          <div class="mandatory-note" v-if="ratingError">Оценка обязательна</div> <!-- Added v-if directive -->
         </div>
         <div class="form-field">
           <label for="comment">Что нам улучшить?</label>
@@ -30,12 +30,20 @@
 export default {
   data() {
     return {
-      rating: 0,
-      comment: ''
+      rating: '',
+      comment: '',
+      ratingError: false // Added flag to track if rating is not selected
     }
   },
   methods: {
     submitFeedback() {
+      if (this.rating === '') {
+        this.ratingError = true; // Set ratingError to true if rating is not selected
+        return; // Prevent form submission
+      } else {
+        this.ratingError = false; // Reset ratingError if rating is selected
+      }
+
       const feedbackData = {
         rating: this.rating,
         comment: this.comment
@@ -59,6 +67,10 @@ export default {
 </script>
 
 <style scoped>
+
+.rating-select {
+  height: 50px;
+}
 /* General styles */
 .container {
   display: flex;
