@@ -9,6 +9,7 @@ import Auth from '@/views/Auth.vue'
 import Leads from "@/views/Leads.vue";
 //import StartPage from "@/views/StartPage.vue";
 import Settings from "@/views/Settings.vue";
+import Form from "@/views/Form.vue";
 
 const router = createRouter({
     history: createWebHistory(),
@@ -16,6 +17,10 @@ const router = createRouter({
         {
             path: '/',
             component: Leads
+        },
+        {
+            path: '/form',
+            component: Form
         },
         {
             path: '/auth',

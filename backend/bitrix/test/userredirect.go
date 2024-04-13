@@ -157,6 +157,6 @@ func UserRedirect(w http.ResponseWriter, r *http.Request) {
 	DealGlobalId = id
 
 	// Redirect or process further as required
-	redirectURL := "https://b24-yeth0y.bitrix24site.ru/empty/"
+	redirectURL := "https://harizma-service.ru/form"
 	http.Redirect(w, r, redirectURL, http.StatusFound)
 }
