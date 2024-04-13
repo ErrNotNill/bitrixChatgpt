@@ -16,7 +16,7 @@
         </div>
         <div class="form-field">
           <label for="comment">Что нам улучшить?</label>
-          <textarea id="comment" v-model="comment"></textarea> <!-- Added id="comment" -->
+          <textarea id="comment" v-model="comment"></textarea>
         </div>
         <div class="form-field">
           <input type="submit" value="Отправить">
@@ -59,11 +59,7 @@ export default {
 </script>
 
 <style scoped>
-
-.rating-select {
-  height: 50px;
-}
-
+/* General styles */
 .container {
   display: flex;
   flex-direction: column;
@@ -72,16 +68,18 @@ export default {
 }
 
 .page-container {
-  margin-bottom: 20px; /* Adjust spacing between containers */
+  margin-bottom: 20px;
 }
 
 .logo {
-  width: 1024px;
-  height: 580px;
+  width: 100%; /* Adjusted logo width */
+  max-width: 500px; /* Added max-width to limit size on larger screens */
+  height: auto; /* Ensures aspect ratio is maintained */
 }
 
 .feedback-form-container {
-  width: 300px;
+  width: 90%; /* Adjusted container width */
+  max-width: 400px; /* Added max-width to limit size on larger screens */
   box-sizing: border-box;
 }
 
@@ -114,7 +112,7 @@ export default {
 }
 
 .form-field input[type="submit"] {
-  width: 300px;
+  width: 100%;
   height: 40px;
   color: white;
   background-color: #333;
@@ -133,6 +131,19 @@ export default {
 
 #comment {
   width: 100%;
-  height: 80px; /* Set the height to 100px */
+  height: 80px;
+}
+
+/* Media queries */
+@media only screen and (min-width: 768px) {
+  .feedback-form-container {
+    width: 70%; /* Adjusted container width for larger screens */
+  }
+}
+
+@media only screen and (min-width: 1024px) {
+  .feedback-form-container {
+    width: 50%; /* Adjusted container width for even larger screens */
+  }
 }
 </style>
