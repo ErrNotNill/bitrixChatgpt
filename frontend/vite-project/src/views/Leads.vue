@@ -4,93 +4,39 @@
   <Sidebar />
 
   <main id="Home-page">
-    <h1>Сделки</h1>
-    <p></p>
+    <h1>Home</h1>
+    <p>This is the home page</p>
     <!-- Filter dropdown -->
     <div>
-      <label for="filter">Filter by: </label>
+      <label for="filter">Filter by:</label>
       <select id="filter" v-model="selectedFilter">
         <option value="all">All</option>
-        <option value="Евгений">Opts...</option>
-
+        <option value="Евгений">Евгений</option>
         <!-- Add more filter options here as needed -->
       </select>
-      <p></p>
       <button @click="applyFilter">Apply Filter</button>
     </div>
 
     <div class="table-container">
       <ul class="table">
-        <li v-for="deal in jsonArray" :key="deal.ID" class="list-item">
+        <li v-for="item in jsonArray" :key="item.id" class="list-item">
           <div class="button-container">
-            <button @click="toggleMenu(deal.ID)" class="table-button">
-              {{ deal.TITLE }}
-              <p>ID сделки: ({{ deal.ID }})</p>
-              Стадия сделки: {{ deal.STAGE_ID }}
+            <button
+              @click="toggleMenu(item.ID)"
+              class="table-button"
+              :class="{ highlighted: item.name === 'Евгений' }"
+            >
+              {{ item.ID }}
             </button>
           </div>
-          <div v-if="activeItem === deal.ID" class="item-details-documents">
-            <!-- Adjust according to the actual properties of a deal -->
-            <!-- Example detail -->
-            <p>Title: {{ deal.TITLE }}</p>
-
-            <!-- Additional Buttons -->
-            <button @click="showDocuments(deal.ID)" class="detail-button">Documents</button>
-            <!-- Conditional rendering based on whether documentsData for this deal.ID exists -->
-            <div v-if="documentsData[deal.ID] && documentsData[deal.ID].length">
-              <ul v-for="doc in documentsData[deal.ID]" :key="doc.id">
-                  {{ doc.title }}
-                  <!-- Links -->
-                  <a :href="doc.downloadUrl" target="_blank">Download</a>
-                  <a :href="doc.pdfUrl" target="_blank">PDF</a>
-                  <a :href="doc.imageUrl" target="_blank">Image</a>
-              </ul>
-            </div>
-          </div>
-          <div v-if="activeItem === deal.ID" class="item-details-comments">
-            <button @click="showCommentary(deal.ID)" class="detail-button">Commentaries</button>
-            <div v-if="commentaryData[deal.ID] && commentaryData[deal.ID].length">
-              <ul v-for="com in commentaryData[deal.ID]" :key="com.id">
-                {{ com.ID }}
-                {{ com.COMMENT }}
-                <!-- Links -->
-              </ul>
-            </div>
-          </div>
-          <div v-if="activeItem === deal.ID" class="item-details-description">
-            <button @click="showDescription(deal.ID)" class="detail-button">Description</button>
-            <div v-if="descriptionData[deal.ID]">
-              <p>ID: {{ descriptionData[deal.ID].ID }}</p>
-              <p>Title: {{ descriptionData[deal.ID].TITLE }}</p>
-              <p>Type ID: {{ descriptionData[deal.ID].TYPE_ID }}</p>
-              <p>Stage ID: {{ descriptionData[deal.ID].STAGE_ID }}</p>
-              <p>Opportunity: {{ descriptionData[deal.ID].OPPORTUNITY }}</p>
-              <p>Currency ID: {{ descriptionData[deal.ID].CURRENCY_ID }}</p>
-              <p>Begindate: {{ descriptionData[deal.ID].BEGINDATE }}</p>
-              <p>Closedate: {{ descriptionData[deal.ID].CLOSEDATE }}</p>
-              <p>Assigned_by_id: {{ descriptionData[deal.ID].ASSIGNED_BY_ID }}</p>
-              <p>Created+by_id: {{ descriptionData[deal.ID].CREATED_BY_ID }}</p>
-              <p>Modify_by_id: {{ descriptionData[deal.ID].MODIFY_BY_ID }}</p>
-              <p>Date_create: {{ descriptionData[deal.ID].DATE_CREATE }}</p>
-              <p>Date_modify: {{ descriptionData[deal.ID].DATE_MODIFY }}</p>
-              <p>Is_new: {{ descriptionData[deal.ID].IS_NEW }}</p>
-              <p>Closed?: {{ descriptionData[deal.ID].CLOSED }}</p>
-              <p>Opened?: {{ descriptionData[deal.ID].OPENED }}</p>
-
-              <!-- Display other fields as needed -->
-            </div>
-
-          </div>
-          <div v-if="activeItem === deal.ID" class="input-window">
-            <input class="text-block" v-model="inputMessage" type="text" placeholder="Enter your message here" />
-            <button type="button" @click="sendToServer(activeItem)">Send to Analyze</button>
-          </div>
-
-          <div v-if="activeItem === deal.ID" class="output-window">
-            <p>{{ outputMessage }}</p>
+          <div v-if="activeItem === item.ID" class="item-details">
+            <p>Name: {{ item.name }}</p>
+            <p>Phone: {{ item.phone }}</p>
+            <p>Assigned By Lead: {{ item.assignedByLead }}</p>
           </div>
         </li>
       </ul>
+
     </div>
   </main>
 
@@ -99,6 +45,8 @@
 <script>
 import axios from 'axios'
 import Sidebar from '@/components/Sidebar.vue'
+
+
 
 export default {
   components: { Sidebar },
@@ -109,43 +57,31 @@ export default {
       selectedFilter: 'all', // Default to "All"
       itemsPerPage: 50, // Number of items to show initially
       itemsToShow: 50, // Number of items to show currently
-      documentsData: {},
-      commentaryData: {},
-      descriptionData: {},
-      inputMessage: '', // Bind to the input field
-      outputMessage: '', // Store server response or output message
     }
   },
-  mounted() {
-    this.adjustItemDetailsHeight();
-  },
-  updated() {
-    this.adjustItemDetailsHeight();
-  },
   created() {
-    axios.get('https://b24app.rwp2.com/api/deals_get')
-        .then((response) => {
-          this.jsonArray = response.data.result; // Correct path to the data
-        })
-        .catch((error) => {
-          console.error('Error fetching data:', error);
-        });
+    axios
+      .get('https://onviz-api.ru/api/leads_get')
+      .then((response) => {
+        this.jsonArray = response.data // Assign the JSON array to a data property
+      })
+      .catch((error) => {
+        console.error('Error fetching data:', error)
+      })
   },
   computed: {
     filteredItems() {
+      // Filter items based on the selected filter criteria
       if (this.selectedFilter === 'all') {
-        return this.jsonArray;
+        return this.jsonArray // Return all items
       } else {
-        return this.jsonArray.filter((deal) => deal.ASSIGNED_BY_ID === this.selectedFilter);
+        return this.jsonArray.filter((item) => item.name === this.selectedFilter)
       }
     }
   },
   methods: {
     toggleMenu(ID) {
       this.activeItem = this.activeItem === ID ? null : ID;
-      this.$nextTick(() => {
-        this.adjustItemDetailsHeight(); // Adjust heights after toggling
-      });
     },
     applyFilter() {
       if (this.selectedFilter === 'Евгений') {
@@ -155,115 +91,13 @@ export default {
     loadMore() {
       this.itemsToShow += 10; // Increase the number of items to show
     },
-    showDocuments(ID) {
-      axios.get(`https://b24app.rwp2.com/api/documents/${ID}`)
-          .then(response => {
-            // Direct assignment for Vue 3 reactivity
-            this.documentsData[ID] = response.data.result.documents;
-          })
-          .catch(error => {
-            console.error('Error fetching documents:', error);
-          });
-    },
-    showCommentary(ID) {
-      axios.get(`https://b24app.rwp2.com/api/comments/${ID}`)
-          .then(response => {
-            // Direct assignment for Vue 3 reactivity
-            this.commentaryData[ID] = response.data.result;
-          })
-          .catch(error => {
-            console.error('Error fetching documents:', error);
-          });
-    },
-    showDescription(ID) {
-      axios.get(`https://b24app.rwp2.com/api/description/${ID}`)
-          .then(response => {
-            // Direct assignment for Vue 3 reactivity
-            this.descriptionData[ID] = response.data.result;
-          })
-          .catch(error => {
-            console.error('Error fetching documents:', error);
-          })
-
-    },
-    adjustItemDetailsHeight() {
-      this.$nextTick(() => {
-        document.querySelectorAll('.item-details').forEach(element => {
-          // Reset style to ensure accurate measurement
-          element.style.height = 'auto';
-          if (element.scrollHeight > 290) {
-            element.style.height = 'auto';
-          } else {
-            element.style.height = '300px'; // Set fixed height if content is not overflowing
-          }
-        });
-      });
-    },
-    sendToServer(dealId) {
-      if (!this.inputMessage) {
-        alert('Please enter a message');
-        return;
-      }
-
-      axios.post('https://b24app.rwp2.com/api/gpt-request', {
-        message: this.inputMessage,
-        dealId: dealId,
-      }).then(response => {
-        this.outputMessage = response.data; // Assuming the response is the message you want to display
-      }).catch(error => {
-        console.error('Error sending message to server:', error);
-        this.outputMessage = 'Failed to get response';
-      });
-    },
   },
 };
 </script>
 
-
-
 <style>
-
-.output-window {
-  width: 490px; /* Adjusted for indentation */
-  height: auto; /* Flexible height */
-  margin-top: 5px; /* Indentation from the input-window block */
-  margin-left: 5px; /* Additional left indentation */
-  background-color: lightgray;
-  padding: 5px;
-  border-radius: 5px;
-}
-
-.send-button {
-  background-color: white;
-  width: 150px;
-  height: 50px;
-  text-align: center;
-  border: #181818;
-  border-radius: 5px;
-  margin-left: 5px;
-}
-
-.text-block{
-  width: 300px;
-  height: 250px;
-  margin-top: 10px;
-  background-color: white;
-  padding: 5px;
-  border-radius: 5px;
-}
-
-.input-window {
-  width: 500px;
-  height: 300px;
-  margin-top: 10px;
-  background-color: lightgray;
-  padding: 5px;
-  border-radius: 5px;
-}
-
 /* Style for the table button */
 .table-button {
-  width: 300px;
   background-color: green;
   border: none;
   color: white;
@@ -273,31 +107,8 @@ export default {
   text-align: center;
 }
 
-.item-details-documents {
-  width: 500px;
-  height: auto; /* Maximum height before scrolling */
-  overflow-y: auto; /* Enables vertical scrolling when content overflows */
-  margin-top: 10px;
-  background-color: lightgray;
-  padding: 5px;
-  border-radius: 5px;
-}
-
-.item-details-comments {
-  width: 500px;
-  height: auto; /* Maximum height before scrolling */
-  overflow-y: auto; /* Enables vertical scrolling when content overflows */
-  margin-top: 10px;
-  background-color: lightgray;
-  padding: 5px;
-  border-radius: 5px;
-}
-
 /* Style for the item details */
-.item-details-description {
-  width: 500px;
-  max-height: 300px; /* Maximum height before scrolling */
-  overflow-y: auto; /* Enables vertical scrolling when content overflows */
+.item-details {
   margin-top: 10px;
   background-color: lightgray;
   padding: 5px;
@@ -306,7 +117,6 @@ export default {
 
 /* Remove bullet points from list items */
 .list-item {
-  width: 100%;
   list-style-type: none;
   margin-left: 0;
   padding-left: 0;
@@ -321,27 +131,11 @@ export default {
 /* Position the table on the left side */
 /* Position the table on the left side */
 .table-container {
-  text-align: left;
-  width: 100%;
-  margin-top: 40px;
+  text-align: center;
+  width: 50%;
+  margin: 0 auto;
 }
 .table li {
   float: left;
 }
-.detail-button {
-  background-color: #f0f0f0; /* Light grey, customizable */
-  border: 1px solid #d0d0d0; /* Slightly darker grey border */
-  color: #333; /* Dark grey text */
-  padding: 5px 15px;
-  margin: 5px;
-  cursor: pointer;
-  transition: background-color 0.3s ease; /* Smooth transition for hover effect */
-}
-
-.detail-button:hover {
-  background-color: #e0e0e0; /* Slightly darker grey on hover */
-}
-
-
-
 </style>

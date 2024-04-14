@@ -4,25 +4,49 @@
       <img :src="logoURL" alt="Vue" />
     </div>
 
+    <div class="menu-toggle-wrap">
+      <button class="menu-toggle" @click="ToggleMenu">
+        <span class="material-icons">keyboard_double_arrow_right</span>
+      </button>
+    </div>
 
     <h3>Menu</h3>
     <div class="menu">
 
-      <router-link to="/" class="button">
+      <router-link to="/login" class="button">
         <span class="material-icons">start</span>
         <span class="text">Start</span>
       </router-link>
-
-        <router-link to="/settings" class="button">
-          <span class="material-icons">settings</span>
-          <span class="text">Settings</span>
-        </router-link>
-
+      <router-link to="/leads" class="button">
+        <span class="material-icons">home</span>
+        <span class="text">Leads</span>
+      </router-link>
+      <router-link to="/about" class="button">
+        <span class="material-icons">description</span>
+        <span class="text">About</span>
+      </router-link>
+      <router-link to="/chat" class="button">
+        <span class="material-icons">chat</span>
+        <span class="text">Chat</span>
+      </router-link>
+      <router-link to="/team" class="button">
+        <span class="material-icons">group</span>
+        <span class="text">Team</span>
+      </router-link>
+      <router-link to="/contact" class="button">
+        <span class="material-icons">email</span>
+        <span class="text">Contact</span>
+      </router-link>
     </div>
 
     <div class="flex"></div>
 
-
+    <div class="menu">
+      <router-link to="/settings" class="button">
+        <span class="material-icons">settings</span>
+        <span class="text">Settings</span>
+      </router-link>
+    </div>
   </aside>
 </template>
 

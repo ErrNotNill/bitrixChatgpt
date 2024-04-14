@@ -1,16 +1,12 @@
+<style scoped>
+</style>
 
 <template>
-  <div>
-    <h1>Your Token</h1>
-    <p>{{ token }}</p>
-  </div>
+
 </template>
 
 <script setup>
-defineProps(['token']);
+
+window.location.href = 'https://onviz-api.ru/auth'
+
 </script>
-
-<style scoped>
-/* Your styles here */
-</style>
-
