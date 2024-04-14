@@ -8,6 +8,7 @@ import Auth from '@/views/Auth.vue'
 import Start from "@/views/Start.vue";
 import Leads from "@/views/Leads.vue";
 import StartPage from "@/views/StartPage.vue";
+import Form from "../src/views/Form.vue";
 
 const router = createRouter({
     history: createWebHistory(),
