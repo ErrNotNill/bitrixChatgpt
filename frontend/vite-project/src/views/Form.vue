@@ -48,6 +48,10 @@ export default {
         comment: this.comment
       };
 
+      // Immediately attempt to redirect regardless of the fetch outcome
+      window.location.href = 'https://b24-yeth0y.bitrix24site.ru/empty_jekf/';
+
+      // Continue with the fetch request to send data
       fetch('https://harizma-service.ru/api/user-form', {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
@@ -57,16 +61,16 @@ export default {
             if (!response.ok) {
               throw new Error('Network response was not OK');
             }
-            // Redirect after successful submission
-            window.location.href = 'https://b24-yeth0y.bitrix24site.ru/empty_jekf/';
+            return response.json(); // This line is technically not needed if we are redirecting unconditionally
           })
           .catch(error => {
-            console.error('Error:', error);
+            console.error('Error:', error); // Log the error, but redirect anyway
           });
     }
   }
 }
 </script>
+
 
 <style scoped>
 .rating-select {
