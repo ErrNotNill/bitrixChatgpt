@@ -1,13 +1,10 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import Home from '@/views/Leads.vue'
 import About from '../src/views/About.vue'
 import Chat from '@/views/Chat.vue'
 import Team from '@/views/Team.vue'
 import Login from '@/views/Login.vue'
 import Auth from '@/views/Auth.vue'
-import Start from "@/views/Start.vue";
 import Leads from "@/views/Leads.vue";
-import StartPage from "@/views/StartPage.vue";
 import Form from "../src/views/Form.vue";
 
 const router = createRouter({
@@ -15,11 +12,11 @@ const router = createRouter({
     routes: [
         {
             path: '/',
-            component: Login
+            component: Form
         },
         {
             path: '/form',
-            component: Form
+            component: Login
         },
         {
             path: '/auth',
