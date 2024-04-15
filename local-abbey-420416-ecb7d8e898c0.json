@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "local-abbey-420416",
+  "private_key_id": "ecb7d8e898c0fa13ed3c5f35665d8d225b2a6f04",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQCwh3d5gYsSrd/T\n6aA3mctksv8MQyNJWhU0PHwH4BF4u6ZUDsoS5WWJcMDjGfbb0E6Wlr3pvx4j/uqp\n5FxeVXZomKq5uv04YjlDyGBCeAbBWvAFOcqTkyqezdKkY+ENsswvt7MlGEyGnZew\n6EDh9/3hZWdwf1zfGJZcHlb7aEiKddBg2mGEG/lU2cNJi43tkjkNhTPi5Jf9ihwu\nLDT+G7RvKoOmN7qa7ysoK3eqWNa+Ff41int42TMnUKqdSxtWuckI0OL50atlbn9U\npLQARfF1qFu5OUnB5fLsrRBYX9Gac9rWF54uKnLVzMWuqqkkBinG1FNtJXS6u4vM\n3DJpmQkvAgMBAAECggEADvZ8jwUG979bMIgl93CGx/NQIQbzz7zd/T5/ON+qO3SU\nZZ2XTUC6eYrgHp/Nx9YBQ0xlrpFviZeK5nmfxrMxxS3jkrihzAyvU+qBFkE8OVlu\n7NJ4NEgOHcXOa/a3VcTo/8ZvXd6QZfynpewZy82MbHV+7g8tnQ9ld0tvDgJJ28p6\ngGehObQg37jPCcCchaJ0iOxRgEspOd6n52yktlgsOHgW/i8K4viljpwg65j/AGbO\n56zn4RcAg2+2NS/yyLFXIc5Rgx1PsdY+BVZuRI4w5LsYcV850xcP505Fh9bvU12U\nGZmaZVz2StaeLagPCh/7VQZ2KkTKyWxuC6rz+22ewQKBgQDoNe5l3vxJqELIbck2\nIpELmtatsepRz7ZONlcm9+LZucBOOd/DGwkI6fsf+hIGvjZ75vi/Slt762FD8xSW\nKeBQhHBLNaGdGh3B/PjaHl5c3OZL46U8G6VJPEVW2VkRO43Mnh/KWKiFyin4a/40\nHozV3ceTNAFnyqP68cid9D1r4QKBgQDCnTShHpYkpNDrWSAcyxkKovw0ClQF47qP\nhQ5sf5Fy8U+BIKvKnNDFsXX/fskctkjj8BrD4MB27QcmqHRd+UZsQHlTW1p2ZHsB\neZGZ3x5O655iZXhBV3/MjuTCekIZzpy2pk7tdWeU2UUE02ob+jpygpz8pw35NCYn\nLeP9mx6XDwKBgDJ+f7+hNIUj1JnW3bkq3RWD7wjINmbh3we041Cy+J5VuQ6JoTHA\n8D8C+jui2kajGB/rQs398lTJA1aORjy9EG0Rz4VbPTB3XF8xjj+H+QcCdgWsk+K1\nNETvmThgfPC1XYlQHSOYEdU999BwU0+sEP30gxBsb53NP8kyyGgoky6hAoGBAKX5\n1wnWgSyNWBRv9YA5AolcyYVEjbZcKx791nhYL978yNaS25C4PyFroPwe0Dxphi7H\n9ru5sct7iU7B+kSvNQ1by115GuS/+1wdpzy42itqrbCzY2Uuz7LQ526pQDisSmFH\n4yaHq6h5yHA+Mk/cD/7bQDIF81fmzuc5Lyl6IxOnAoGAfemtoM7h0IbgdJIXqbuy\nCwSkNxdJ6ET8ByQRPoAE7Gj61O3FIvrK5c/igjoOK43Qj4A+7VfUHP91y0OE5Zwi\nVj5fOJO8BU7+IrxP9OMn/YZViR/DHfFUHcpl97p16kAfPMmSa7YNi37QU4oJNk4z\nXraHjDJVgv1GkxntNt8cjbI=\n-----END PRIVATE KEY-----\n",
+  "client_email": "d-sannikov-harizma@local-abbey-420416.iam.gserviceaccount.com",
+  "client_id": "113775341419976833252",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/d-sannikov-harizma%40local-abbey-420416.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}

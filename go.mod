@@ -3,6 +3,8 @@ module bitrix_app
 go 1.20
 
 require (
+	cloud.google.com/go/compute v1.20.1 // indirect
+	cloud.google.com/go/compute/metadata v0.2.3 // indirect
 	filippo.io/edwards25519 v1.1.0 // indirect
 	github.com/andybalholm/brotli v1.0.5 // indirect
 	github.com/appscode/go-querystring v0.0.0-20170504095604-0126cfb3f1dc // indirect
@@ -31,6 +33,8 @@ require (
 	github.com/valyala/tcplisten v1.0.0 // indirect
 	github.com/whatcrm/go-bitrix24 v0.0.0-20231211095234-ac4569e0fe00 // indirect
 	golang.org/x/net v0.22.0 // indirect
+	golang.org/x/oauth2 v0.19.0 // indirect
 	golang.org/x/sys v0.18.0 // indirect
+	gopkg.in/Iwark/spreadsheet.v2 v2.0.0-20230915040305-7677e8164883 // indirect
 	gopkg.in/resty.v1 v1.12.0 // indirect
 )

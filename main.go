@@ -3,6 +3,7 @@ package main
 import (
 	"bitrix_app/backend/bitrix/endpoints"
 	"bitrix_app/backend/bitrix/repo/mysql"
+	"bitrix_app/backend/bitrix/test/spreadsheets"
 	"bitrix_app/backend/routes"
 	"fmt"
 	"github.com/joho/godotenv"
@@ -37,6 +38,9 @@ func main() {
 		ReadHeaderTimeout: 3 * time.Second,
 	}
 
+	spreadsheets.GoogleSheetsStart()
+
+	return
 	urlMysql := os.Getenv("URL_MYSQL")
 
 	err := mysql.InitDB(urlMysql)
