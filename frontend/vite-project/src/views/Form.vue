@@ -40,23 +40,28 @@ export default {
       if (this.rating === '') {
         this.ratingError = true; // Set ratingError to true if rating is not selected
         return; // Prevent form submission
-      } else {
-        this.ratingError = false; // Reset ratingError if rating is selected
       }
+      this.ratingError = false; // Reset ratingError if rating is selected
 
       const feedbackData = {
-        rating: this.rating,
+        rating: this.rating.toString(), // Ensure rating is a string if your backend expects a string
         comment: this.comment
       };
-      console.log(feedbackData);
 
       fetch('https://harizma-service.ru/api/user-form', {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify(feedbackData)
       })
-          .then(() => {
-            this.$emit('formSubmitted');
+          .then(response => {
+            if (!response.ok) {
+              throw new Error('Network response was not OK');
+            }
+            return response.json(); // Assuming the server responds with JSON.
+          })
+          .then(data => {
+            console.log('Success:', data);
+            // Redirect or change the view here
           })
           .catch(error => {
             console.error('Error:', error);
