@@ -12,7 +12,7 @@
             <option value="" disabled hidden>Поставь оценку</option>
             <option v-for="num in 10" :value="num" :key="num">{{ num }}</option>
           </select>
-          <div class="mandatory-note" v-if="ratingError">Оценка обязательна</div> <!-- Added v-if directive -->
+          <div class="mandatory-note" v-if="ratingError">Оценка обязательна</div>
         </div>
         <div class="form-field">
           <label for="comment">Что нам улучшить?</label>
@@ -32,19 +32,19 @@ export default {
     return {
       rating: '',
       comment: '',
-      ratingError: false // Added flag to track if rating is not selected
+      ratingError: false
     }
   },
   methods: {
     submitFeedback() {
       if (this.rating === '') {
-        this.ratingError = true; // Set ratingError to true if rating is not selected
-        return; // Prevent form submission
+        this.ratingError = true;
+        return;
       }
-      this.ratingError = false; // Reset ratingError if rating is selected
+      this.ratingError = false;
 
       const feedbackData = {
-        rating: this.rating.toString(), // Ensure rating is a string if your backend expects a string
+        rating: this.rating.toString(),
         comment: this.comment
       };
 
@@ -57,11 +57,8 @@ export default {
             if (!response.ok) {
               throw new Error('Network response was not OK');
             }
-            return response.json(); // Assuming the server responds with JSON.
-          })
-          .then(data => {
-            console.log('Success:', data);
-            // Redirect or change the view here
+            // Redirect after successful submission
+            window.location.href = 'https://b24-yeth0y.bitrix24site.ru/empty_jekf/';
           })
           .catch(error => {
             console.error('Error:', error);
@@ -72,55 +69,45 @@ export default {
 </script>
 
 <style scoped>
-
 .rating-select {
   height: 50px;
 }
-/* General styles */
 .container {
   display: flex;
   flex-direction: column;
   align-items: center;
   width: 100%;
 }
-
 .page-container {
   margin-bottom: 20px;
 }
-
 .logo {
-  width: 100%; /* Adjusted logo width */
-  max-width: 500px; /* Added max-width to limit size on larger screens */
-  height: auto; /* Ensures aspect ratio is maintained */
+  width: 100%;
+  max-width: 500px;
+  height: auto;
 }
-
 .feedback-form-container {
-  width: 90%; /* Adjusted container width */
-  max-width: 400px; /* Added max-width to limit size on larger screens */
+  width: 90%;
+  max-width: 400px;
   box-sizing: border-box;
 }
-
 .form-heading {
   font-weight: normal;
   color: #FFB500;
   text-align: center;
   margin-bottom: 45px;
 }
-
 .form-field {
   margin-bottom: 30px;
 }
-
 .form-field label {
   display: block;
   width: 100%;
   color: white;
 }
-
 .mandatory-note {
   color: red;
 }
-
 .form-field select, .form-field textarea {
   display: block;
   width: 100%;
@@ -128,7 +115,6 @@ export default {
   background-color: #333;
   border: none;
 }
-
 .form-field input[type="submit"] {
   width: 100%;
   height: 40px;
@@ -136,32 +122,21 @@ export default {
   background-color: #333;
   border: 1px solid #D3D3D3;
 }
-
-.form-field input[type="submit"] {
-  padding: 0;
-  cursor: pointer;
-  background-color: #FFB500;
-}
-
 .form-field input[type="submit"]:hover {
   background-color: #FF7F50;
 }
-
 #comment {
   width: 100%;
   height: 80px;
 }
-
-/* Media queries */
 @media only screen and (min-width: 768px) {
   .feedback-form-container {
-    width: 70%; /* Adjusted container width for larger screens */
+    width: 70%;
   }
 }
-
 @media only screen and (min-width: 1024px) {
   .feedback-form-container {
-    width: 50%; /* Adjusted container width for even larger screens */
+    width: 50%;
   }
 }
 </style>
