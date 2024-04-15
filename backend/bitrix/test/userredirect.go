@@ -1,11 +1,14 @@
 package test
 
 import (
+	"bitrix_app/backend/bitrix/test/spreadsheets"
 	"encoding/json"
 	"fmt"
 	"io"
 	"log"
 	"net/http"
+	"strconv"
+	"sync"
 )
 
 type Feedback struct {
@@ -95,15 +98,22 @@ func UserForm(w http.ResponseWriter, r *http.Request) {
 		if !exists {
 			log.Printf("Invalid rating value: %s", feedback.Rating)
 		}
+		urlDeal := fmt.Sprintf("https://harizma.bitrix24.ru/crm/deal/details/%s/", DealGlobalId)
 
 		// Assuming CreateDeal handles the error internally and logs as needed
-		err = CreateDeal(feedback.Comment, "17", fmt.Sprintf("https://harizma.bitrix24.ru/crm/deal/details/%s/", DealGlobalId),
+		err = CreateDeal(feedback.Comment, "17", urlDeal,
 			apiResponse.Result.ContactID, apiResponse.Result.Branch, numericRating, apiResponse.Result.DateCreate, stageValue)
 		if err != nil {
 			log.Println("CreateDeal failed")
 			http.Error(w, "Failed to create deal", http.StatusInternalServerError)
 			return
 		}
+		//sheet := spreadsheets.GoogleSheetsUpdate()
+		spreadsheets.GoogleSheetsUpdate(rowCount, 2, strconv.Itoa(numericRating))
+		spreadsheets.GoogleSheetsUpdate(rowCount, 3, feedback.Comment)
+		spreadsheets.GoogleSheetsUpdate(rowCount, 4, urlDeal)
+		spreadsheets.GoogleSheetsUpdate(rowCount, 11, strconv.Itoa(requestFromLink))
+		requestFromLink++
 
 		w.WriteHeader(http.StatusOK)
 		//w.Write([]byte("Feedback received successfully"))
@@ -113,50 +123,26 @@ func UserForm(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-type ResponseData struct {
-	DealID      string `json:"deal_id"`
-	Rating      string `json:"rating"`
-	Comment     string `json:"comment"`
-	Date        string `json:"date"`
-	PhoneNumber string `json:"phone_number"`
-	Branch      string `json:"branch"`
-}
-
-func SendJsonInGoogle(w http.ResponseWriter, r *http.Request) {
-	// Set Content-Type header
-	w.Header().Set("Content-Type", "application/json")
-
-	// Populate data structure with your global variables
-
-	data := ResponseData{
-		DealID:      "STR",
-		Rating:      "SSSSS",
-		Comment:     "ZXCZXC",
-		Date:        "ASDADSAD",
-		PhoneNumber: "QWEQEQEWQE",
-		Branch:      "GDSGDSGDSGSGDSG",
-	}
-
-	// Encode data to JSON and send as response
-	if err := json.NewEncoder(w).Encode(data); err != nil {
-		log.Printf("Error encoding JSON: %v", err)
-		http.Error(w, "Error encoding JSON", http.StatusInternalServerError)
-	}
-}
+var (
+	rowCount        = 2
+	countMutex      sync.Mutex
+	countGetUrl     = 0
+	requestFromLink = 0
+)
 
 func UserRedirect(w http.ResponseWriter, r *http.Request) {
-	// Parse the query parameters from the URL
+	spreadsheets.GoogleSheetsUpdate(rowCount, 10, strconv.Itoa(countGetUrl))
+	countGetUrl++
 	query := r.URL.Query()
-
-	// Retrieve individual query parameter values
 	id := query.Get("id")
 
-	// Log the values for debugging (or use them as needed)
+	// Lock and defer the unlock to safely increment the tableCount
+	countMutex.Lock()
+	spreadsheets.GoogleSheetsUpdate(rowCount, 1, id)
+	rowCount++
+	countMutex.Unlock()
+
 	log.Printf("Received ID: %s", id)
-
-	DealGlobalId = id
-
-	// Redirect or process further as required
 	redirectURL := "https://harizma-service.ru/form"
 	http.Redirect(w, r, redirectURL, http.StatusFound)
 }

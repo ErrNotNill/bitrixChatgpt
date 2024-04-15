@@ -2,39 +2,36 @@ package spreadsheets
 
 import (
 	"context"
-	"fmt"
 	"golang.org/x/oauth2/google"
 	"gopkg.in/Iwark/spreadsheet.v2"
 	"os"
 )
 
-func GoogleSheetsStart() {
+func GoogleSheetsUpdate(row, column int, value string) {
 	data, err := os.ReadFile("local-abbey-420416-ecb7d8e898c0.json")
-	checkError(err)
+	CheckError(err)
 	conf, err := google.JWTConfigFromJSON(data, spreadsheet.Scope)
-	checkError(err)
+	CheckError(err)
 	client := conf.Client(context.TODO())
 
 	service := spreadsheet.NewServiceWithClient(client)
-	spreadsheet, err := service.FetchSpreadsheet("1AoYkzJKlj-uCF_IyQ0wfeKGEws_iKKQiRViWq9M0N1Y")
-	checkError(err)
-	sheet, err := spreadsheet.SheetByIndex(0)
-	checkError(err)
-	for _, row := range sheet.Rows {
-		for _, cell := range row {
-			fmt.Println(cell.Value)
-		}
-	}
 
-	// Update cell content
-	sheet.Update(0, 36, "hogehoge")
+	//here we choose tables URL
+	spreadSheet, err := service.FetchSpreadsheet("1AoYkzJKlj-uCF_IyQ0wfeKGEws_iKKQiRViWq9M0N1Y")
+	CheckError(err)
+
+	//here we choose table num
+	sheet, err := spreadSheet.SheetByIndex(0)
+	CheckError(err)
+
+	sheet.Update(row, column, value)
 
 	// Make sure call Synchronize to reflect the changes
 	err = sheet.Synchronize()
-	checkError(err)
+	CheckError(err)
 }
 
-func checkError(err error) {
+func CheckError(err error) {
 	if err != nil {
 		panic(err.Error())
 	}
