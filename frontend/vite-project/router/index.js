@@ -12,11 +12,11 @@ const router = createRouter({
     routes: [
         {
             path: '/',
-            component: Form
+            component: Login
         },
         {
             path: '/form',
-            component: Login
+            component: Form
         },
         {
             path: '/auth',
