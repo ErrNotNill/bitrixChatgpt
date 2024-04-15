@@ -35,8 +35,6 @@ func Router() {
 	http.HandleFunc("/api/user-redirect/", test.UserRedirect)
 	http.HandleFunc("/api/user-form", test.UserForm)
 
-	http.HandleFunc("/api/send-json", test.SendJsonInGoogle)
-	
 	//http.HandleFunc("/api/check_widget", widget.CheckWidget) //here we create widget in bitrix
 
 	/*c := cors.New(cors.Options{
