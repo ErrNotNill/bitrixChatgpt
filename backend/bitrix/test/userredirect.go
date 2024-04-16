@@ -122,10 +122,10 @@ func UserForm(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 		//sheet := spreadsheets.GoogleSheetsUpdate()
-		spreadsheets.GoogleSheetsUpdate(RatingInTable, 2, strconv.Itoa(numericRating))
-		spreadsheets.GoogleSheetsUpdate(CommentaryInTable, 3, feedback.Comment)
-		spreadsheets.GoogleSheetsUpdate(LinkOnDealInTable, 4, urlDeal)
-		spreadsheets.GoogleSheetsUpdate(RequestFromLink, 11, strconv.Itoa(RequestFromLink))
+		spreadsheets.GoogleSheetsUpdate(RatingInTable, 1, feedback.Rating)
+		spreadsheets.GoogleSheetsUpdate(CommentaryInTable, 2, feedback.Comment)
+		spreadsheets.GoogleSheetsUpdate(LinkOnDealInTable, 3, urlDeal)
+		spreadsheets.GoogleSheetsUpdate(RequestFromLink, 10, strconv.Itoa(RequestFromLink))
 
 		w.WriteHeader(http.StatusOK)
 		//w.Write([]byte("Feedback received successfully"))
@@ -141,12 +141,12 @@ func UserRedirect(w http.ResponseWriter, r *http.Request) {
 	CountGetUrl++
 	UserIdForTable++
 
-	spreadsheets.GoogleSheetsUpdate(CountGetUrl, 10, strconv.Itoa(CountGetUrl))
+	spreadsheets.GoogleSheetsUpdate(CountGetUrl, 9, strconv.Itoa(CountGetUrl))
 
 	query := r.URL.Query()
 	id := query.Get("id")
 
-	spreadsheets.GoogleSheetsUpdate(UserIdForTable, 1, id)
+	spreadsheets.GoogleSheetsUpdate(UserIdForTable, 0, id)
 
 	log.Printf("Received ID: %s", id)
 	redirectURL := "https://harizma-service.ru/form"
