@@ -30,10 +30,15 @@
 export default {
   data() {
     return {
+      id: '',  // Store the ID
       rating: '',
       comment: '',
       ratingError: false
     }
+  },
+  mounted() {
+    const urlParams = new URLSearchParams(window.location.search);
+    this.id = urlParams.get('id');
   },
   methods: {
     submitFeedback() {
@@ -44,14 +49,11 @@ export default {
       this.ratingError = false;
 
       const feedbackData = {
+        id: this.id,  // Include the ID in the feedback data
         rating: this.rating.toString(),
         comment: this.comment
       };
 
-      // Redirect immediately after validating the input
-      window.location.href = 'https://b24-yeth0y.bitrix24site.ru/empty_jekf/';
-
-      // Send the data to the server in the background
       fetch('https://harizma-service.ru/api/user-form', {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
@@ -70,6 +72,7 @@ export default {
   }
 }
 </script>
+
 
 <style scoped>
 .rating-select {

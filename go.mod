@@ -13,6 +13,8 @@ require (
 	github.com/go-sql-driver/mysql v1.8.0 // indirect
 	github.com/gofiber/fiber/v2 v2.43.0 // indirect
 	github.com/google/uuid v1.3.0 // indirect
+	github.com/gorilla/securecookie v1.1.2 // indirect
+	github.com/gorilla/sessions v1.2.2 // indirect
 	github.com/ikarpovich/go-bitrix v0.0.0-20181012095210-b11f4bcc95ec // indirect
 	github.com/jmoiron/sqlx v1.3.5 // indirect
 	github.com/joho/godotenv v1.5.1 // indirect

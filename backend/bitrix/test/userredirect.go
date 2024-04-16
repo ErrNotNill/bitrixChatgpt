@@ -2,8 +2,11 @@ package test
 
 import (
 	"bitrix_app/backend/bitrix/test/spreadsheets"
+	"crypto/rand"
+	"encoding/base64"
 	"encoding/json"
 	"fmt"
+	"github.com/gorilla/sessions"
 	"io"
 	"log"
 	"net/http"
@@ -11,13 +14,14 @@ import (
 )
 
 type Feedback struct {
-	Rating  string `json:"rating"` // Make sure the JSON tags match the keys in your JSON object.
+	Id      string `json:"id"` // Add this line
+	Rating  string `json:"rating"`
 	Comment string `json:"comment"`
 }
 
 var DealGlobalId string
 
-var CountGetUrl = 0
+var CountGetUrl = 9
 
 func UserForm(w http.ResponseWriter, r *http.Request) {
 
@@ -47,6 +51,7 @@ func UserForm(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
+		log.Printf("Parsed feedback ID: %+v\n", feedback.Id)
 		log.Printf("Parsed feedback data: %+v\n", feedback)
 		log.Printf("feedback.Rating: %s, feedback.Comment: %s", feedback.Rating, feedback.Comment)
 
@@ -134,24 +139,31 @@ func UserForm(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-var CountUserRedirect = 0 //переходов по ссылке
-var CountUserRequests = 0 //ответов по ссылке
-var CountSendedSms = 0
-var CountSendedDoneSms = 0
+var CountUserRedirect = 8  //переходов по ссылке
+var CountUserRequests = 2  //ответов по ссылке
+var CountSendedSms = 18    //сообщение отправлено
+var CountSendedDoneSms = 3 //сообщение не отправилось
+
+var store = sessions.NewCookieStore([]byte(GenerateSecretKey(32)))
 
 func UserRedirect(w http.ResponseWriter, r *http.Request) {
 	CountGetUrl++
 	CountUserRedirect++
-	spreadsheets.GoogleSheetsUpdate(1, 9, strconv.Itoa(CountUserRedirect)) //переходов по ссылке
 
+	session, _ := store.Get(r, "session-name")
 	query := r.URL.Query()
 	id := query.Get("id")
-	DealGlobalId = id
-	spreadsheets.GoogleSheetsUpdate(CountGetUrl, 0, id)
+	session.Values["dealId"] = id
+	session.Save(r, w)
 
-	log.Printf("Received ID: %s", id)
-	redirectURL := "https://harizma-service.ru/form"
+	// Include the ID in the redirect URL as a query parameter
+	redirectURL := fmt.Sprintf("https://harizma-service.ru/form?id=%s", id)
 	http.Redirect(w, r, redirectURL, http.StatusFound)
+
+	go func() {
+		spreadsheets.GoogleSheetsUpdate(1, 9, strconv.Itoa(CountUserRedirect))
+		spreadsheets.GoogleSheetsUpdate(CountGetUrl, 0, id)
+	}()
 }
 
 func SendedSms(w http.ResponseWriter, r *http.Request) {
@@ -162,4 +174,13 @@ func SendedSms(w http.ResponseWriter, r *http.Request) {
 func SendedDoneSms(w http.ResponseWriter, r *http.Request) {
 	CountSendedDoneSms++
 	spreadsheets.GoogleSheetsUpdate(1, 8, strconv.Itoa(CountSendedDoneSms))
+}
+
+func GenerateSecretKey(length int) string {
+	b := make([]byte, length)
+	_, err := rand.Read(b)
+	if err != nil {
+		panic(err) // Handle error appropriately in production code
+	}
+	return base64.StdEncoding.EncodeToString(b)
 }
