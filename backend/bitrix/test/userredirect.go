@@ -16,11 +16,6 @@ type Feedback struct {
 }
 
 var DealGlobalId string
-var RatingGlobalText string
-var CommentGlobalText string
-var DateGlobal string
-var PhoneNumberGlobal string
-var BranchGlobal string
 
 var CountGetUrl = 0
 
@@ -129,7 +124,7 @@ var CountUserRedirect = 0 //переходов по ссылке
 var CountUserRequests = 0 //ответов по ссылке
 
 func UserRedirect(w http.ResponseWriter, r *http.Request) {
-
+	CountGetUrl++
 	CountUserRedirect++
 	spreadsheets.GoogleSheetsUpdate(0, 9, strconv.Itoa(CountUserRedirect)) //переходов по ссылке
 
