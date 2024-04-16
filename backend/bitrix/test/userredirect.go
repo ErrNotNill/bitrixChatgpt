@@ -8,7 +8,6 @@ import (
 	"log"
 	"net/http"
 	"strconv"
-	"sync"
 )
 
 type Feedback struct {
@@ -23,7 +22,21 @@ var DateGlobal string
 var PhoneNumberGlobal string
 var BranchGlobal string
 
+var DealIdInTable = 1
+var RatingInTable = 1
+var CommentaryInTable = 1
+var LinkOnDealInTable = 1
+var RequestFromLink = 1 //user was entire the endpoint request
+var CountGetUrl = 1
+
 func UserForm(w http.ResponseWriter, r *http.Request) {
+
+	RatingInTable++
+	DealIdInTable++
+	CommentaryInTable++
+	LinkOnDealInTable++
+	RequestFromLink++
+
 	if r.Method == "OPTIONS" {
 		w.Header().Set("Access-Control-Allow-Origin", "*")
 		w.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS")
@@ -109,11 +122,10 @@ func UserForm(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 		//sheet := spreadsheets.GoogleSheetsUpdate()
-		spreadsheets.GoogleSheetsUpdate(rowCount, 2, strconv.Itoa(numericRating))
-		spreadsheets.GoogleSheetsUpdate(rowCount, 3, feedback.Comment)
-		spreadsheets.GoogleSheetsUpdate(rowCount, 4, urlDeal)
-		spreadsheets.GoogleSheetsUpdate(rowCount, 11, strconv.Itoa(requestFromLink))
-		requestFromLink++
+		spreadsheets.GoogleSheetsUpdate(RatingInTable, 2, strconv.Itoa(numericRating))
+		spreadsheets.GoogleSheetsUpdate(CommentaryInTable, 3, feedback.Comment)
+		spreadsheets.GoogleSheetsUpdate(LinkOnDealInTable, 4, urlDeal)
+		spreadsheets.GoogleSheetsUpdate(RequestFromLink, 11, strconv.Itoa(RequestFromLink))
 
 		w.WriteHeader(http.StatusOK)
 		//w.Write([]byte("Feedback received successfully"))
@@ -123,24 +135,18 @@ func UserForm(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-var (
-	rowCount        = 2
-	countMutex      sync.Mutex
-	countGetUrl     = 0
-	requestFromLink = 0
-)
+var UserIdForTable = 1
 
 func UserRedirect(w http.ResponseWriter, r *http.Request) {
-	spreadsheets.GoogleSheetsUpdate(rowCount, 10, strconv.Itoa(countGetUrl))
-	countGetUrl++
+	CountGetUrl++
+	UserIdForTable++
+
+	spreadsheets.GoogleSheetsUpdate(CountGetUrl, 10, strconv.Itoa(CountGetUrl))
+
 	query := r.URL.Query()
 	id := query.Get("id")
 
-	// Lock and defer the unlock to safely increment the tableCount
-	countMutex.Lock()
-	spreadsheets.GoogleSheetsUpdate(rowCount, 1, id)
-	rowCount++
-	countMutex.Unlock()
+	spreadsheets.GoogleSheetsUpdate(UserIdForTable, 1, id)
 
 	log.Printf("Received ID: %s", id)
 	redirectURL := "https://harizma-service.ru/form"
