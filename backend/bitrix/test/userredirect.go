@@ -22,12 +22,12 @@ var DateGlobal string
 var PhoneNumberGlobal string
 var BranchGlobal string
 
-var DealIdInTable = 1
-var RatingInTable = 1
-var CommentaryInTable = 1
-var LinkOnDealInTable = 1
-var RequestFromLink = 1 //user was entire the endpoint request
-var CountGetUrl = 1
+var DealIdInTable = 0
+var RatingInTable = 0
+var CommentaryInTable = 0
+var LinkOnDealInTable = 0
+var RequestFromLink = 0 //user was entire the endpoint request
+var CountGetUrl = 0
 
 func UserForm(w http.ResponseWriter, r *http.Request) {
 
@@ -121,13 +121,13 @@ func UserForm(w http.ResponseWriter, r *http.Request) {
 			http.Error(w, "Failed to create deal", http.StatusInternalServerError)
 			return
 		}
+		w.WriteHeader(http.StatusOK)
 		//sheet := spreadsheets.GoogleSheetsUpdate()
 		spreadsheets.GoogleSheetsUpdate(RatingInTable, 1, feedback.Rating)
 		spreadsheets.GoogleSheetsUpdate(CommentaryInTable, 2, feedback.Comment)
 		spreadsheets.GoogleSheetsUpdate(LinkOnDealInTable, 3, urlDeal)
 		spreadsheets.GoogleSheetsUpdate(RequestFromLink, 10, strconv.Itoa(RequestFromLink))
 
-		w.WriteHeader(http.StatusOK)
 		//w.Write([]byte("Feedback received successfully"))
 		//http.Redirect(w, r, "https://b24-yeth0y.bitrix24site.ru/empty_jekf/", http.StatusFound)
 	} else {
@@ -145,7 +145,7 @@ func UserRedirect(w http.ResponseWriter, r *http.Request) {
 
 	query := r.URL.Query()
 	id := query.Get("id")
-
+	DealGlobalId = id
 	spreadsheets.GoogleSheetsUpdate(UserIdForTable, 0, id)
 
 	log.Printf("Received ID: %s", id)
