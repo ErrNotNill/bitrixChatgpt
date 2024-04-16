@@ -136,6 +136,8 @@ func UserForm(w http.ResponseWriter, r *http.Request) {
 
 var CountUserRedirect = 0 //переходов по ссылке
 var CountUserRequests = 0 //ответов по ссылке
+var CountSendedSms = 0
+var CountSendedDoneSms = 0
 
 func UserRedirect(w http.ResponseWriter, r *http.Request) {
 	CountGetUrl++
@@ -150,4 +152,14 @@ func UserRedirect(w http.ResponseWriter, r *http.Request) {
 	log.Printf("Received ID: %s", id)
 	redirectURL := "https://harizma-service.ru/form"
 	http.Redirect(w, r, redirectURL, http.StatusFound)
+}
+
+func SendedSms(w http.ResponseWriter, r *http.Request) {
+	CountSendedSms++
+	spreadsheets.GoogleSheetsUpdate(1, 7, strconv.Itoa(CountSendedSms))
+}
+
+func SendedDoneSms(w http.ResponseWriter, r *http.Request) {
+	CountSendedDoneSms++
+	spreadsheets.GoogleSheetsUpdate(1, 6, strconv.Itoa(CountSendedDoneSms))
 }
