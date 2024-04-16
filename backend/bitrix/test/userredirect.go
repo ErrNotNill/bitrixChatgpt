@@ -161,5 +161,5 @@ func SendedSms(w http.ResponseWriter, r *http.Request) {
 
 func SendedDoneSms(w http.ResponseWriter, r *http.Request) {
 	CountSendedDoneSms++
-	spreadsheets.GoogleSheetsUpdate(1, 6, strconv.Itoa(CountSendedDoneSms))
+	spreadsheets.GoogleSheetsUpdate(1, 8, strconv.Itoa(CountSendedDoneSms))
 }
