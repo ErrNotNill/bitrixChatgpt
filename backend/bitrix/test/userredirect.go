@@ -19,8 +19,6 @@ type Feedback struct {
 	Comment string `json:"comment"`
 }
 
-var DealGlobalId string
-
 var CountGetUrl = 9
 
 func UserForm(w http.ResponseWriter, r *http.Request) {
@@ -74,7 +72,7 @@ func UserForm(w http.ResponseWriter, r *http.Request) {
 		}
 
 		// Get Deal information and branch mapping
-		apiResponse, err := GetDealById(DealGlobalId)
+		apiResponse, err := GetDealById(feedback.Id)
 		if err != nil {
 			log.Println("Error getting deal info")
 			http.Error(w, "Failed to get deal info", http.StatusInternalServerError)
@@ -100,7 +98,7 @@ func UserForm(w http.ResponseWriter, r *http.Request) {
 		if !exists {
 			log.Printf("Invalid rating value: %s", feedback.Rating)
 		}
-		urlDeal := fmt.Sprintf("https://harizma.bitrix24.ru/crm/deal/details/%s/", DealGlobalId)
+		urlDeal := fmt.Sprintf("https://harizma.bitrix24.ru/crm/deal/details/%s/", feedback.Id)
 
 		// Assuming CreateDeal handles the error internally and logs as needed
 		err = CreateDeal(feedback.Comment, "17", urlDeal,
