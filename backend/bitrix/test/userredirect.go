@@ -145,7 +145,7 @@ func UserRedirect(w http.ResponseWriter, r *http.Request) {
 	query := r.URL.Query()
 	id := query.Get("id")
 	DealGlobalId = id
-	spreadsheets.GoogleSheetsUpdate(CountGetUrl, 1, id)
+	spreadsheets.GoogleSheetsUpdate(CountGetUrl, 0, id)
 
 	log.Printf("Received ID: %s", id)
 	redirectURL := "https://harizma-service.ru/form"
