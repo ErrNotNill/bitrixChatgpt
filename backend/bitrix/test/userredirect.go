@@ -19,7 +19,7 @@ type Feedback struct {
 	Comment string `json:"comment"`
 }
 
-var CountGetUrl = 8
+var CountGetUrl = 7
 
 func UserForm(w http.ResponseWriter, r *http.Request) {
 
@@ -137,9 +137,9 @@ func UserForm(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-var CountUserRedirect = 8  //переходов по ссылке
-var CountUserRequests = 2  //ответов по ссылке
-var CountSendedSms = 18    //сообщение отправлено
+var CountUserRedirect = 7  //переходов по ссылке
+var CountUserRequests = 1  //ответов по ссылке
+var CountSendedSms = 15    //сообщение отправлено
 var CountSendedDoneSms = 3 //сообщение не отправилось
 
 var store = sessions.NewCookieStore([]byte(GenerateSecretKey(32)))
