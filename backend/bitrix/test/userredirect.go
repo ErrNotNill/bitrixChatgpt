@@ -106,11 +106,24 @@ func UserForm(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 		w.WriteHeader(http.StatusOK)
+		var branchConvertedToText string
 		//sheet := spreadsheets.GoogleSheetsUpdate()
-		spreadsheets.GoogleSheetsUpdate(CountGetUrl, 1, feedback.Rating)
-		spreadsheets.GoogleSheetsUpdate(CountGetUrl, 2, feedback.Comment)
-		spreadsheets.GoogleSheetsUpdate(CountGetUrl, 3, urlDeal)
-		spreadsheets.GoogleSheetsUpdate(CountGetUrl, 4, apiResponse.Result.Branch)
+		if apiResponse.Result.Branch == "471" {
+			branchConvertedToText = "м. Бауманская, ул. Бакунинская 32/36 с1"
+		} else if apiResponse.Result.Branch == "473" {
+			branchConvertedToText = "м. Лубянка, ул. Сретенский переулок, 4"
+		} else if apiResponse.Result.Branch == "475" {
+			branchConvertedToText = "м. Молодежная, Рублёвское шоссе, 28к1"
+		} else if apiResponse.Result.Branch == "477" {
+			branchConvertedToText = "м. Сухаревская, Москва, ул. Сретенка, 30"
+		} else if apiResponse.Result.Branch == "764" {
+			branchConvertedToText = "м. Новослободская,  ул. Новослободская, 20с6"
+		}
+
+		spreadsheets.GoogleSheetsUpdate(CountGetUrl, 1, feedback.Rating)        //оценка
+		spreadsheets.GoogleSheetsUpdate(CountGetUrl, 2, feedback.Comment)       //комментарий
+		spreadsheets.GoogleSheetsUpdate(CountGetUrl, 3, urlDeal)                //ссылка на сделку
+		spreadsheets.GoogleSheetsUpdate(CountGetUrl, 4, branchConvertedToText)  //филиал
 		spreadsheets.GoogleSheetsUpdate(0, 10, strconv.Itoa(CountUserRequests)) //ответов по ссылке
 
 		//w.Write([]byte("Feedback received successfully"))
