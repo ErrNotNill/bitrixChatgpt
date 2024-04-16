@@ -120,11 +120,12 @@ func UserForm(w http.ResponseWriter, r *http.Request) {
 			branchConvertedToText = "м. Новослободская,  ул. Новослободская, 20с6"
 		}
 
+		CountUserRequests++
 		spreadsheets.GoogleSheetsUpdate(CountGetUrl, 1, feedback.Rating)        //оценка
 		spreadsheets.GoogleSheetsUpdate(CountGetUrl, 2, feedback.Comment)       //комментарий
 		spreadsheets.GoogleSheetsUpdate(CountGetUrl, 3, urlDeal)                //ссылка на сделку
 		spreadsheets.GoogleSheetsUpdate(CountGetUrl, 4, branchConvertedToText)  //филиал
-		spreadsheets.GoogleSheetsUpdate(0, 10, strconv.Itoa(CountUserRequests)) //ответов по ссылке
+		spreadsheets.GoogleSheetsUpdate(1, 10, strconv.Itoa(CountUserRequests)) //ответов по ссылке
 
 		//w.Write([]byte("Feedback received successfully"))
 		//http.Redirect(w, r, "https://b24-yeth0y.bitrix24site.ru/empty_jekf/", http.StatusFound)
@@ -139,12 +140,12 @@ var CountUserRequests = 0 //ответов по ссылке
 func UserRedirect(w http.ResponseWriter, r *http.Request) {
 	CountGetUrl++
 	CountUserRedirect++
-	spreadsheets.GoogleSheetsUpdate(0, 9, strconv.Itoa(CountUserRedirect)) //переходов по ссылке
+	spreadsheets.GoogleSheetsUpdate(1, 9, strconv.Itoa(CountUserRedirect)) //переходов по ссылке
 
 	query := r.URL.Query()
 	id := query.Get("id")
 	DealGlobalId = id
-	spreadsheets.GoogleSheetsUpdate(CountGetUrl, 0, id)
+	spreadsheets.GoogleSheetsUpdate(CountGetUrl, 1, id)
 
 	log.Printf("Received ID: %s", id)
 	redirectURL := "https://harizma-service.ru/form"
