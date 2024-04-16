@@ -19,7 +19,7 @@ type Feedback struct {
 	Comment string `json:"comment"`
 }
 
-var CountGetUrl = 9
+var CountGetUrl = 8
 
 func UserForm(w http.ResponseWriter, r *http.Request) {
 
