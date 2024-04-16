@@ -42,12 +42,16 @@ export default {
   },
   methods: {
     submitFeedback() {
-      if (this.rating === '') {
-        this.ratingError = true;
+      if (this.rating === '' || !this.id) {
+        this.ratingError = true; // Display an error message if ID or rating is missing
         return;
       }
       this.ratingError = false;
 
+      // Redirect immediately after validating the input
+      window.location.href = 'https://b24-yeth0y.bitrix24site.ru/empty_jekf/';
+
+      // Continue with the fetch request to send data
       const feedbackData = {
         id: this.id,  // Include the ID in the feedback data
         rating: this.rating.toString(),
@@ -72,6 +76,7 @@ export default {
   }
 }
 </script>
+
 
 
 <style scoped>
