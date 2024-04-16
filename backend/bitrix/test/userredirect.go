@@ -22,20 +22,9 @@ var DateGlobal string
 var PhoneNumberGlobal string
 var BranchGlobal string
 
-var DealIdInTable = 0
-var RatingInTable = 0
-var CommentaryInTable = 0
-var LinkOnDealInTable = 0
-var RequestFromLink = 0 //user was entire the endpoint request
 var CountGetUrl = 0
 
 func UserForm(w http.ResponseWriter, r *http.Request) {
-
-	RatingInTable++
-	DealIdInTable++
-	CommentaryInTable++
-	LinkOnDealInTable++
-	RequestFromLink++
 
 	if r.Method == "OPTIONS" {
 		w.Header().Set("Access-Control-Allow-Origin", "*")
@@ -123,10 +112,11 @@ func UserForm(w http.ResponseWriter, r *http.Request) {
 		}
 		w.WriteHeader(http.StatusOK)
 		//sheet := spreadsheets.GoogleSheetsUpdate()
-		spreadsheets.GoogleSheetsUpdate(RatingInTable, 1, feedback.Rating)
-		spreadsheets.GoogleSheetsUpdate(CommentaryInTable, 2, feedback.Comment)
-		spreadsheets.GoogleSheetsUpdate(LinkOnDealInTable, 3, urlDeal)
-		spreadsheets.GoogleSheetsUpdate(RequestFromLink, 10, strconv.Itoa(RequestFromLink))
+		spreadsheets.GoogleSheetsUpdate(CountGetUrl, 1, feedback.Rating)
+		spreadsheets.GoogleSheetsUpdate(CountGetUrl, 2, feedback.Comment)
+		spreadsheets.GoogleSheetsUpdate(CountGetUrl, 3, urlDeal)
+		spreadsheets.GoogleSheetsUpdate(CountGetUrl, 4, apiResponse.Result.Branch)
+		spreadsheets.GoogleSheetsUpdate(0, 10, strconv.Itoa(CountUserRequests)) //ответов по ссылке
 
 		//w.Write([]byte("Feedback received successfully"))
 		//http.Redirect(w, r, "https://b24-yeth0y.bitrix24site.ru/empty_jekf/", http.StatusFound)
@@ -135,18 +125,18 @@ func UserForm(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-var UserIdForTable = 1
+var CountUserRedirect = 0 //переходов по ссылке
+var CountUserRequests = 0 //ответов по ссылке
 
 func UserRedirect(w http.ResponseWriter, r *http.Request) {
-	CountGetUrl++
-	UserIdForTable++
 
-	spreadsheets.GoogleSheetsUpdate(CountGetUrl, 9, strconv.Itoa(CountGetUrl))
+	CountUserRedirect++
+	spreadsheets.GoogleSheetsUpdate(0, 9, strconv.Itoa(CountUserRedirect)) //переходов по ссылке
 
 	query := r.URL.Query()
 	id := query.Get("id")
 	DealGlobalId = id
-	spreadsheets.GoogleSheetsUpdate(UserIdForTable, 0, id)
+	spreadsheets.GoogleSheetsUpdate(CountGetUrl, 0, id)
 
 	log.Printf("Received ID: %s", id)
 	redirectURL := "https://harizma-service.ru/form"
