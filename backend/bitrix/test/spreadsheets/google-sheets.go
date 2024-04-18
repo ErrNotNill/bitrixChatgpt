@@ -17,7 +17,7 @@ func GoogleSheetsUpdate(row, column int, value string) {
 	service := spreadsheet.NewServiceWithClient(client)
 
 	//here we choose tables URL
-	spreadSheet, err := service.FetchSpreadsheet("1AoYkzJKlj-uCF_IyQ0wfeKGEws_iKKQiRViWq9M0N1Y")
+	spreadSheet, err := service.FetchSpreadsheet("1F2jHgop053dU8ITHOBLEAtMmgVgZYYYXOt2nWWIuR6M")
 	CheckError(err)
 
 	//here we choose table num
