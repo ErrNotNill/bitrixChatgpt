@@ -6,6 +6,7 @@ import Login from '@/views/Login.vue'
 import Auth from '@/views/Auth.vue'
 import Leads from "@/views/Leads.vue";
 import Form from "../src/views/Form.vue";
+import ThanksPage from "../src/views/ThanksPage.vue";
 
 const router = createRouter({
     history: createWebHistory(),
@@ -17,6 +18,10 @@ const router = createRouter({
         {
             path: '/form',
             component: Form
+        },
+        {
+            path: '/thanks',
+            component: ThanksPage
         },
         {
             path: '/auth',

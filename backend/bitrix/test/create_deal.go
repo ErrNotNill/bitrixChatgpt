@@ -25,9 +25,11 @@ func CreateDeal(commentary string, category string, link string, contactId strin
 "STAGE_ID": "%s"
 }
 }`, commentary, category, link, contactId, dateCreate, branch, rating, stageId)
+
 	//UF_CRM_1712927864 = Ссылка на сделку (NPS)
 	//UF_CRM_1690982742603 = Адрес филиала
 	//UF_CRM_1712927909 = Оценка (NPS)
+	//UF_CRM_1712936072 = Комментарий (NPS)
 	// Convert the JSON string to a byte slice
 	body := []byte(requestBody)
 
