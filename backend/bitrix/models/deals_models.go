@@ -80,7 +80,7 @@ type Deal struct {
 	LinkOnParentDealNps string      `json:"UF_CRM_1712927864"`
 	Branch              string      `json:"UF_CRM_1690982742603"`
 	RatingNps           string      `json:"UF_CRM_1712927909"`
-	VisitDate           string      `json:"UF_CRM_1690209734961"`
+	VisitDate           time.Time   `json:"UF_CRM_1690209734961"`
 }
 
 type RequestTime struct {

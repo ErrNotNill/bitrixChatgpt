@@ -124,12 +124,13 @@ func UserForm(w http.ResponseWriter, r *http.Request) {
 		}
 
 		CountUserRequests++
-		spreadsheets.GoogleSheetsUpdate(CountGetUrl, 1, feedback.Rating)              //оценка
-		spreadsheets.GoogleSheetsUpdate(CountGetUrl, 2, feedback.Comment)             //комментарий
-		spreadsheets.GoogleSheetsUpdate(CountGetUrl, 3, urlDeal)                      //ссылка на сделку
-		spreadsheets.GoogleSheetsUpdate(CountGetUrl, 4, branchConvertedToText)        //филиал
-		spreadsheets.GoogleSheetsUpdate(CountGetUrl, 5, apiResponse.Result.VisitDate) //ответов по ссылке
-		spreadsheets.GoogleSheetsUpdate(1, 10, strconv.Itoa(CountUserRequests))       //ответов по ссылке
+
+		spreadsheets.GoogleSheetsUpdate(CountGetUrl, 1, feedback.Rating)                       //оценка
+		spreadsheets.GoogleSheetsUpdate(CountGetUrl, 2, feedback.Comment)                      //комментарий
+		spreadsheets.GoogleSheetsUpdate(CountGetUrl, 3, urlDeal)                               //ссылка на сделку
+		spreadsheets.GoogleSheetsUpdate(CountGetUrl, 4, branchConvertedToText)                 //филиал
+		spreadsheets.GoogleSheetsUpdate(CountGetUrl, 5, apiResponse.Result.VisitDate.String()) //ответов по ссылке
+		spreadsheets.GoogleSheetsUpdate(1, 10, strconv.Itoa(CountUserRequests))                //ответов по ссылке
 
 		//w.Write([]byte("Feedback received successfully"))
 		//http.Redirect(w, r, "https://b24-yeth0y.bitrix24site.ru/empty_jekf/", http.StatusFound)
