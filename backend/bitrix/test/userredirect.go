@@ -100,6 +100,7 @@ func UserForm(w http.ResponseWriter, r *http.Request) {
 		}
 		urlDeal := fmt.Sprintf("https://harizma.bitrix24.ru/crm/deal/details/%s/", feedback.Id)
 
+		fmt.Println("time: ", apiResponse.Result.VisitDate)
 		// Assuming CreateDeal handles the error internally and logs as needed
 		err = CreateDeal(feedback.Comment, "17", urlDeal,
 			apiResponse.Result.ContactID, apiResponse.Result.Branch, numericRating, apiResponse.Result.DateCreate, apiResponse.Result.VisitDate, stageValue)
