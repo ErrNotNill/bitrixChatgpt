@@ -22,7 +22,7 @@ func CreateDeal(commentary string, category string, link string, contactId strin
 "DATE_CREATE":"%s",
 "UF_CRM_1690982742603":"%v",
 "UF_CRM_1712927909": "%v",
-"UF_CRM_1690209734961": %v,
+"UF_CRM_1690209734961": "%v",
 "STAGE_ID": "%s"
 }
 }`, commentary, category, link, contactId, dateCreate, branch, rating, visitDate, stageId)

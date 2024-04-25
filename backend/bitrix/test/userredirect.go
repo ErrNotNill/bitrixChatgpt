@@ -101,7 +101,7 @@ func UserForm(w http.ResponseWriter, r *http.Request) {
 		urlDeal := fmt.Sprintf("https://harizma.bitrix24.ru/crm/deal/details/%s/", feedback.Id)
 
 		fmt.Println("time: ", apiResponse.Result.VisitDate)
-		formattedVisitDate := apiResponse.Result.VisitDate.Format("02.01.2006 15:04:05")
+		formattedVisitDate := apiResponse.Result.VisitDate.Format("01.01.2012 00:00:00")
 
 		// Assuming CreateDeal handles the error internally and logs as needed
 		err = CreateDeal(feedback.Comment, "17", urlDeal,
