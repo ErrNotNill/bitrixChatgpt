@@ -19,7 +19,7 @@ type Feedback struct {
 	Comment string `json:"comment"`
 }
 
-var CountGetUrl = 71
+var CountGetUrl = 346
 
 func UserForm(w http.ResponseWriter, r *http.Request) {
 
@@ -102,7 +102,7 @@ func UserForm(w http.ResponseWriter, r *http.Request) {
 
 		// Assuming CreateDeal handles the error internally and logs as needed
 		err = CreateDeal(feedback.Comment, "17", urlDeal,
-			apiResponse.Result.ContactID, apiResponse.Result.Branch, numericRating, apiResponse.Result.DateCreate, stageValue)
+			apiResponse.Result.ContactID, apiResponse.Result.Branch, numericRating, apiResponse.Result.DateCreate, apiResponse.Result.VisitDate, stageValue)
 		if err != nil {
 			log.Println("CreateDeal failed")
 			http.Error(w, "Failed to create deal", http.StatusInternalServerError)
@@ -124,11 +124,12 @@ func UserForm(w http.ResponseWriter, r *http.Request) {
 		}
 
 		CountUserRequests++
-		spreadsheets.GoogleSheetsUpdate(CountGetUrl, 1, feedback.Rating)        //оценка
-		spreadsheets.GoogleSheetsUpdate(CountGetUrl, 2, feedback.Comment)       //комментарий
-		spreadsheets.GoogleSheetsUpdate(CountGetUrl, 3, urlDeal)                //ссылка на сделку
-		spreadsheets.GoogleSheetsUpdate(CountGetUrl, 4, branchConvertedToText)  //филиал
-		spreadsheets.GoogleSheetsUpdate(1, 10, strconv.Itoa(CountUserRequests)) //ответов по ссылке
+		spreadsheets.GoogleSheetsUpdate(CountGetUrl, 1, feedback.Rating)              //оценка
+		spreadsheets.GoogleSheetsUpdate(CountGetUrl, 2, feedback.Comment)             //комментарий
+		spreadsheets.GoogleSheetsUpdate(CountGetUrl, 3, urlDeal)                      //ссылка на сделку
+		spreadsheets.GoogleSheetsUpdate(CountGetUrl, 4, branchConvertedToText)        //филиал
+		spreadsheets.GoogleSheetsUpdate(CountGetUrl, 5, apiResponse.Result.VisitDate) //ответов по ссылке
+		spreadsheets.GoogleSheetsUpdate(1, 10, strconv.Itoa(CountUserRequests))       //ответов по ссылке
 
 		//w.Write([]byte("Feedback received successfully"))
 		//http.Redirect(w, r, "https://b24-yeth0y.bitrix24site.ru/empty_jekf/", http.StatusFound)
@@ -137,10 +138,10 @@ func UserForm(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-var CountUserRedirect = 71  //переходов по ссылке
-var CountUserRequests = 33  //ответов по ссылке
-var CountSendedSms = 236    //сообщение отправлено
-var CountSendedDoneSms = 18 //сообщение не отправилось
+var CountUserRedirect = 346 //переходов по ссылке
+var CountUserRequests = 61  //ответов по ссылке
+var CountSendedSms = 514    //сообщение отправлено
+var CountSendedDoneSms = 50 //сообщение не отправилось
 
 var store = sessions.NewCookieStore([]byte(GenerateSecretKey(32)))
 

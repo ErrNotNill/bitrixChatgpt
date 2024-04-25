@@ -27,6 +27,9 @@ func main() {
 
 	routes.Router()
 
+	//iiko.IikoGetToken()
+	//iiko.GetSales()
+
 	/*	err := authorize.AuthorizeBitrix()
 		if err != nil {
 			log.Println("Bitrix authorization error...")

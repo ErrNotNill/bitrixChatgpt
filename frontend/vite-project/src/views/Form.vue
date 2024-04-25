@@ -15,7 +15,7 @@
           <div class="mandatory-note" v-if="ratingError">Оценка обязательна</div>
         </div>
         <div class="form-field">
-          <label for="comment">Что нам улучшить?</label>
+          <label for="comment">Чем вас удивить в следующий раз?</label>
           <textarea id="comment" v-model="comment"></textarea>
         </div>
         <div class="form-field">

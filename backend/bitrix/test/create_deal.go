@@ -11,7 +11,7 @@ import (
 	"os"
 )
 
-func CreateDeal(commentary string, category string, link string, contactId string, branch string, rating int, dateCreate string, stageId string) error {
+func CreateDeal(commentary string, category string, link string, contactId string, branch string, rating int, dateCreate string, visitDate string, stageId string) error {
 	method := "POST"
 	requestBody := fmt.Sprintf(`{"fields":
 {"TITLE":"Сбор обратной связи harizma-service",
@@ -22,14 +22,16 @@ func CreateDeal(commentary string, category string, link string, contactId strin
 "DATE_CREATE":"%s",
 "UF_CRM_1690982742603":"%v",
 "UF_CRM_1712927909": "%v",
+"UF_CRM_1690209734961": %v,
 "STAGE_ID": "%s"
 }
-}`, commentary, category, link, contactId, dateCreate, branch, rating, stageId)
+}`, commentary, category, link, contactId, dateCreate, branch, rating, visitDate, stageId)
 
 	//UF_CRM_1712927864 = Ссылка на сделку (NPS)
 	//UF_CRM_1690982742603 = Адрес филиала
 	//UF_CRM_1712927909 = Оценка (NPS)
 	//UF_CRM_1712936072 = Комментарий (NPS)
+	//UF_CRM_1690209734961 = Дата и время визита (для фильтра)
 	// Convert the JSON string to a byte slice
 	body := []byte(requestBody)
 
