@@ -9,10 +9,9 @@ import (
 	"log"
 	"net/http"
 	"os"
-	"time"
 )
 
-func CreateDeal(commentary string, category string, link string, contactId string, branch string, rating int, dateCreate string, visitDate time.Time, stageId string) error {
+func CreateDeal(commentary string, category string, link string, contactId string, branch string, rating int, dateCreate string, visitDate string, stageId string) error {
 	method := "POST"
 	requestBody := fmt.Sprintf(`{"fields":
 {"TITLE":"Сбор обратной связи harizma-service",

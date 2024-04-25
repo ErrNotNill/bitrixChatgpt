@@ -101,9 +101,11 @@ func UserForm(w http.ResponseWriter, r *http.Request) {
 		urlDeal := fmt.Sprintf("https://harizma.bitrix24.ru/crm/deal/details/%s/", feedback.Id)
 
 		fmt.Println("time: ", apiResponse.Result.VisitDate)
+		formattedVisitDate := apiResponse.Result.VisitDate.Format("02.01.2006 15:04:05")
+
 		// Assuming CreateDeal handles the error internally and logs as needed
 		err = CreateDeal(feedback.Comment, "17", urlDeal,
-			apiResponse.Result.ContactID, apiResponse.Result.Branch, numericRating, apiResponse.Result.DateCreate, apiResponse.Result.VisitDate, stageValue)
+			apiResponse.Result.ContactID, apiResponse.Result.Branch, numericRating, apiResponse.Result.DateCreate, formattedVisitDate, stageValue)
 		if err != nil {
 			log.Println("CreateDeal failed")
 			http.Error(w, "Failed to create deal", http.StatusInternalServerError)
@@ -126,12 +128,12 @@ func UserForm(w http.ResponseWriter, r *http.Request) {
 
 		CountUserRequests++
 
-		spreadsheets.GoogleSheetsUpdate(CountGetUrl, 1, feedback.Rating)                       //оценка
-		spreadsheets.GoogleSheetsUpdate(CountGetUrl, 2, feedback.Comment)                      //комментарий
-		spreadsheets.GoogleSheetsUpdate(CountGetUrl, 3, urlDeal)                               //ссылка на сделку
-		spreadsheets.GoogleSheetsUpdate(CountGetUrl, 4, branchConvertedToText)                 //филиал
-		spreadsheets.GoogleSheetsUpdate(CountGetUrl, 5, apiResponse.Result.VisitDate.String()) //ответов по ссылке
-		spreadsheets.GoogleSheetsUpdate(1, 10, strconv.Itoa(CountUserRequests))                //ответов по ссылке
+		spreadsheets.GoogleSheetsUpdate(CountGetUrl, 1, feedback.Rating)        //оценка
+		spreadsheets.GoogleSheetsUpdate(CountGetUrl, 2, feedback.Comment)       //комментарий
+		spreadsheets.GoogleSheetsUpdate(CountGetUrl, 3, urlDeal)                //ссылка на сделку
+		spreadsheets.GoogleSheetsUpdate(CountGetUrl, 4, branchConvertedToText)  //филиал
+		spreadsheets.GoogleSheetsUpdate(CountGetUrl, 5, formattedVisitDate)     //ответов по ссылке
+		spreadsheets.GoogleSheetsUpdate(1, 10, strconv.Itoa(CountUserRequests)) //ответов по ссылке
 
 		//w.Write([]byte("Feedback received successfully"))
 		//http.Redirect(w, r, "https://b24-yeth0y.bitrix24site.ru/empty_jekf/", http.StatusFound)
