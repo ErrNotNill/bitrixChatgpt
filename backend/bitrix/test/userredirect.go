@@ -21,8 +21,6 @@ type Feedback struct {
 	Comment string `json:"comment"`
 }
 
-var CountGetUrl = 346
-
 func GetWebhookWithDealId(w http.ResponseWriter, r *http.Request) {
 	// Parse the URL
 	u, err := url.Parse(r.URL.String())
@@ -188,10 +186,11 @@ func UserForm(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-var CountUserRedirect = 346 //переходов по ссылке
-var CountUserRequests = 61  //ответов по ссылке
-var CountSendedSms = 514    //сообщение отправлено
-var CountSendedDoneSms = 50 //сообщение не отправилось
+var CountGetUrl = 792       //кол-во строк
+var CountUserRedirect = 791 //переходов по ссылке
+var CountUserRequests = 117 //ответов по ссылке
+var CountSendedSms = 929    //сообщение отправлено
+var CountSendedDoneSms = 94 //сообщение не отправилось
 
 var store = sessions.NewCookieStore([]byte(GenerateSecretKey(32)))
 
