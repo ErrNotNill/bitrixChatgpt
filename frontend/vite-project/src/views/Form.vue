@@ -30,7 +30,7 @@
 export default {
   data() {
     return {
-      id: '',  // Store the ID
+      code: '',  // Store the ID
       rating: '',
       comment: '',
       ratingError: false
@@ -38,11 +38,11 @@ export default {
   },
   mounted() {
     const urlParams = new URLSearchParams(window.location.search);
-    this.id = urlParams.get('id');
+    this.code = urlParams.get('code');
   },
   methods: {
     submitFeedback() {
-      if (this.rating === '' || !this.id) {
+      if (this.rating === '' || !this.code) {
         this.ratingError = true; // Display an error message if ID or rating is missing
         return;
       }
@@ -53,7 +53,7 @@ export default {
 
       // Continue with the fetch request to send data
       const feedbackData = {
-        id: this.id,  // Include the ID in the feedback data
+        code: this.code,  // Include the ID in the feedback data
         rating: this.rating.toString(),
         comment: this.comment
       };

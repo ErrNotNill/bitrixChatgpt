@@ -1,6 +1,7 @@
 package test
 
 import (
+	"bitrix_app/backend/bitrix/repo/mysql"
 	"bitrix_app/backend/bitrix/test/spreadsheets"
 	"crypto/rand"
 	"encoding/base64"
@@ -10,16 +11,57 @@ import (
 	"io"
 	"log"
 	"net/http"
+	"net/url"
 	"strconv"
 )
 
 type Feedback struct {
-	Id      string `json:"id"` // Add this line
+	Code    string `json:"code"` // Add this line
 	Rating  string `json:"rating"`
 	Comment string `json:"comment"`
 }
 
 var CountGetUrl = 346
+
+func GetWebhookWithDealId(w http.ResponseWriter, r *http.Request) {
+	// Parse the URL
+	u, err := url.Parse(r.URL.String())
+	if err != nil {
+		log.Println("Error parsing URL:", err)
+		return
+	}
+
+	// Extract the query parameters
+	queryParams := u.Query()
+	dealId := queryParams.Get("deal_id")
+	code := queryParams.Get("code")
+
+	// Save dealId and code to the database
+	if err := saveDealCodeMapping(dealId, code); err != nil {
+		log.Println("Error saving to database:", err)
+		return
+	}
+
+	fmt.Println("Deal ID:", dealId)
+	fmt.Println("Code:", code)
+}
+
+func saveDealCodeMapping(dealId, code string) error {
+	// Database insertion logic here
+	_, err := mysql.Db.Exec("INSERT INTO deal_codes (deal_id, code) VALUES (?, ?)", dealId, code)
+	return err
+}
+
+func validateCodeWithDealId(code string) (string, error) {
+	// Database query logic here
+	var dbDealId string
+	err := mysql.Db.QueryRow("SELECT deal_id FROM deal_codes WHERE code = ?", code).Scan(&dbDealId)
+	if err != nil {
+		log.Println("Error executing dbDeal")
+		return "", err
+	}
+	return dbDealId, nil
+}
 
 func UserForm(w http.ResponseWriter, r *http.Request) {
 
@@ -49,7 +91,7 @@ func UserForm(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		log.Printf("Parsed feedback ID: %+v\n", feedback.Id)
+		log.Printf("Parsed feedback Code: %+v\n", feedback.Code)
 		log.Printf("Parsed feedback data: %+v\n", feedback)
 		log.Printf("feedback.Rating: %s, feedback.Comment: %s", feedback.Rating, feedback.Comment)
 
@@ -70,9 +112,13 @@ func UserForm(w http.ResponseWriter, r *http.Request) {
 		if !exists {
 			log.Printf("Invalid rating value: %s", feedback.Rating)
 		}
-
+		dealId, err := validateCodeWithDealId(feedback.Code)
+		if err != nil {
+			log.Printf("Invalid feedback code: %v", feedback.Code)
+			return
+		}
 		// Get Deal information and branch mapping
-		apiResponse, err := GetDealById(feedback.Id)
+		apiResponse, err := GetDealById(dealId)
 		if err != nil {
 			log.Println("Error getting deal info")
 			http.Error(w, "Failed to get deal info", http.StatusInternalServerError)
@@ -98,7 +144,7 @@ func UserForm(w http.ResponseWriter, r *http.Request) {
 		if !exists {
 			log.Printf("Invalid rating value: %s", feedback.Rating)
 		}
-		urlDeal := fmt.Sprintf("https://harizma.bitrix24.ru/crm/deal/details/%s/", feedback.Id)
+		urlDeal := fmt.Sprintf("https://harizma.bitrix24.ru/crm/deal/details/%s/", dealId)
 
 		fmt.Println("time: ", apiResponse.Result.VisitDate)
 		formattedVisitDate := apiResponse.Result.VisitDate.Format("2006-01-02T15:04:05-07:00")
@@ -155,17 +201,24 @@ func UserRedirect(w http.ResponseWriter, r *http.Request) {
 
 	session, _ := store.Get(r, "session-name")
 	query := r.URL.Query()
-	id := query.Get("id")
-	session.Values["dealId"] = id
+	code := query.Get("code")
+	session.Values["code"] = code
 	session.Save(r, w)
+	dealId, _ := validateCodeWithDealId(code)
+
+	if dealId == "" {
+		// Handle invalid code
+		http.Error(w, "Invalid code", http.StatusBadRequest)
+		return
+	}
 
 	// Include the ID in the redirect URL as a query parameter
-	redirectURL := fmt.Sprintf("https://harizma-service.ru/form?id=%s", id)
+	redirectURL := fmt.Sprintf("https://harizma-service.ru/form?code=%s", code)
 	http.Redirect(w, r, redirectURL, http.StatusFound)
 
 	go func() {
 		spreadsheets.GoogleSheetsUpdate(1, 9, strconv.Itoa(CountUserRedirect))
-		spreadsheets.GoogleSheetsUpdate(CountGetUrl, 0, id)
+		spreadsheets.GoogleSheetsUpdate(CountGetUrl, 0, dealId)
 	}()
 }
 

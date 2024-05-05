@@ -27,7 +27,9 @@ func main() {
 
 	routes.Router()
 
+	//spreadsheets.GoogleSheetsCheckColumn()
 	//iiko.IikoGetToken()
+	//reports.IikoReportSales()
 	//iiko.GetSales()
 
 	/*	err := authorize.AuthorizeBitrix()

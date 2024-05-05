@@ -16,6 +16,8 @@ import (
 //getOpportunityReport : : : https://harizma-co.iiko.it:443/resto/api/reports/sales?key=ae8d5fbe-9235-6f8d-14e9-263f4ad28bc3&dateFrom=17.04.2024&dateTo=18.04.2024&dishDetails=true&allRevenue=false&department=969e5b39-5306-0777-0189-306abd4d0011
 //getOLAP_report : : : https://harizma-co.iiko.it:443/resto/api/reports/olap?key=f95fa107-04ab-1353-24bd-e82186a35d21&report=SALES&from=18.04.2024&to=19.04.2024&groupRow=WaiterName&groupRow=CloseTime&groupRow=Department&groupRow=averageByGuest&agr=fullSum&agr=OrderNum&groupRow=HourClose&groupRow=OperationType&groupRow=OrderType&groupRow=SessionNum&groupRow=TableNum
 
+var IikoApiKey string
+
 func GetSales() {
 	//https://harizma-co.iiko.it:443/resto/api/reports/olap?key=90568e67-cce3-183f-c9bf-7740a920bcd4&report=SALES&from=01.04.2024&to=01.04.2024&groupRow=Department&groupRow=OpenTime&agr=fullSum&departmentId=79963b6f-2e77-4906-ba1d-ee761d558340
 
@@ -96,7 +98,7 @@ func IikoGetToken() {
 	}
 	log.Println("Response body BS GetUsersInfo:", string(bs))
 	//err = json.Unmarshal(bs, &token)
-	GlobalToken = string(bs)
+	IikoApiKey = string(bs)
 	//fmt.Println("GlobalToken: ", GlobalToken)
 }
 
