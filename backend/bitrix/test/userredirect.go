@@ -50,6 +50,17 @@ func saveDealCodeMapping(dealId, code string) error {
 	return err
 }
 
+func codeExists(code string) (bool, error) {
+	var exists bool
+	query := "SELECT EXISTS(SELECT 1 FROM deal_codes WHERE code = ?)"
+	err := mysql.Db.QueryRow(query, code).Scan(&exists)
+	if err != nil {
+		log.Printf("Error checking if code exists: %v", err)
+		return false, err
+	}
+	return exists, nil
+}
+
 func validateCodeWithDealId(code string) (string, error) {
 	// Database query logic here
 	var dbDealId string
@@ -115,7 +126,6 @@ func UserForm(w http.ResponseWriter, r *http.Request) {
 			log.Printf("Invalid feedback code: %v", feedback.Code)
 			return
 		}
-		fmt.Println("dealId user_form:", dealId)
 		// Get Deal information and branch mapping
 		apiResponse, err := GetDealById(dealId)
 		if err != nil {
@@ -212,6 +222,18 @@ func UserRedirect(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Invalid code", http.StatusBadRequest)
 		return
 	}
+	exists, err := codeExists(code)
+	if err != nil {
+		http.Error(w, "Error checking code", http.StatusInternalServerError)
+		return
+	}
+
+	if exists {
+		fmt.Fprintln(w, "Code exists in the database.")
+	} else {
+		fmt.Fprintln(w, "Code does not exist.")
+	}
+
 	fmt.Println("dealId is: ", dealId)
 	// Include the ID in the redirect URL as a query parameter
 	redirectURL := fmt.Sprintf("https://harizma-service.ru/form?code=%s", code)
