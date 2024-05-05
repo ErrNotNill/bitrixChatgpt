@@ -104,6 +104,18 @@ func UserForm(w http.ResponseWriter, r *http.Request) {
 		log.Printf("Parsed feedback data: %+v\n", feedback)
 		log.Printf("feedback.Rating: %s, feedback.Comment: %s", feedback.Rating, feedback.Comment)
 
+		exists, err := codeExists(feedback.Code)
+		if err != nil {
+			http.Error(w, "Error checking code", http.StatusInternalServerError)
+			return
+		}
+
+		if exists {
+			fmt.Fprintln(w, "Code exists in the database.")
+		} else {
+			fmt.Fprintln(w, "Code does not exist.")
+		}
+
 		// Lookup for Rating
 		ratingMap := map[string]int{
 			"1":  857,
@@ -126,6 +138,7 @@ func UserForm(w http.ResponseWriter, r *http.Request) {
 			log.Printf("Invalid feedback code: %v", feedback.Code)
 			return
 		}
+
 		// Get Deal information and branch mapping
 		apiResponse, err := GetDealById(dealId)
 		if err != nil {
@@ -221,17 +234,6 @@ func UserRedirect(w http.ResponseWriter, r *http.Request) {
 		// Handle invalid code
 		http.Error(w, "Invalid code", http.StatusBadRequest)
 		return
-	}
-	exists, err := codeExists(code)
-	if err != nil {
-		http.Error(w, "Error checking code", http.StatusInternalServerError)
-		return
-	}
-
-	if exists {
-		fmt.Fprintln(w, "Code exists in the database.")
-	} else {
-		fmt.Fprintln(w, "Code does not exist.")
 	}
 
 	fmt.Println("dealId is: ", dealId)
