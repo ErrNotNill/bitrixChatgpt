@@ -204,13 +204,14 @@ func UserRedirect(w http.ResponseWriter, r *http.Request) {
 	session.Values["code"] = code
 	session.Save(r, w)
 	dealId, _ := validateCodeWithDealId(code)
+	fmt.Println("code is: ", code)
 
 	if dealId == "" {
 		// Handle invalid code
 		http.Error(w, "Invalid code", http.StatusBadRequest)
 		return
 	}
-
+	fmt.Println("dealId is: ", dealId)
 	// Include the ID in the redirect URL as a query parameter
 	redirectURL := fmt.Sprintf("https://harizma-service.ru/form?code=%s", code)
 	http.Redirect(w, r, redirectURL, http.StatusFound)
