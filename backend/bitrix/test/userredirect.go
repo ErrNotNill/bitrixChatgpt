@@ -115,6 +115,7 @@ func UserForm(w http.ResponseWriter, r *http.Request) {
 			log.Printf("Invalid feedback code: %v", feedback.Code)
 			return
 		}
+		fmt.Println("dealId user_form:", dealId)
 		// Get Deal information and branch mapping
 		apiResponse, err := GetDealById(dealId)
 		if err != nil {
